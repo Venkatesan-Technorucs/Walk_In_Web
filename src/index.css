@@ -3,4 +3,22 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
-@import "primereact/resources/themes/lara-light-cyan/theme.css" layer(primereact);
+@import "primereact/resources/themes/md-light-indigo/theme.css" layer(primereact);
+
+/* @import "tailwindcss"; */
+@import 'primeicons/primeicons.css';
+
+:root{
+    --primary-color:#0c733b;
+    --primary-color-light:#3f9f4e;
+    --secondary-text-color:#7a7e8a;
+    --header-bg:#F4F6FA;
+}
+
+@theme {
+  --breakpoint-xs: 475px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}     
