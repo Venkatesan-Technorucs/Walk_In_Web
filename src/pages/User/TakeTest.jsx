@@ -134,7 +134,6 @@ const TakeTest = () => {
         }
     };
 
-
     return (
         <div className='w-full h-full flex flex-col'>
             {/* Header */}
@@ -148,11 +147,11 @@ const TakeTest = () => {
                     <Card pt={pt.progressCard}>
                         <div className='flex flex-col xs:flex-row justify-between items-center'>
                             <div>
-                                <h1 className='text-center xs:text-left text-base xs:text-xl sm:text-2xl font-medium'>{title}</h1>
+                                <h1 className='text-center xs:text-left text-base xs:text-xl sm:text-2xl font-medium capitalize'>{title}</h1>
                                 <h2 className='text-sm xs:text-base sm:text-lg font-normal text-(--secondary-text-color)'>Question {currentQuestionIndex + 1} of {totalQuestions}</h2>
                             </div>
                             <div className='flex justify-center items-center gap-3'>
-                                <CountdownTimer duration={10} active={true} onComplete={handleSubmit} />
+                                <CountdownTimer duration={duration*60} active={true} onComplete={handleSubmit} />
                                 <div className='h-6 rounded-4xl border-2 flex justify-center items-center p-1'>
                                     <p className='text-[10px] sm:text-sm p-1 font-medium'>{answeredCount}/{totalQuestions} answered</p>
                                 </div>
@@ -165,8 +164,8 @@ const TakeTest = () => {
                             <div className='flex flex-col gap-2'>
                                 <h1 className='text-base xs:text-lg'>Question {currentQuestionIndex + 1}.</h1>
                                 <div className='flex gap-2'>
-                                    <Tag value={question.category} className='text-black bg-white border-1 border-(--primary-color)'></Tag>;
-                                    <Tag value={question.difficulty} className='bg-gray-200 text-black rounded-lg'></Tag>;
+                                    <Tag value={question.category} className='text-black bg-white border-1 border-(--primary-color)'></Tag>
+                                    <Tag value={question.difficulty} className='bg-gray-200 text-black rounded-lg'></Tag>
                                 </div>
 
                             </div>

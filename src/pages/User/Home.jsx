@@ -68,14 +68,6 @@ const Home = () => {
 
     const getTag = () => {
         if(isActive) return { label: 'Active', severity: 'success' };
-        else return { label: 'Expired', severity: 'danger' };
-        // switch (tests.isActive) {
-        //     case 'false':
-        //         return { label: 'Expired', severity: 'danger' };
-
-        //     case 'true':
-        //         return { label: 'Active', severity: 'success' };
-        // }
     };
 
     console.log(tests.isActive);
