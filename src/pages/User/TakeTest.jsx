@@ -6,12 +6,14 @@ import React, { useEffect, useState } from 'react'
 import CountdownTimer from '../../utils/CountdownTimer'
 import { Checkbox } from 'primereact/checkbox';
 import Header from '../../components/Header';
-import { Tag } from 'primereact/tag';
+import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Axios } from '../../services/Axios'
+import { useAuth } from '../../contexts/AuthContext';
 
 const TakeTest = () => {
+    let { state, dispatch } = useAuth();
     let { id } = useParams();
     let navigate = useNavigate();
     let [title, setTitle] = useState('');
@@ -23,9 +25,15 @@ const TakeTest = () => {
     let [answeredCount, setAnsweredCount] = useState(0);
     let [progressCount, setProgressCount] = useState(0);
     let [isLoading, setisLoading] = useState(true);
-
+    let [switchCount, setSwitchCount] = useState(0);
+    let [visible, setVisible] = useState(false);
+    let [test, setTest] = useState({});
 
     useEffect(() => {
+        setTest(JSON.parse(localStorage.getItem('test')));
+        if (!test.attempt && !test.sessionId) {
+            navigate('/register');
+        }
         const fetchQuestion = async () => {
             try {
                 let response = await Axios.get(`/api/tests/getTest/${id}`);
@@ -41,7 +49,52 @@ const TakeTest = () => {
             }
         }
         fetchQuestion();
-    }, []);
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                setVisible(true);
+                setSwitchCount((prev) => {
+                    const updatedCount = prev + 1;
+                    if (updatedCount > 100) {
+                        handleSubmit(answers);
+                    }
+                    return updatedCount;
+                });
+            }
+        };
+        const handleBeforeUnload = (e) => {
+            setSwitchCount((prev) => {
+                const updatedCount = prev + 1;
+                if (updatedCount > 20) {
+                    handleSubmit(answers);
+                }
+                return updatedCount;
+            });
+            e.preventDefault();
+            e.returnValue = "";
+        };
+        const handlePopState = () => {
+            setVisible(true);
+            setSwitchCount((prev) => {
+                const updatedCount = prev + 1;
+                if (updatedCount > 20) {
+                    handleSubmit(answers);
+                }
+                return updatedCount;
+            });
+            window.history.pushState(null, null, window.location.href);
+        };
+
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener("popstate", handlePopState);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            removeEventListener("visibilitychange", handleVisibilityChange)
+            removeEventListener("beforeunload", handleBeforeUnload)
+            removeEventListener("popstate", handlePopState);
+        }
+    }, [test,navigate]);
+
 
     let handlePrevious = () => {
         setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
@@ -52,15 +105,11 @@ const TakeTest = () => {
 
     let handleSubmit = async (answers) => {
         try {
-            let attemptId = sessionStorage.getItem("attempt");
-            // console.log(attemptId);
-            // console.log(answers);
-            let response = await Axios.post('/api/tests/submitAnswer', { "attemptId": attemptId, 'questionAnswers': answers });
-            // console.log(response.data);
+            let response = await Axios.post('/api/tests/submitAttempt', { "attemptId": test.attempt, 'questionAnswers': answers });
+            dispatch({ type: "LOGOUT" });
+            navigate('/logout');
         } catch (error) {
             console.log(error);
-        } finally {
-            navigate('/')
         }
     }
 
@@ -102,6 +151,20 @@ const TakeTest = () => {
         });
     };
 
+    const dialogHeaderContent = (
+        <div className="flex items-center gap-2 text-red-600 text-base xs:text-2xl">
+            <i className='pi pi-exclamation-triangle mb-1 text-base xs:text-2xl'></i>
+            Alert
+        </div>
+    );
+
+    const dialogFooterContent = (
+        <div className='text-sm'>
+            <Button label="Ok" icon="pi pi-check" onClick={() => { if (!visible) return; setVisible(false); }} autoFocus className='text-base h-9 xs:h-12 xs:text-lg bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+        </div>
+    );
+
+
 
     const pt = {
         progressCard: {
@@ -111,7 +174,7 @@ const TakeTest = () => {
         questionsCard: {
             root: 'self-center',
             body: 'p-0',
-            content: 'px-5 py-2 flex flex-col'
+            content: 'px-5 py-2 flex flex-col gap-2'
         },
         questionsNavigatorCard: {
             root: 'w-full self-center p-3',
@@ -137,13 +200,16 @@ const TakeTest = () => {
     return (
         <div className='w-full h-full flex flex-col'>
             {/* Header */}
-            <Header />
+            <Header name={state.user.user_name} role={state.user.role} />
             {/* Body */}
             {isLoading
                 ? <div className='w-full min-h-[calc(100vh-80px)] flex items-center justify-center self-center bg-[#E6ECF1]'>
                     <ProgressSpinner className='h-16' />
                 </div>
                 : <div className='w-full min-h-[calc(100vh-80px)] flex flex-col px-[10%] py-4 gap-4 bg-[#E6ECF1]'>
+                    <Dialog position='top' header={dialogHeaderContent} footer={dialogFooterContent} visible={visible} onHide={() => { if (!visible) return; setVisible(false); }} className='w-[75%] h[50%] xs:w-[60%]' pt={{ root: 'text-xs xs:text-base md:text-xl', content: 'pt-[2px] pb-[8px]', header: 'p-3', closeButton: 'w-[20px] h-[30px] xs:h-[48px] xs:w-[30px]', footer: 'p-2' }}>
+                        <p className="m-0">Please remain on this page while taking the test. Navigating away, refreshing, or switching tabs may interrupt your session and result in automatic submission.</p>
+                    </Dialog>
                     <Card pt={pt.progressCard}>
                         <div className='flex flex-col xs:flex-row justify-between items-center'>
                             <div>
@@ -151,7 +217,7 @@ const TakeTest = () => {
                                 <h2 className='text-sm xs:text-base sm:text-lg font-normal text-(--secondary-text-color)'>Question {currentQuestionIndex + 1} of {totalQuestions}</h2>
                             </div>
                             <div className='flex justify-center items-center gap-3'>
-                                <CountdownTimer duration={duration*60} active={true} onComplete={handleSubmit} />
+                                <CountdownTimer duration={duration * 60} active={true} onComplete={handleSubmit} />
                                 <div className='h-6 rounded-4xl border-2 flex justify-center items-center p-1'>
                                     <p className='text-[10px] sm:text-sm p-1 font-medium'>{answeredCount}/{totalQuestions} answered</p>
                                 </div>
@@ -161,13 +227,8 @@ const TakeTest = () => {
                     </Card>
                     {questions.slice(currentQuestionIndex, currentQuestionIndex + 1).map((question) => {
                         return <Card className='w-full self-center' key={question.id} pt={pt.questionsCard}>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-1'>
                                 <h1 className='text-base xs:text-lg'>Question {currentQuestionIndex + 1}.</h1>
-                                <div className='flex gap-2'>
-                                    <Tag value={question.category} className='text-black bg-white border-1 border-(--primary-color)'></Tag>
-                                    <Tag value={question.difficulty} className='bg-gray-200 text-black rounded-lg'></Tag>
-                                </div>
-
                             </div>
                             <h2 className='text-lg xs:text-xl font-medium mb-2'>{question.title}</h2>
                             <ol className='pl-5 list-decimal marker:text-xl' type='1' >

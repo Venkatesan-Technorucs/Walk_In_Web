@@ -3,16 +3,17 @@
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css" layer(utilities);
 
-@import "primereact/resources/themes/md-light-indigo/theme.css" layer(primereact);
+@import "primereact/resources/themes/md-light-indigo/theme.css"
+  layer(primereact);
 
 /* @import "tailwindcss"; */
-@import 'primeicons/primeicons.css';
+@import "primeicons/primeicons.css";
 
-:root{
-    --primary-color:#0c733b;
-    --primary-color-light:#3f9f4e;
-    --secondary-text-color:#7a7e8a;
-    --header-bg:#F4F6FA;
+:root {
+  --primary-color: #0c733b;
+  --primary-color-light: #3f9f4e;
+  --secondary-text-color: #7a7e8a;
+  --header-bg: #f4f6fa;
 }
 
 @theme {
@@ -21,4 +22,18 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-}     
+}
+
+/* .p-icon-field .p-icon-field-right {
+  width: 100% !important;
+} */
+ 
+.register_password .p-icon-field{
+  width: 100% !important;
+}
+
+.register_select .p-cascadeselect-panel {
+  min-width: 100% !important;
+  max-width: 300px; /* optional, if you want to limit it */
+  overflow-x: auto; /* scroll if submenus go outside */
+}

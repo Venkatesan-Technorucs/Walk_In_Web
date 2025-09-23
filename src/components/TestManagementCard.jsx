@@ -4,43 +4,45 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Tag } from 'primereact/tag';
 import { Column } from 'primereact/column';
+import { useNavigate } from 'react-router-dom';
 
-const TestManagementCard = () => {
-    const test = [
-        {
-            id: 0,
-            title: "Sample Aptitude Test One",
-            subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
-            questions: 3,
-            duration: '30m',
-            scheduleFrom: '9/11/2025, 10:46:54 AM',
-            scheduleTo: 'to 10/11/2025, 11:46:54 AM',
-            status: 'expired',
-            action: 'view'
-        },
-        {
-            id: 1,
-            title: "Sample Aptitude Test Two",
-            subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
-            questions: 3,
-            duration: '30m',
-            scheduleFrom: '9/11/2025, 10:46:54 AM',
-            scheduleTo: 'to 10/11/2025, 11:46:54 AM',
-            status: 'active',
-            action: 'view'
-        },
-        {
-            id: 2,
-            title: "Sample Aptitude Test Three",
-            subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
-            questions: 3,
-            duration: '30m',
-            scheduleFrom: '9/11/2025, 10:46:54 AM',
-            scheduleTo: 'to 10/11/2025, 11:46:54 AM',
-            status: 'expired',
-            action: 'view'
-        },
-    ]
+const TestManagementCard = ({test}) => {
+    let navigate = useNavigate();
+    // const test = [
+    //     {
+    //         id: 0,
+    //         title: "Sample Aptitude Test One",
+    //         subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
+    //         questions: 3,
+    //         duration: '30m',
+    //         scheduleFrom: '9/11/2025, 10:46:54 AM',
+    //         scheduleTo: 'to 10/11/2025, 11:46:54 AM',
+    //         status: 'expired',
+    //         action: 'view'
+    //     },
+    //     {
+    //         id: 1,
+    //         title: "Sample Aptitude Test Two",
+    //         subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
+    //         questions: 3,
+    //         duration: '30m',
+    //         scheduleFrom: '9/11/2025, 10:46:54 AM',
+    //         scheduleTo: 'to 10/11/2025, 11:46:54 AM',
+    //         status: 'active',
+    //         action: 'view'
+    //     },
+    //     {
+    //         id: 2,
+    //         title: "Sample Aptitude Test Three",
+    //         subTitle: 'A sample test  with basic questions covering quantitative and general knowledge',
+    //         questions: 3,
+    //         duration: '30m',
+    //         scheduleFrom: '9/11/2025, 10:46:54 AM',
+    //         scheduleTo: 'to 10/11/2025, 11:46:54 AM',
+    //         status: 'expired',
+    //         action: 'view'
+    //     },
+    // ]
 
     const titleBodyTemplate = (test) => {
         return <div>
@@ -52,7 +54,7 @@ const TestManagementCard = () => {
     const questionsBodyTemplate = (test) => {
         return <div className='flex items-center gap-1 justify-center'>
             <i className='pi pi-book'></i>
-            <p>{test.questions}</p>
+            <p>{test.totalQuestions}</p>
         </div>
     };
 
@@ -66,22 +68,22 @@ const TestManagementCard = () => {
     const scheduleBodyTemplate = (test) => {
         return <div>
             <p className='text-base font-medium'>{test.scheduleFrom}</p>
-            <p className='text-sm text-(--secondary-text-color) font-normal'>{test.scheduleTo}</p>
+            <p className='text-sm text-(--secondary-text-color) font-normal'>{test.endDate}</p>
         </div>
     };
 
-    const actionBodyTemplate = (test) => { return <Button outlined label={test.action} className='text-(--primary-color)' /> };
+    const actionBodyTemplate = (test) => { return <Button outlined label={'View'} className='text-(--primary-color)' onClick={()=>{navigate(`/test/details/${test.id}`)}} /> };
 
     const statusBodyTemplate = (test) => {
-        return <Tag value={test.status} severity={getSeverity(test)}></Tag>;
+        return <Tag value={test.isActive ? 'Active' : 'Expired'} severity={getSeverity(test)}></Tag>;
     };
 
     const getSeverity = (test) => {
-        switch (test.status) {
-            case 'expired':
+        switch (test.isActive) {
+            case false:
                 return 'danger';
 
-            case 'active':
+            case true:
                 return 'success';
             default:
                 return null;
@@ -97,7 +99,7 @@ const TestManagementCard = () => {
                 </div>
                 <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
             </div>
-            <Card className='rounded-xl' title='Test (2)'>
+            <Card className='rounded-xl' title={`Test (${test.length})`}>
                 <DataTable value={test} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>
                     <Column field='questions' header="Questions" body={questionsBodyTemplate}></Column>

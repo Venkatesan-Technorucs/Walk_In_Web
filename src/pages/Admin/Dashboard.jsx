@@ -1,27 +1,65 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button';
 import TestManagementCard from '../../components/TestManagementCard';
-import QuestionsManagementCard from '../../components/QuestionsManagementCard';
+// import QuestionsManagementCard from '../../components/QuestionsManagementCard';
 import UsersManagementCard from '../../components/UsersManagementCard';
-import ResultsManagementCard from '../../components/ResultsManagementCard';
+// import ResultsManagementCard from '../../components/ResultsManagementCard';
+import { useAuth } from '../../contexts/AuthContext';
+import { Axios } from '../../services/Axios';
 
 
 const Dashboard = () => {
-
+    let { state, dispatch } = useAuth();
     let [active, setActive] = useState('');
+    let [allUsers, setAllUsers] = useState([]);
+    let [allQuestions, setAllQuestions] = useState([]);
+    let [allTests, setAllTests] = useState([]);
+    let [dashboardData, setDashboardData] = useState({
+        totalAdmins: '',
+        totalApplicants: '',
+        totalQuestions: '',
+        totalActiveTests: '',
+        totalTests: '',
+    });
 
+    useEffect(() => {
+        setActive('usersCard');
+        let fetchData = async () => {
+            let response = await Axios.all([Axios.get('/api/users/getAllUsers'), Axios.get('/api/tests/getAllTests'), Axios.get('/api/questions/getAllQuestions')]);
+            let usersResponse = response[0].data;
+            let testsResponse = response[1].data.tests;
+            let questionsResponse = response[2].data;
+            setAllUsers(usersResponse);
+            setAllTests(testsResponse);
+            setAllQuestions(questionsResponse);
+            let admins = usersResponse.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Applicant');
+            let applicants = usersResponse.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Admin')
+            let activeTests = testsResponse.filter((test) => test.isActive);
+            setDashboardData({
+                totalAdmins: admins.length,
+                totalApplicants: applicants.length,
+                totalQuestions: questionsResponse.length,
+                totalActiveTests: activeTests.length,
+                totalTests: testsResponse.length
+            });
+        }
+        fetchData();
+    }, [])
+
+    function handleLogout() {
+        dispatch({ type: 'LOGOUT' });
+    }
+
+    let users = allUsers.filter((user) => user.role !== 'SuperAdmin').sort((a, b) => (b.role === 'Admin') - (a.role === 'Admin'));
     const renderCard = () => {
         switch (active) {
             case 'usersCard':
-                return <UsersManagementCard/>
-            case 'questionsCard':
-                return <QuestionsManagementCard />;
+                return <UsersManagementCard users={users} />
             case 'testsCard':
-                return <TestManagementCard />;
-            case 'resultsCard':
-                return <ResultsManagementCard/>
+                return <TestManagementCard test={allTests} questions={allQuestions} />;
+
         }
     };
 
@@ -56,57 +94,40 @@ const Dashboard = () => {
             <i className='pi pi-book'></i>
         </div>
     );
-    const items = [
-        {
-            label: 'User Management',
-        },
-        {
-            label: 'Questions',
-        },
-        {
-            label: 'Tests',
-        },
-        {
-            label: 'Results',
-        },
-    ]
+
     return (
-        <div className='w-full h-full flex flex-col bg-[#E6ECF1]'>
+        <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
             {/* Header */}
-            <Header />
+            <Header name={state.user.user_name} role={state.user.role} onLogout={handleLogout} />
             {/* Body */}
-            <div className='w-3/4 h-full flex flex-col self-center my-5 gap-2'>
+            <div className='w-3/4 min-h-full flex flex-col self-center my-5 gap-2'>
+                {/* Dashboard contents */}
                 <div className=''>
-                    <h1 className='text-2xl font-medium'>Super Admin Dashboard</h1>
-                    <h2 className='text-lg text-(--secondary-text-color) '>Manage the entire aptitude test platform</h2>
+                    <h1 className='text-xl md:text-2xl font-medium'>{state.user.role === 'SuperAdmin' ? 'Super' : ''} Admin Dashboard</h1>
+                    <h2 className='text-base xs:text-lg text-(--secondary-text-color) '>Manage the entire aptitude test platform</h2>
                 </div>
-                <div className='w-full h-40 flex justify-center items-center gap-10'>
-                    <Card className='w-50 h-30 p-5 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
-                        <p className='text-4xl'>6</p>
+                <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-2'>
+                    {state.user.role === 'SuperAdmin' && <Card className='w-full xs:w-50 h-20 xs:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
+                        <p className='text-4xl'>{dashboardData.totalAdmins}</p>
+                    </Card>}
+                    <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={applicantsHeader}>
+                        <p className='text-4xl'>{dashboardData.totalApplicants}</p>
                     </Card>
-                    <Card className='w-50 h-30 p-5 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={applicantsHeader}>
-                        <p className='text-4xl'>6</p>
+                    <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={questionsHeader}>
+                        <p className='text-4xl'>{dashboardData.totalQuestions}</p>
                     </Card>
-                    <Card className='w-50 h-30 p-5 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={questionsHeader}>
-                        <p className='text-4xl'>6</p>
-                    </Card>
-                    <Card className='w-50 h-30 p-5 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={testHeader}>
-                        <p className='text-4xl'>6</p>
-                        <p className='text-sm'>of 2 total tests</p>
+                    <Card className='w-full xs:w-50 h-20 xs:h-40 sm:h-30 flex flex-col xs:justify-between p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={testHeader}>
+                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
+                        <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
                     </Card>
                 </div>
-                <div className='card w-full h-12 bg-white rounded-4xl flex items-center p-2 gap-1 hover:cursor-pointer'>
-                    <div className={`h-8 rounded-4xl w-1/4 flex justify-center items-center ${active==='usersCard' ? 'bg-green-100' : ''}`} onClick={()=>{setActive('usersCard')}}>
-                        <p>User Management</p>
+                {/* Users or Tests */}
+                <div className='w-full h-12 bg-white rounded-4xl flex items-center p-2 gap-1 hover:cursor-pointer'>
+                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'usersCard' ? 'bg-green-100' : ''}`} onClick={() => { setActive('usersCard') }}>
+                        <p>Users</p>
                     </div>
-                    <div className={`h-8 rounded-4xl w-1/4 flex justify-center items-center ${active ==='questionsCard' ? 'bg-green-100' : ''}`} onClick={()=>{setActive('questionsCard')}}>
-                        <p>Questions</p>
-                    </div>
-                    <div className={`h-8 rounded-4xl w-1/4 flex justify-center items-center ${active==='testsCard' ? 'bg-green-100' : ''}`} onClick={()=>{setActive('testsCard')}}>
+                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'testsCard' ? 'bg-green-100' : ''}`} onClick={() => { setActive('testsCard') }}>
                         <p>Tests</p>
-                    </div>
-                    <div className={`h-8 rounded-4xl w-1/4 flex justify-center items-center ${active==='resultsCard' ? 'bg-green-100' : ''}`} onClick={()=>{setActive('resultsCard')}}>
-                        <p>Results</p>
                     </div>
                 </div>
                 <div className=''>
