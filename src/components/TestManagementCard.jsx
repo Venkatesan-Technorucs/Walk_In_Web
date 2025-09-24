@@ -113,7 +113,7 @@ const TestManagementCard = () => {
     };
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='h-screen flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>Test Management</h1>
@@ -122,17 +122,18 @@ const TestManagementCard = () => {
                 <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' onClick={() => { setTestVisible(true) }} />
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
             </div>
-            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} />}
-            <Card title='Filter' className='rounded-2xl'>
-                <div className='w-1/2 flex flex-col gap-1'>
-                    <label htmlFor="filterText" name='filterText' className=''>Search Tests</label>
-                    <IconField iconPosition="left">
-                        <InputIcon className="pi pi-search"> </InputIcon>
-                        <InputText id='filterText' name='filterText' placeholder="Search by test name..." value={filterText} onChange={(e) => { handleChange(e) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
-                    </IconField>
-                </div>
-            </Card>
-            <Card className='rounded-xl' title={`Test (${totalRecords})`}>
+            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={recentTests} />}
+            <Card className='rounded-xl' header={
+                <div className='flex justify-between items-center p-4'>
+                    <div>
+                        <div className='text-2xl font-medium text-(--primary-text-color)'>Test {totalRecords}</div>
+                        <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Tests in the system</div>
+                    </div>
+                    <span className="p-input-icon-left w-1/2">
+                        <InputIcon icon="pi pi-search"> </InputIcon>
+                        <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Tests" />
+                    </span>
+                </div>}>
                 <DataTable lazy value={allTests} paginator rows={rows} first={page * rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>
                     <Column field='questions' header="Questions" body={questionsBodyTemplate}></Column>
