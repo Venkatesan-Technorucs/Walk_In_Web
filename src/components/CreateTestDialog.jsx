@@ -5,8 +5,10 @@ import { Button } from 'primereact/button';
 import { Card } from 'primereact/card'
 import { Checkbox } from 'primereact/checkbox';
 import { Panel } from 'primereact/panel';
+import { Calendar } from 'primereact/calendar';
 import { validateField, validateOptions, validateTestQuestion } from '../utils/Validation';
 import { Axios } from '../services/Axios';
+import { classNames } from 'primereact/utils';
 
 const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     const [collapsed, setCollapsed] = useState(true);
@@ -134,7 +136,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         setHasPanelOpened(false);
     }
 
-    let handleAddQuestion =  (e) => {
+    let handleAddQuestion = (e) => {
         e.preventDefault();
         let newQuestionErrors = {
             qTitle: validateField('Question', questionData.qTitle),
@@ -157,7 +159,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         else {
             try {
                 console.log(questionData);
-                setTestData(prev=>({...prev,questions:questionData}));
+                setTestData(prev => ({ ...prev, questions: questionData }));
                 handleClear();
                 setCollapsed(true);
                 setHasPanelOpened(false)
@@ -197,9 +199,30 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         }
     };
 
+    const calenderIconTemplate = ()=>{
+        return (
+            // <div></div>
+            <i className='pi pi-calendar bg-(--primary-color) p-2'></i>
+        )
+    }
+    const pt = {
+        checkbox: {
+            box: ({ context }) => ({
+                className: classNames(
+                    'flex items-center justify-center border-2 rounded-sm transition-colors duration-200',
+                    {
+                        'bg-(--header-bg) border-(--primary-color)': !context.checked,
+
+                        'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% border-(--primary-color-light)': context.checked
+                    }
+                )
+            }),
+            icon: 'w-4 h-4 text-white transition-all duration-200'
+        }
+    }
 
     return (
-        <Dialog header="Create Test" visible={testVisible} style={{ width: '50vw', height: '80vh' }} pt={{ closeButton: 'hidden' }} >
+        <Dialog header="Create Test" visible={testVisible} style={{ width: '50vw', height: '80vh' }} pt={{ closeButton: 'hidden', root: '', content: 'bg-(--header-bg)', header: "bg-(--header-bg)", headerTitle: "text-2xl font-bold", }} >
             <form className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <div className='flex'>
@@ -228,22 +251,39 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                         {(errors.duration && isErrorView) && <small className='text-xs text-red-500'>{errors.duration}</small>}
                     </div>
                 </div>
-                <Card title='Recent Tests'>
+                <div className='flex gap-3'>
+                    <div className='w-1/2 flex flex-col gap-1'>
+                        <div className='flex'>
+                            <label htmlFor="department" className={`${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}>Start Date</label>
+                            <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
+                        </div>
+                        <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} onChange={(e) => handleChange('startDate', e)} showIcon className='h-10' icon={()=><i className='pi pi-clock bg-(--primary-color)'></i>} />
+                        {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
+                    </div>
+                    <div className='w-1/2 flex flex-col gap-1'>
+                        <div className='flex'>
+                            <label htmlFor="duration" className={`${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}>End Date</label>
+                            <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
+                        </div>
+                        <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} onChange={(e) => handleChange('endDate', e)} showIcon className='h-10' pt={{ root: '',buttonbar:"bg-green-400" }} />
+                        {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
+                    </div>
+                </div>
+                <Card title='Recent Tests' className='overflow-auto rounded-2xl' pt={{ title:'text-lg',body:"p-4",content:"p-0" }}>
                     <ul>
                         {tests.map((test) => {
                             return (
-                                <div className='flex gap-2' key={test.id}>
+                                <div className='flex items-center gap-2 mb-3' key={test.id}>
                                     <Checkbox inputId={test.id} name={test.title}
-                                    // pt={pt.checkbox}
                                     />
-                                    <label htmlFor={test.id}>{test.title}</label>
+                                    <label htmlFor={test.id} className='capitalize'>{test.title}</label>
                                 </div>
                             )
                         })}
                     </ul>
                 </Card>
-                <Card title='Questions'>
-                    <Panel header='Add Question' toggleable onToggle={handleToggle} collapseIcon collapsed={collapsed} >
+                <Card title='Questions' className='rounded-2xl' pt={{ title: 'text-lg' }}>
+                    <Panel header='Add Question' toggleable onToggle={handleToggle} collapseIcon collapsed={collapsed} pt={{ title: "text-base font-bold",header:"bg-(--header-bg)" }} >
                         <div className='flex flex-col gap-4'>
                             <div className='flex flex-col gap-1'>
                                 <div className='flex'>
@@ -254,26 +294,21 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                                 {(questionErrors.qTitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qTitle}</small>}
                             </div>
                             <div className='flex gap-2 items-center'>
-                                <Checkbox inputId='isMultiSelect' name='isMultiSelect' checked={questionData.isMultiSelect} onChange={(e)=>{setQuestionData({...questionData,isMultiSelect:e.value})}} />
+                                <Checkbox inputId='isMultiSelect' name='isMultiSelect' checked={questionData.isMultiSelect} onChange={(e) => { setQuestionData({ ...questionData, isMultiSelect: e.value }) }} />
                                 <label htmlFor="isMultiSelect">Multiple Choice</label>
                             </div>
-                            <Card>
-                                <div className='flex justify-between'>
-                                    <h1>Options</h1>
-                                    <Button type='button' label='Add' onClick={handleAddOption} />
-                                </div>
+                            <div className='flex justify-between items-start'>
+                                <h1 className='font-bold text-base'>Options</h1>
+                                <Button type='button' label='Add' outlined onClick={handleAddOption} className='p-1 text-(--primary-color)' />
+                            </div>
+                            <div className='flex flex-col gap-2'>
                                 {questionData.options.map((option, index) => {
                                     const isSingleMode = !questionData.isMultiSelect;
                                     const anyCorrectSelected = questionData.options.some(opt => opt.isCorrect);
                                     return (
-                                        <div className='flex justify-around items-center mb-2'>
-                                            <InputText id={`option-${index}`} placeholder={`Enter option ${index + 1}`} value={option.title} pt={{ root: 'py-1' }} onChange={(e) => {
-                                                let newOptions = [...questionData.options];
-                                                newOptions[index].title = e.target.value;
-                                                setQuestionData({ ...questionData, options: newOptions });
-                                            }} />
-                                            <div className='flex items-center gap-2'>
-                                                <Checkbox inputId={index} checked={option.isCorrect} disabled={isSingleMode && anyCorrectSelected && !option.isCorrect} onChange={(e) => {
+                                        <div>
+                                            <div className='flex items-center justify-between'>
+                                                <Checkbox className='' pt={pt.checkbox} inputId={index} checked={option.isCorrect} disabled={isSingleMode && anyCorrectSelected && !option.isCorrect} onChange={(e) => {
                                                     let newOptions = [...questionData.options];
                                                     if (isSingleMode) {
                                                         newOptions = newOptions.map((opt, i) => ({
@@ -286,16 +321,23 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                                                     setQuestionData({ ...questionData, options: newOptions });
                                                 }
                                                 } />
-                                                <label htmlFor="">Is Correct</label>
+                                                <InputText id={`option-${index}`} className='h-6 w-[80%] bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${index + 1}`} value={option.title} pt={{ root: 'py-1' }} onChange={(e) => {
+                                                    let newOptions = [...questionData.options];
+                                                    newOptions[index].title = e.target.value;
+                                                    setQuestionData({ ...questionData, options: newOptions });
+                                                }} />
+                                                <Button type='button' outlined icon='pi pi-trash text-xs' className='p-0 w-6 text-(--primary-color)' onClick={() => { handleRemoveOption(index) }} />
+                                                <div className='flex items-center gap-2'>
+                                                </div>
                                             </div>
-                                            {questionData.options.length > 4 && <Button type='button' outlined icon='pi pi-trash' onClick={() => { handleRemoveOption(index) }} />}
                                         </div>
                                     )
                                 })}
-                            </Card>
+                                <p>Select the correct answers</p>
+                            </div>
                             <div className='flex items-center justify-end gap-2 '>
-                                <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color)" />
-                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+                                <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color) p-1 w-18 h-8" pt={{icon:"text-sm"}} />
+                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% p-2 h-8 w-18' pt={{icon:"text-sm"}} />
                             </div>
                         </div>
                     </Panel>

@@ -177,7 +177,7 @@ const Register = () => {
                 if (response?.data.success) {
                     if (totalTests < 2) {
                         let startTestResponse = await Axios.post('/api/tests/startAttempt', { testId: todayTestId });
-                        let registeredUser = { ...response?.data?.data, test: { ...startTestResponse.data } }
+                        let registeredUser = { ...response?.data?.data, test: { ...startTestResponse.data.data } }
                         dispatch({ type: "TEST_STARTED", payload: registeredUser });
                         setIsBtnClicked(false);
                         navigate(`/take-test/${todayTestId}`)

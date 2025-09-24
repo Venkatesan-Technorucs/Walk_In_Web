@@ -99,7 +99,7 @@ const CreateAdminDialog = ({ visible, setVisible, show }) => {
 
 
     return (
-        <Dialog header="Create Admin" visible={visible} style={{ width: '50vw' }} pt={{ closeButton: 'hidden' }} >
+        <Dialog header="Create Admin" visible={visible} style={{ width: '50vw' }} pt={{ closeButton: 'hidden',content:'bg-(--header-bg)',header:"bg-(--header-bg)",headerTitle:"text-2xl font-bold", }} >
             <form className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <div className='flex'>

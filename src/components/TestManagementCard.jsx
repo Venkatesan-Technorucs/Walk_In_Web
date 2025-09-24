@@ -112,8 +112,6 @@ const TestManagementCard = () => {
         toast.current.show({ severity: severity, summary: summary, detail: msg });
     };
 
-    let recentTests = allTests.slice(allTests.length - 3);
-
     return (
         <div className='flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
@@ -124,7 +122,7 @@ const TestManagementCard = () => {
                 <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' onClick={() => { setTestVisible(true) }} />
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
             </div>
-            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={recentTests} />}
+            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} />}
             <Card title='Filter' className='rounded-2xl'>
                 <div className='w-1/2 flex flex-col gap-1'>
                     <label htmlFor="filterText" name='filterText' className=''>Search Tests</label>
