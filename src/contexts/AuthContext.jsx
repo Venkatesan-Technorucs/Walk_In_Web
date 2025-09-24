@@ -54,10 +54,7 @@ const AuthProvider = ({ children }) => {
                 console.log(decodedToken);
                 const now = Date.now();
                 if (now < decodedToken.exp * 1000) {
-                    let response = await Axios.get(`/api/users/getSingleUser/${decodedToken.userId}`);
-                    if (response.data.data) {
-                        dispatch({ type: "LOGIN_SUCCESS", payload: { ...response.data.data, token: token } });
-                    }
+                        dispatch({ type: "LOGIN_SUCCESS", payload: { ...decodedToken, token: token } });
                 } else {
                     dispatch({ type: "ERROR", error: 'Token expired' })
                 }
