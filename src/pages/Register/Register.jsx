@@ -227,12 +227,12 @@ const Register = () => {
         )
     } else {
         return (
-            <div className='w-full h-full flex flex-col justify-center items-center bg-[#E6ECF1] p-6 gap-3'>
+            <div className='w-screeen h-screen flex flex-col justify-center items-center bg-[#E6ECF1] p-6 gap-3'>
                 <div className='w-full h-[15%] flex flex-col justify-center items-center gap-2'>
                     <img src={logo} alt="logo" className='h-[40px] xs:h-[50px]' />
                     <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-(--primary-color)'>Online Assessment Platform</h2>
                 </div>
-                <Card title='Create your account' className='w-full rounded-2xl sm:w-2/3 lg:w-2/4 sm:self-center' pt={{ title: 'text-(--secondary-text-color) text-[22px] xs:text-2xl mb-0' }}>
+                <Card title='Create your account' className='w-full h-full rounded-2xl sm:w-2/3 lg:w-2/4 sm:self-center' pt={{ title: 'text-(--secondary-text-color) text-[22px] xs:text-2xl mb-0' }}>
                     <form action="" className='flex flex-col gap-4'>
                         <div className='flex flex-col gap-1'>
                             <div className='flex'>

@@ -25,7 +25,9 @@ function userReducer(state, action) {
             localStorage.removeItem("test");
             return { ...initialState, loading: false };
         case "LOADING":
-            return { ...state, loading: true }
+            return { ...state, loading: true };
+        case "API_LOADING":
+            return { ...state, apiLoading: true, apiLoading: action.payload };
         case "ERROR":
             return { ...state, loading: false, error: action.payload }
         default:
@@ -36,7 +38,8 @@ function userReducer(state, action) {
 let initialState = {
     user: null,
     error: null,
-    loading: true
+    loading: true,
+    apiLoading: false
 };
 
 let { Provider } = AuthContext;

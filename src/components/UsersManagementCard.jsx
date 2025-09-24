@@ -60,6 +60,7 @@ const UsersManagementCard = ({ }) => {
     }, [])
 
     const onPageChange = (event) => {
+        debugger;
         setPage(event.page);
         setRows(event.rows);
         fetchUsers(event.page, event.rows, filterText, role?.name);
