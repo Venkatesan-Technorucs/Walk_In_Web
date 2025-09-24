@@ -72,9 +72,16 @@ export const validateTestQuestion =(questionIds,questions)=>{
   else return null;
 }
 
-export const validateOptions = (options)=>{
-  if(options.length<2){
-    return 'Atleast two options needed for a question';
+export const validateOptions = (options) => {
+  if (!Array.isArray(options)) {
+    return 'Options should be an array';
   }
-  else return null;
-}
+
+  const filledCount = options.filter(opt => opt.title?.trim()).length;
+
+  if (filledCount < 2) {
+    return 'At least two options must have a title';
+  }
+
+  return null;
+};

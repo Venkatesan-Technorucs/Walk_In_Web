@@ -83,18 +83,17 @@ const TestDetails = () => {
             <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
           </Button>
           <div className='flex justify-between'>
-            <h1>{testDetails.title}</h1>
+            <h1 className='capitalize font-bold text-2xl'>Title: {testDetails.title}</h1>
             <Tag value={testDetails.isActive ? 'Active' : 'Expired'} severity={testDetails.isActive ? 'success' : 'danger'}></Tag>
           </div>
           <div className='flex items-center gap-1'>
+            <p className='text-base font-medium'>Duration: </p>
             <i className='pi pi-clock'></i>
             <p>{testDetails.duration}m</p>
           </div>
-          <h2>{testDetails.department}</h2>
-          <div className='flex gap-2'>
-            <h2>{testDetails.startDate}</h2>
-            <h2>{testDetails.endDate}</h2>
-          </div>
+          <h2 className='font-medium test-base'>Department: {testDetails.department}</h2>
+            <h2 className='font-medium text-base'>Start Date: {testDetails.startDate}</h2>
+            <h2 className='font-medium text-base'>End Date: {testDetails.endDate}</h2>
         </div>
         <Card className='rounded-xl' title={`Question (${testQuestions.length})`}>
           <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>

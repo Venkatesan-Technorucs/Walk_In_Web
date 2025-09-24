@@ -2,7 +2,6 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import React, { useContext, useEffect, useReducer } from 'react'
 import { createContext } from 'react'
-import { Axios } from '../services/Axios';
 
 export const AuthContext = createContext();
 
