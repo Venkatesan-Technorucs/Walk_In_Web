@@ -30,17 +30,14 @@ const TakeTest = () => {
     let [test, setTest] = useState({});
 
     useEffect(() => {
-        setTest(JSON.parse(localStorage.getItem('test')));
-        if (!test?.attempt && !test?.sessionId) {
-            navigate('/register');
-        }
+        const storedTest = JSON.parse(localStorage.getItem('test'));
+        setTest(storedTest);
+    }, []);
+
+    useEffect(() => {
         const fetchQuestion = async () => {
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    navigate('/register');
-                    return;
-                }
                 let response = await Axios.get(`/api/tests/getTest/${id}`, { headers: { Authorization: `Bearer ${token}` } });
                 debugger
                 if (response.data?.success) {
@@ -100,7 +97,7 @@ const TakeTest = () => {
             removeEventListener("beforeunload", handleBeforeUnload)
             removeEventListener("popstate", handlePopState);
         }
-    }, []);
+    }, [test]);
 
 
     let handlePrevious = () => {
@@ -112,7 +109,7 @@ const TakeTest = () => {
 
     let handleSubmit = async (answers) => {
         try {
-            let response = await Axios.post('/api/tests/submitAttempt', { "attemptId": test.attempt, 'questionAnswers': answers });
+            let response = await Axios.post('/api/tests/submitAnswer', { "attemptId": test.attempt, 'questionAnswers': answers });
             dispatch({ type: "LOGOUT" });
             navigate('/logout');
         } catch (error) {
