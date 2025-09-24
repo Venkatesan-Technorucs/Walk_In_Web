@@ -37,13 +37,13 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let [isErrorView, setIsErrorView] = useState(false);
 
     let [questionData, setQuestionData] = useState({
-        qTitle: '',
+        qtitle: '',
         isMultiSelect: '',
         options: [{ title: '', isCorrect: false }, { title: '', isCorrect: false }, { title: '', isCorrect: false }, { title: '', isCorrect: false }],
     });
     let [optionsCount, setOptionsCount] = useState(4);
     let [questionErrors, setQuestionErrors] = useState({
-        qTitle: '',
+        qtitle: '',
         options: '',
     })
     let [isQuestionErrorView, setIsQuestionErrorView] = useState(false);
@@ -143,16 +143,13 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
             case 'duration':
                 setErrors({ ...errors, [fieldName]: validateField(fieldName, value) })
                 break;
-            case 'endDate':
-                setTestData({ ...testData, [fieldName]: value });
-                break;
         }
     }
 
     let handleClear = () => {
         setIsQuestionErrorView(false);
-        let questionData = { qTitle: '', isMultiSelect: false, options: [{ qTitle: "", isCorrect: "" }, { qTitle: "", isCorrect: "" }, { qTitle: "", isCorrect: "" }, { qTitle: "", isCorrect: "" }] };
-        let newErrors = { qTitle: null, options: null };
+        let questionData = { qtitle: '', isMultiSelect: false, options: [{ title: "", isCorrect: false }, { title: "", isCorrect: false }, { title: "", isCorrect: false }, { title: "", isCorrect: false }] };
+        let newErrors = { qtitle: null, options: null };
         setQuestionData(questionData);
         setQuestionErrors(newErrors);
         setCollapsed(true);
@@ -162,7 +159,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let handleAddQuestion = (e) => {
         e.preventDefault();
         let newQuestionErrors = {
-            qTitle: validateField('Question', questionData.qTitle),
+            qtitle: validateField('Question', questionData.qTitle),
             options: validateOptions(questionData.options),
         };
         const correctOptions = questionData.options.filter(opt => opt.isCorrect);
@@ -196,7 +193,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let handleQuestionChange = (fieldName, value) => {
         setQuestionData({ ...questionData, [fieldName]: value });
         switch (fieldName) {
-            case 'qTitle':
+            case 'qtitle':
                 setQuestionErrors({ ...questionErrors, [fieldName]: validateField(fieldName, value) })
                 break;
         }
@@ -315,11 +312,11 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                         <div className='flex flex-col gap-4'>
                             <div className='flex flex-col gap-1'>
                                 <div className='flex'>
-                                    <label htmlFor="qTitle" className={`${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}>Question</label>
+                                    <label htmlFor="qtitle" className={`${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}>Question</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <InputText id='qTitle' type='text' placeholder='Enter question' value={questionData.qTitle} onChange={(e) => { handleQuestionChange('qTitle', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(questionErrors.qTitle && isQuestionErrorView)} />
-                                {(questionErrors.qTitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qTitle}</small>}
+                                <InputText id='qtitle' type='text' placeholder='Enter question' value={questionData.qtitle} onChange={(e) => { handleQuestionChange('qtitle', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(questionErrors.qtitle && isQuestionErrorView)} />
+                                {(questionErrors.qtitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qtitle}</small>}
                             </div>
                             <div className='flex gap-2 items-center'>
                                 <Checkbox inputId='isMultiSelect' name='isMultiSelect' pt={pt.checkbox} checked={questionData.isMultiSelect} onChange={(e) => { if (e.checked) { setQuestionData({ ...questionData, isMultiSelect: true }) } else { setQuestionData({ ...questionData, isMultiSelect: false }) } }} />
@@ -371,7 +368,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                     </Panel>
                     <ol type='1'>
                         {testData.questions.map((question, index) => {
-                            return <li key={index}>{question.qTitle}</li>
+                            return <li key={index}>{question.qtitle}</li>
                         })}
                     </ol>
                 </Card>
