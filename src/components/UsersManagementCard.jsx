@@ -82,8 +82,8 @@ const UsersManagementCard = ({ }) => {
     }
     const userBodyTemplate = (users) => {
         return <div>
-            <p className='text-base font-medium'>{users.name}</p>
-            <p className='text-sm text-(--secondary-text-color) font-normal'>{users.email}</p>
+            <p className='text-base text-(--secondary-text-color) font-medium'>{users.name}</p>
+            {/* <p className='text-sm text-(--secondary-text-color) font-normal'>{users.email}</p> */}
         </div>
     };
 
@@ -115,9 +115,12 @@ const UsersManagementCard = ({ }) => {
         }
     };
 
+    const emailBodyTemplate = (users) => {
+        return <p className='text-(--secondary-text-color) items-center justify-center font-normal'>{users.email}</p>;
+    }
 
     const roleBodyTemplate = (users) => {
-        return <div className='flex items-center gap-1 justify-center'>
+        return <div className='flex items-center gap-1'>
             <i className={getIcon(users)}></i>
             <Tag value={users.role} severity={getSeverity(users)}></Tag>
         </div>
@@ -128,7 +131,7 @@ const UsersManagementCard = ({ }) => {
     // };
     const actionBodyTemplate = (users) => {
         return (
-            <div className='flex justify-center items-center gap-2'>
+            <div className='flex items-center gap-2'>
                 <Button outlined icon='pi pi-info-circle' onClick={() => {
                     navigate(`/user/details/${users.id}`)
                 }} className='text-(--primary-color)' />
@@ -154,14 +157,14 @@ const UsersManagementCard = ({ }) => {
                         <label htmlFor="filterText" name='filterText' className=''>Search Users</label>
                         <IconField iconPosition="left">
                             <InputIcon className="pi pi-search"> </InputIcon>
-                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
+                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
                         </IconField>
                     </div>
                     {state.user.role === 'SuperAdmin' && <div className="w-1/2 flex flex-col gap-1 ">
                         <label htmlFor="role" name='role'>Filter by Role</label>
-                        <div className='w-full border-gray-400  border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
+                        <div className='w-full border-gray-400 border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
                             <Dropdown id='role' name='role' value={role} onChange={(e) => handleChange('role', e)} options={roles} optionLabel="name"
-                                placeholder="Select Role" className="w-full border-none focus-within:border-0 focus-within:shadow-none" />
+                                placeholder="Select Role" className="w-full h-12 border-none focus-within:border-0 focus-within:shadow-none" />
                         </div>
                     </div>}
                 </div>
@@ -169,6 +172,7 @@ const UsersManagementCard = ({ }) => {
             <Card className='rounded-xl' title={`Users (${totalRecords})`} subTitle='Manage all users in the system' pt={{}}>
                 <DataTable value={users} lazy paginator rows={rows} first={page*rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0' }}>
                     <Column className='w-1/3 p-0' field="user" header="User" body={userBodyTemplate} ></Column>
+                    <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>
                     <Column className='w-1/3' field='action' header="Action" body={actionBodyTemplate}></Column>
                 </DataTable>

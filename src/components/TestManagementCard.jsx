@@ -71,14 +71,14 @@ const TestManagementCard = () => {
     };
 
     const questionsBodyTemplate = (allTests) => {
-        return <div className='flex items-center gap-1 justify-center'>
+        return <div className='flex items-center gap-1'>
             <i className='pi pi-book'></i>
             <p>{allTests.totalQuestions}</p>
         </div>
     };
 
     const durationBodyTemplate = (allTests) => {
-        return <div className='flex items-center gap-1 justify-center'>
+        return <div className='flex items-center gap-1'>
             <i className='pi pi-clock'></i>
             <p>{allTests.duration}m</p>
         </div>
@@ -86,8 +86,8 @@ const TestManagementCard = () => {
 
     const scheduleBodyTemplate = (allTests) => {
         return <div>
-            <p className='text-base font-medium'>{allTests.startDate}</p>
-            <p className='text-sm text-(--secondary-text-color) font-normal'>{allTests.endDate}</p>
+            <p className='text-sm text-(--secondary-text-color) font-medium'>{allTests.startDate}</p>
+            <p className='text-sm text-(--secondary-text-color) font-medium'>{allTests.endDate}</p>
         </div>
     };
 
