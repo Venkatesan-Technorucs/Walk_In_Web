@@ -6,6 +6,7 @@ import TestManagementCard from '../../components/TestManagementCard';
 import UsersManagementCard from '../../components/UsersManagementCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { Axios } from '../../services/Axios';
+import CustomCard from '../../components/common/Card.Jsx';
 
 
 const Dashboard = () => {
@@ -94,8 +95,8 @@ const Dashboard = () => {
                     <h1 className='text-xl md:text-2xl font-medium'>{state.user.role === 'SuperAdmin' ? 'Super' : ''} Admin Dashboard</h1>
                     <h2 className='text-base xs:text-lg text-(--secondary-text-color) '>Manage the entire aptitude test platform</h2>
                 </div>
-                <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-2'>
-                    {state.user.role === 'SuperAdmin' && <Card className='w-full xs:w-50 h-20 xs:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
+                <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-3'>
+                    {/* {state.user.role === 'SuperAdmin' && <Card className='w-full xs:w-50 h-20 xs:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
                         <p className='text-4xl'>{dashboardData.totalAdmins}</p>
                     </Card>}
                     <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={applicantsHeader}>
@@ -104,7 +105,17 @@ const Dashboard = () => {
                     <Card className='w-full xs:w-50 h-20 xs:h-40 sm:h-30 flex flex-col xs:justify-between p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={testHeader}>
                         <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
                         <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
-                    </Card>
+                    </Card> */}
+                    <CustomCard pt={pt.dashboardCard} header={adminHeader}>
+                        <p className='text-4xl'>{dashboardData.totalAdmins}</p>
+                    </CustomCard>
+                    <CustomCard pt={pt.dashboardCard} header={applicantsHeader}>
+                        <p className='text-4xl'>{dashboardData.totalApplicants}</p>
+                    </CustomCard>
+                    <CustomCard pt={pt.dashboardCard} header={testHeader}>
+                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
+                        <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
+                    </CustomCard>
                 </div>
                 {/* Users or Tests */}
                 <div className='w-full h-12 bg-white rounded-4xl flex items-center p-2 gap-1 hover:cursor-pointer'>
