@@ -1,5 +1,5 @@
 export const validateEmail = (email) => {
-  const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const re = /^[\w.+-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   if (email === "" || email.trim() === "") {
     return "Email is required";
   } else if (!re.test(email.toLowerCase())) {

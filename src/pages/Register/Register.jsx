@@ -104,7 +104,7 @@ const Register = () => {
 
         try {
             const res = await Axios.get(`/api/users/getAllSkills?skillName=${value}`);
-            setFilteredSkills(res.data.skills || []);
+            setFilteredSkills(res?.data?.data?.skills || []);
         } catch (err) {
             if (err.status === 404) {
                 setFilteredSkills([]);
@@ -174,10 +174,12 @@ const Register = () => {
         } else {
             try {
                 let response = await Axios.post('/api/auth/register', registerData);
+                debugger
                 if (response?.data.success) {
+                    localStorage.setItem('token', response?.data?.data?.token);
                     if (totalTests < 2) {
-                        let startTestResponse = await Axios.post('/api/tests/startAttempt', { testId: todayTestId });
-                        let registeredUser = { ...response?.data?.data, test: { ...startTestResponse.data } }
+                        let startTestResponse = await Axios.post('/api/tests/startAttempt', { testId: todayTestId }, { headers: { Authorization: `Bearer ${response?.data?.data?.token}` } });
+                        let registeredUser = { ...response?.data?.data, test: { ...startTestResponse.data.data } }
                         dispatch({ type: "TEST_STARTED", payload: registeredUser });
                         setIsBtnClicked(false);
                         navigate(`/take-test/${todayTestId}`)

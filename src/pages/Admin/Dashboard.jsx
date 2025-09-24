@@ -106,9 +106,9 @@ const Dashboard = () => {
                         <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
                         <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
                     </Card> */}
-                    <CustomCard pt={pt.dashboardCard} header={adminHeader}>
+                   {state.user.role === 'SuperAdmin' && <CustomCard pt={pt.dashboardCard} header={adminHeader}>
                         <p className='text-4xl'>{dashboardData.totalAdmins}</p>
-                    </CustomCard>
+                    </CustomCard>}
                     <CustomCard pt={pt.dashboardCard} header={applicantsHeader}>
                         <p className='text-4xl'>{dashboardData.totalApplicants}</p>
                     </CustomCard>

@@ -42,7 +42,7 @@ const Home = () => {
 
     let handleTakeTest = async (id) => {
         try {
-            let response = await Axios.post('/api/tests/startAttempt', { testId: id });
+            let response = await Axios.post('/api/tests/startAttempt', { testId: id }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             let user = { ...state.user, test: { ...response.data.data } };
             dispatch({ type: "TEST_STARTED", payload: user });
             navigate(`/take-test/${id}`)

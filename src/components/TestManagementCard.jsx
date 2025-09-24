@@ -115,7 +115,7 @@ const TestManagementCard = () => {
     let recentTests = allTests.slice(allTests.length - 3);
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='h-screen flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>Test Management</h1>
@@ -127,7 +127,10 @@ const TestManagementCard = () => {
             {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={recentTests} />}
             <Card className='rounded-xl' header={
                 <div className='flex justify-between items-center p-4'>
-                    <div className='text-2xl font-medium text-(--primary-text-color)'>Test {totalRecords}</div>
+                    <div>
+                        <div className='text-2xl font-medium text-(--primary-text-color)'>Test {totalRecords}</div>
+                        <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Tests in the system</div>
+                    </div>
                     <span className="p-input-icon-left w-1/2">
                         <InputIcon icon="pi pi-search"> </InputIcon>
                         <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Tests" />

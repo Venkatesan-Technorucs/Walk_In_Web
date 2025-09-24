@@ -31,17 +31,24 @@ const TakeTest = () => {
 
     useEffect(() => {
         setTest(JSON.parse(localStorage.getItem('test')));
-        if (!test.attempt && !test.sessionId) {
+        if (!test?.attempt && !test?.sessionId) {
             navigate('/register');
         }
         const fetchQuestion = async () => {
             try {
-                let response = await Axios.get(`/api/tests/getTest/${id}`);
-                setTitle(response.data.title);
-                setDuration(response.data.duration);
-                setQuestions(response.data.questions);
-                setTotalQuestions(response.data.totalQuestions)
-
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    navigate('/register');
+                    return;
+                }
+                let response = await Axios.get(`/api/tests/getTest/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+                debugger
+                if (response.data?.success) {
+                    setTitle(response.data?.data?.title);
+                    setDuration(response.data?.data?.duration);
+                    setQuestions(response.data?.data?.questions);
+                    setTotalQuestions(response.data?.data?.totalQuestions);
+                }
             } catch (error) {
                 console.log(error);
             } finally {
@@ -93,7 +100,7 @@ const TakeTest = () => {
             removeEventListener("beforeunload", handleBeforeUnload)
             removeEventListener("popstate", handlePopState);
         }
-    }, [test,navigate]);
+    }, []);
 
 
     let handlePrevious = () => {
