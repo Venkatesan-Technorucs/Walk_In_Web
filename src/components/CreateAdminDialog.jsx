@@ -6,7 +6,7 @@ import { Password } from 'primereact/password';
 import { validateEmail, validateName, validatePassword } from '../utils/Validation';
 import { Axios } from '../services/Axios';
 
-const CreateAdminDialog = ({visible,setVisible,show}) => {
+const CreateAdminDialog = ({ visible, setVisible, show }) => {
     let [newAdminData, setNewAdminData] = useState({
         firstName: '',
         lastName: '',
@@ -46,24 +46,34 @@ const CreateAdminDialog = ({visible,setVisible,show}) => {
         else {
             try {
                 console.log(newAdminData);
-                let response = await Axios.post('/api/auth/register', { ...newAdminData, role: 'Admin' });
-                show('success', 'Success', 'Admin created successfully');
-                setVisible(false)
-                setIsErrorView(false);
-                let newAdminData = { firstName: '', lastName: '', email: '', password: '' };
-                let newErrors = { firstName: null, lastName: null, email: null, password: null };
-                setNewAdminData(newAdminData);
-                setErrors(newErrors);
+                let response = await Axios.post('/api/users/createAdmin', { ...newAdminData, role: 'Admin' });
+                if (response.success) {
+                    show('success', 'Success', 'Admin created successfully');
+                    setVisible(false)
+                    setIsErrorView(false);
+                    let adminData = { firstName: '', lastName: '', email: '', password: '' };
+                    let errors = { firstName: null, lastName: null, email: null, password: null };
+                    setNewAdminData(adminData);
+                    setErrors(errors);
+                }
+                else {
+                    show('error', 'Error', response.data.message);
+                    setVisible(false)
+                    setIsErrorView(false);
+                    let adminData = { firstName: '', lastName: '', email: '', password: '' };
+                    let errors = { firstName: null, lastName: null, email: null, password: null };
+                    setNewAdminData(adminData);
+                    setErrors(errors);
+                }
             } catch (error) {
-                // debugger
                 console.log(error);
                 show('error', 'Error', error?.response?.data.message);
                 setVisible(false)
                 setIsErrorView(false);
-                let newAdminData = { firstName: '', lastName: '', email: '', password: '' };
-                let newErrors = { firstName: null, lastName: null, email: null, password: null };
-                setNewAdminData(newAdminData);
-                setErrors(newErrors);
+                let adminData = { firstName: '', lastName: '', email: '', password: '' };
+                let errors = { firstName: null, lastName: null, email: null, password: null };
+                setNewAdminData(adminData);
+                setErrors(errors);
             }
 
         }

@@ -57,3 +57,24 @@ export const validateSkills =(skills)=>{
   }
   else return null;
 }
+
+export const validateField = (label,field)=>{
+  if(!field || field.trim()===''){
+    return `${label} is required`;
+  }
+  else return null;
+}
+
+export const validateTestQuestion =(questionIds,questions)=>{
+  if(questionIds.length<0 || questions.length<0){
+    return `Choose previous test questions or create questions`
+  }
+  else return null;
+}
+
+export const validateOptions = (options)=>{
+  if(options.length<2){
+    return 'Atleast two options needed for a question';
+  }
+  else return null;
+}

@@ -3,9 +3,7 @@ import Header from '../../components/Header'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button';
 import TestManagementCard from '../../components/TestManagementCard';
-// import QuestionsManagementCard from '../../components/QuestionsManagementCard';
 import UsersManagementCard from '../../components/UsersManagementCard';
-// import ResultsManagementCard from '../../components/ResultsManagementCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { Axios } from '../../services/Axios';
 
@@ -13,37 +11,28 @@ import { Axios } from '../../services/Axios';
 const Dashboard = () => {
     let { state, dispatch } = useAuth();
     let [active, setActive] = useState('');
-    let [allUsers, setAllUsers] = useState([]);
-    let [allQuestions, setAllQuestions] = useState([]);
-    let [allTests, setAllTests] = useState([]);
     let [dashboardData, setDashboardData] = useState({
         totalAdmins: '',
         totalApplicants: '',
-        totalQuestions: '',
-        totalActiveTests: '',
         totalTests: '',
+        totalActiveTests: '',
     });
 
+    console.log(state);
     useEffect(() => {
         setActive('usersCard');
         let fetchData = async () => {
-            let response = await Axios.all([Axios.get('/api/users/getAllUsers'), Axios.get('/api/tests/getAllTests'), Axios.get('/api/questions/getAllQuestions')]);
-            let usersResponse = response[0].data;
-            let testsResponse = response[1].data.tests;
-            let questionsResponse = response[2].data;
-            setAllUsers(usersResponse);
-            setAllTests(testsResponse);
-            setAllQuestions(questionsResponse);
-            let admins = usersResponse.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Applicant');
-            let applicants = usersResponse.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Admin')
-            let activeTests = testsResponse.filter((test) => test.isActive);
-            setDashboardData({
-                totalAdmins: admins.length,
-                totalApplicants: applicants.length,
-                totalQuestions: questionsResponse.length,
-                totalActiveTests: activeTests.length,
-                totalTests: testsResponse.length
-            });
+            try {
+                let response = await Axios.get('/api/users/getUsersDashboardDetails');
+                setDashboardData({
+                    totalAdmins: response.data.data.totalAdmin,
+                    totalApplicants: response.data.data.totalApplicant,
+                    totalTests: response.data.data.totalTests,
+                    totalActiveTests: response.data.data.activeTests
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
         fetchData();
     }, [])
@@ -52,13 +41,12 @@ const Dashboard = () => {
         dispatch({ type: 'LOGOUT' });
     }
 
-    let users = allUsers.filter((user) => user.role !== 'SuperAdmin').sort((a, b) => (b.role === 'Admin') - (a.role === 'Admin'));
     const renderCard = () => {
         switch (active) {
             case 'usersCard':
-                return <UsersManagementCard users={users} />
+                return <UsersManagementCard />
             case 'testsCard':
-                return <TestManagementCard test={allTests} questions={allQuestions} />;
+                return <TestManagementCard />;
 
         }
     };
@@ -98,7 +86,7 @@ const Dashboard = () => {
     return (
         <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
             {/* Header */}
-            <Header name={state.user.user_name} role={state.user.role} onLogout={handleLogout} />
+            <Header name={state.user?.name} role={state.user?.role} onLogout={handleLogout} />
             {/* Body */}
             <div className='w-3/4 min-h-full flex flex-col self-center my-5 gap-2'>
                 {/* Dashboard contents */}
@@ -112,9 +100,6 @@ const Dashboard = () => {
                     </Card>}
                     <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={applicantsHeader}>
                         <p className='text-4xl'>{dashboardData.totalApplicants}</p>
-                    </Card>
-                    <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={questionsHeader}>
-                        <p className='text-4xl'>{dashboardData.totalQuestions}</p>
                     </Card>
                     <Card className='w-full xs:w-50 h-20 xs:h-40 sm:h-30 flex flex-col xs:justify-between p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={testHeader}>
                         <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>

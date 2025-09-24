@@ -14,7 +14,7 @@ function userReducer(state, action) {
     switch (action.type) {
         case "LOGIN_SUCCESS":
             localStorage.setItem("token", action.payload.token);
-            return { ...state, user: action.payload, tempUser: null, isRegistered: false, loading: false, error: null };
+            return { ...state, user: action.payload, loading: false, error: null };
         case "REGISTER_SUCCESSFULL":
             return { ...state, user: action.payload, loading: false, error: null };
         case "TEST_STARTED":

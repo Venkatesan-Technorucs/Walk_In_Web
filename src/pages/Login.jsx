@@ -60,6 +60,10 @@ const Login = () => {
                 dispatch({ type: "LOGIN_SUCCESS", payload: response.data.data });
                 navigate('/');
             }
+            else{
+                setIsLoading(false);
+                show('error', response.data.message);
+            }
         } catch (error) {
             setIsLoading(false);
             if (error.response.status === 404 || error.response.status === 401) {
