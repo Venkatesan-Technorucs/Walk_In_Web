@@ -9,7 +9,7 @@ import { Axios } from '../../services/Axios';
 import Header from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
-
+ 
 const TestDetails = () => {
   let {state, dispatch} = useAuth();
   let { id } = useParams();
@@ -17,7 +17,7 @@ const TestDetails = () => {
   let [testAttemptedUsers, setTestAttemptedUsers] = useState([])
   let [testQuestions, setTestQuestions] = useState([]);
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     let fetchTestDetails = async () => {
       try{
@@ -35,48 +35,16 @@ const TestDetails = () => {
     };
     fetchTestDetails();
   }, []);
-
-
-  function getTimeTaken(startTimeStr, endTimeStr) {
-    const parseTime = (str) => {
-      const normalized = str.replace(/(am|pm)/i, (match) => ` ${match.toUpperCase()}`);
-      return new Date(normalized);
-    };
-
-    const startTime = parseTime(startTimeStr);
-
-    if (!endTimeStr) return "-";
-
-    const endTime = parseTime(endTimeStr);
-
-    // if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-    //   return "-";
-    // }
-
-    const durationMs = endTime - startTime;
-    const hours = Math.floor(durationMs / (1000 * 60 * 60));
-    const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((durationMs % (1000 * 60)) / 1000);
-
-    const pad = (num) => String(num).padStart(2, "0");
-    if (hours > 0) {
-      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-
-    } else {
-      return `${pad(minutes)}:${pad(seconds)}`;
-    }
-  }
-
+ 
   const userBodyTemplate = (user) => {
     return <div>
       <p className='text-base font-medium'>{`${user.userDetails.firstName} ${user.userDetails.lastName}`}</p>
       <p className='text-sm text-(--secondary-text-color) font-normal'>{user.userDetails.email}</p>
     </div>
   };
-
-  console.log(testDetails);
+ 
   const statusBodyTemplate = (user) => {
-    return <Tag value={user.status} severity={user.status === 'Completed' ? 'danger' : 'success'}></Tag>
+    return <Tag value={user.status} severity={user.status ==='Completed' ? 'danger' : 'success'}></Tag>
   };
   const timeTakenBodyTemplate = (user) => {
     debugger;
@@ -90,23 +58,22 @@ const TestDetails = () => {
     let diffSeconds = diff.getUTCSeconds();
     return <div className='flex items-center gap-1'>
       <i className='pi pi-clock'></i>
-      <p>{getTimeTaken(user.startTime, user.endTime)}</p>
+      <p>{`${diffMinutes}m ${diffSeconds}s`}</p>
     </div>
-      : '-'
+  };
+ 
+  const isMultiBodyTemplate = (question)=>{
+    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success': "danger"}></Tag>
   }
-
-  const isMultiBodyTemplate = (question) => {
-    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
-  }
-
+ 
   const optionsBodyTemplate = (option) => {
     return <p>{option.title}</p>
   };
-
+ 
   const renderColumn = (row, index) => {
     return <Column field={`option${index + 1}`} header={`Option ${index + 1}`} body={optionsBodyTemplate(row)}></Column>
   }
-
+ 
   return (
     <>
       {!state.apiLoading ? <div>
@@ -149,4 +116,4 @@ const TestDetails = () => {
   )
 }
 
-export default TestDetails
+export default TestDetails;
