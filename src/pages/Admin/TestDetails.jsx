@@ -6,8 +6,11 @@ import { Tag } from 'primereact/tag';
 import { Column } from 'primereact/column';
 import { useParams } from 'react-router-dom'
 import { Axios } from '../../services/Axios';
+import Header from '../../components/Header';
+import { useAuth } from '../../contexts/AuthContext';
 
 const TestDetails = () => {
+  let {state} = useAuth();
   let { id } = useParams();
   let [testDetails, setTestDetais] = useState({});
   let [testAttemptedUsers, setTestAttemptedUsers] = useState([])
@@ -22,17 +25,16 @@ const TestDetails = () => {
     };
     fetchTestDetails();
   }, [id]);
-  console.log(testDetails);
 
   const userBodyTemplate = (user) => {
     return <div>
-      <p className='text-base font-medium'>{`${user.UserDetails.firstName} ${user.UserDetails.lastName}`}</p>
-      <p className='text-sm text-(--secondary-text-color) font-normal'>{user.UserDetails.email}</p>
+      <p className='text-base font-medium'>{`${user.userDetails.firstName} ${user.userDetails.lastName}`}</p>
+      <p className='text-sm text-(--secondary-text-color) font-normal'>{user.userDetails.email}</p>
     </div>
   };
 
   const statusBodyTemplate = (user) => {
-    return <Tag value={user.status} severity={user.status ==='Completed' ? 'danger' : 'success'}></Tag>;
+    return <Tag value={user.status} severity={user.status ==='Completed' ? 'danger' : 'success'}></Tag>
   };
   const timeTakenBodyTemplate = (user) => {
     let startTime = user.startTime;
@@ -49,19 +51,24 @@ const TestDetails = () => {
   };
 
   const isMultiBodyTemplate = (question)=>{
-    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success': "danger"}></Tag>;
+    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success': "danger"}></Tag>
   }
+
+  const optionsBodyTemplate = (question) => {
+    return <p>{question.options.title}</p>
+  };
 
   return (
     <div>
-      <div>
-        <div>
+      <Header name={state.user.name} role={state.user.role} />
+      <div className='flex flex-col p-5'>
+        <div className='flex justify-between'>
           <h1>{testDetails.title}</h1>
-          <Tag value={testDetails.isActive ? 'Active' : 'Expired'} severity={testDetails.isActive ? 'success' : 'danger'}></Tag>;
+          <Tag value={testDetails.isActive ? 'Active' : 'Expired'} severity={testDetails.isActive ? 'success' : 'danger'}></Tag>
         </div>
-        <div className='flex items-center gap-1 justify-center'>
+        <div className='flex items-center gap-1'>
           <i className='pi pi-clock'></i>
-          <p>{allTests.duration}m</p>
+          <p>{testDetails.duration}m</p>
         </div>
         <h2>{testDetails.department}</h2>
         <div className='flex gap-2'>
@@ -71,12 +78,12 @@ const TestDetails = () => {
       </div>
       <Card className='rounded-xl' title={`Question (${testQuestions.length})`}>
         <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
-          <Column field="question" header="Question"></Column>
+          <Column field="title" header="Question"></Column>
           <Column field="isMultiSelect" header="Multiple Choice"  body={isMultiBodyTemplate}></Column>
-          <Column field="option1" header="Option 1" ></Column>
-          <Column field="option2" header="Option 2" ></Column>
-          <Column field="option3" header="Option 3" ></Column>
-          <Column field="option4" header="Option 4" ></Column>
+          <Column field="option1" header="Option 1" body={optionsBodyTemplate} ></Column>
+          <Column field="option2" header="Option 2"body={optionsBodyTemplate} ></Column>
+          <Column field="option3" header="Option 3" body={optionsBodyTemplate}></Column>
+          <Column field="option4" header="Option 4" body={optionsBodyTemplate}></Column>
         </DataTable>
       </Card>
       <Card className='rounded-xl' title={`User (${testAttemptedUsers.length})`}>

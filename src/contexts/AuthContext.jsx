@@ -48,10 +48,10 @@ const AuthProvider = ({ children }) => {
             let token = localStorage.getItem('token');
             if (token) {
                 const decodedToken = jwtDecode(token);
+                console.log(decodedToken);
                 const now = Date.now();
                 if (now < decodedToken.exp * 1000) {
-                    let response = await Axios.get(`/api/users/getSingleUser/${decodedToken.userId}`);
-                    dispatch({ type: "LOGIN_SUCCESS", payload: { ...response.data, token: token } });
+                    dispatch({ type: "LOGIN_SUCCESS", payload: { ...decodedToken, token: token } });
                 } else {
                     dispatch({ type: "ERROR", error: 'Token expired' })
                 }

@@ -16,10 +16,9 @@ const Home = () => {
     let [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        console.log(state.user);
         let fetchTests = async () => {
             try {
-                const today = new Date('2025-08-15');
+                const today = new Date('2025-09-20');
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');
@@ -33,10 +32,7 @@ const Home = () => {
                 let response = await Axios.post('/api/tests/testbyDate', payload);
                 setTests(response.data.data.tests);
             } catch (error) {
-                if (error.response.status === 404 || error.response.status === 400) {
                     setMsg(error.response.data.message);
-                }
-                console.log(error);
             } finally {
                 setIsLoading(false);
             }
@@ -47,7 +43,7 @@ const Home = () => {
     let handleTakeTest = async (id) => {
         try {
             let response = await Axios.post('/api/tests/startAttempt', { testId: id });
-            let user = { ...state.user, test: { ...response.data } };
+            let user = { ...state.user, test: { ...response.data.data } };
             dispatch({ type: "TEST_STARTED", payload: user });
             navigate(`/take-test/${id}`)
         } catch (error) {
@@ -72,7 +68,7 @@ const Home = () => {
     return (
         <div className='w-full h-full flex flex-col'>
             {/* Header */}
-            <Header name={state.user.user_name} role={state.user.role} />
+            <Header name={state.user.name} role={state.user.role} />
             {/* Body */}
             {isLoading
                 ? <div className='w-full min-h-[calc(100vh-100px)] flex items-center justify-center self-center bg-[#E6ECF1]'>

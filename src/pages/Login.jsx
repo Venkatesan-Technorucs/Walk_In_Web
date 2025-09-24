@@ -55,22 +55,18 @@ const Login = () => {
                 password: password
             }
             let response = await Axios.post('/api/auth/login', payload);
-            if (response.data.data.token) {
+            if (response.data.success) {
                 setIsLoading(false)
                 dispatch({ type: "LOGIN_SUCCESS", payload: response.data.data });
                 navigate('/');
             }
-            else{
+            else {
                 setIsLoading(false);
                 show('error', response.data.message);
             }
         } catch (error) {
             setIsLoading(false);
-            if (error.response.status === 404 || error.response.status === 401) {
-                show('error', error.response.data.message);
-            } else {
-                show('error', error.message);
-            }
+            show('error', error.response.data.message);
         } finally {
             setIsLoading(false);
         }

@@ -43,7 +43,7 @@ const Register = () => {
     let [todayTestId, setTodayTestId] = useState(0);
     let [totalTests, setTotalTests] = useState(0);
     let [isLoading, setIsLoading] = useState(true);
-    let [isBtnClicked,setIsBtnClicked] = useState(false);
+    let [isBtnClicked, setIsBtnClicked] = useState(false);
     let [msg, setMsg] = useState('');
     const structuredCities = transformData(cities);
 
@@ -53,7 +53,7 @@ const Register = () => {
     useEffect(() => {
         let fetchTests = async () => {
             try {
-                const today = new Date('2025-08-16');
+                const today = new Date('2025-08-15');
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');
@@ -65,11 +65,15 @@ const Register = () => {
                     tests_page: false
                 }
                 let response = await Axios.post('/api/tests/testbyDate', payload);
-                setTodayTestPresent(response.data.data.tests);
-                if (response.data.data.tests) {
-                    setTotalTests(response.data.data.no_of_tests);
-                    if (response.data.data.no_of_tests < 2) {
-                        setTodayTestId(response.data.data.testId);
+                if (response.data.success) {
+                    setTodayTestPresent(response.data.data.tests);
+                    if (response.data.data.tests) {
+                        setTotalTests(response.data.data.no_of_tests);
+                        if (response.data.data.no_of_tests < 2) {
+                            setTodayTestId(response.data.data.testId);
+                        }
+                    } else {
+                        setMsg(response.data.message);
                     }
                 } else {
                     setMsg(response.data.message);
@@ -136,10 +140,6 @@ const Register = () => {
         setRegisterData({ ...registerData, skills: updatedSkills });
     };
 
-
-    console.log(registerData.skills);
-
-
     let handleChange = (fieldName, value) => {
         setRegisterData({ ...registerData, [fieldName]: value });
         switch (fieldName) {
@@ -174,16 +174,21 @@ const Register = () => {
         } else {
             try {
                 let response = await Axios.post('/api/auth/register', registerData);
-                if (totalTests < 2) {
-                    let startTestResponse = await Axios.post('/api/tests/startAttempt', { testId: todayTestId });
-                    let registeredUser = { ...response.data, test: { ...startTestResponse.data } }
-                    dispatch({ type: "TEST_STARTED", payload: registeredUser });
-                    setIsBtnClicked(false);
-                    navigate(`/take-test/${todayTestId}`)
+                if (response?.data.success) {
+                    if (totalTests < 2) {
+                        let startTestResponse = await Axios.post('/api/tests/startAttempt', { testId: todayTestId });
+                        let registeredUser = { ...response?.data?.data, test: { ...startTestResponse.data } }
+                        dispatch({ type: "TEST_STARTED", payload: registeredUser });
+                        setIsBtnClicked(false);
+                        navigate(`/take-test/${todayTestId}`)
+                    } else {
+                        dispatch({ type: "REGISTER_SUCCESSFULL", payload: response.data.data });
+                        setIsBtnClicked(false);
+                        navigate('/home');
+                    }
                 } else {
-                    dispatch({ type: "REGISTER_SUCCESSFULL", payload: response.data });
                     setIsBtnClicked(false);
-                    navigate('/home');
+                    show('warn', response?.data?.message)
                 }
             } catch (error) {
                 setIsBtnClicked(false);
@@ -279,7 +284,7 @@ const Register = () => {
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}
                         </div>
                         <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                        <Button label='Register' loading={isBtnClicked} onClick={handleRegister} className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' pt={{loadingIcon:"text-white",label:"text-white"}} />
+                        <Button label='Register' loading={isBtnClicked} onClick={handleRegister} className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' pt={{ loadingIcon: "text-white", label: "text-white" }} />
                     </form>
                 </Card>
             </div>

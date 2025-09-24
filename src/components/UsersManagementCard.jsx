@@ -8,7 +8,6 @@ import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import { MultiSelect } from 'primereact/multiselect';
 import { useAuth } from '../contexts/AuthContext';
 import { Toast } from 'primereact/toast';
 import { Axios } from '../services/Axios';
@@ -117,7 +116,6 @@ const UsersManagementCard = ({ }) => {
     };
 
 
-
     const roleBodyTemplate = (users) => {
         return <div className='flex items-center gap-1 justify-center'>
             <i className={getIcon(users)}></i>
@@ -138,9 +136,6 @@ const UsersManagementCard = ({ }) => {
             </div>
         )
     };
-
-
-console.log(role);
 
     return (
         <div className='flex flex-col gap-2'>

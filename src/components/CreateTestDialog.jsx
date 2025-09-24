@@ -199,7 +199,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
 
 
     return (
-        <Dialog header="Create Test" visible={testVisible} style={{ width: '90vw', height: '90vh' }} pt={{ closeButton: 'hidden' }} >
+        <Dialog header="Create Test" visible={testVisible} style={{ width: '50vw', height: '80vh' }} pt={{ closeButton: 'hidden' }} >
             <form className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <div className='flex'>
