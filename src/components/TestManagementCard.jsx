@@ -21,6 +21,7 @@ const TestManagementCard = () => {
     let [page, setPage] = useState(0);
     let [loading, setLoading] = useState(false);
     let [filterText, setFilterText] = useState('');
+    let [recentTests, setRecentTests] = useState([]);
     const toast = useRef(null);
     const [testVisible, setTestVisible] = useState(false);
 
@@ -85,8 +86,8 @@ const TestManagementCard = () => {
     };
 
     const scheduleBodyTemplate = (allTests) => {
-        return <div>
-            <p className='text-sm text-(--secondary-text-color) font-medium'>{allTests.startDate}</p>
+        return <div className='flex items-center gap-1'>
+            <p className='text-sm text-(--secondary-text-color) font-medium'>{allTests.startDate}</p> -
             <p className='text-sm text-(--secondary-text-color) font-medium'>{allTests.endDate}</p>
         </div>
     };
@@ -113,7 +114,7 @@ const TestManagementCard = () => {
     };
 
     return (
-        <div className='h-screen flex flex-col gap-2'>
+        <div className='min-h-screen h-full flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>Test Management</h1>
@@ -126,7 +127,7 @@ const TestManagementCard = () => {
             <Card className='rounded-xl' header={
                 <div className='flex justify-between items-center p-4'>
                     <div>
-                        <div className='text-2xl font-medium text-(--primary-text-color)'>Test {totalRecords}</div>
+                        <div className='text-2xl font-medium text-(--primary-text-color)'>Tests - ({totalRecords})</div>
                         <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Tests in the system</div>
                     </div>
                     <span className="p-input-icon-left w-1/2">
