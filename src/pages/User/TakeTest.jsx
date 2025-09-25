@@ -39,7 +39,6 @@ const TakeTest = () => {
             try {
                 const token = localStorage.getItem('token');
                 let response = await Axios.get(`/api/tests/getTest/${id}`, { headers: { Authorization: `Bearer ${token}` } });
-                debugger
                 if (response.data?.success) {
                     setTitle(response.data?.data?.title);
                     setDuration(response.data?.data?.duration);
@@ -204,7 +203,7 @@ const TakeTest = () => {
     return (
         <div className='w-full h-full flex flex-col'>
             {/* Header */}
-            <Header name={state.user.user_name} role={state.user.role} />
+            <Header name={state.user.name} role={state.user.role} />
             {/* Body */}
             {isLoading
                 ? <div className='w-full min-h-[calc(100vh-80px)] flex items-center justify-center self-center bg-[#E6ECF1]'>

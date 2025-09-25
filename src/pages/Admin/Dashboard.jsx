@@ -38,10 +38,6 @@ const Dashboard = () => {
         fetchData();
     }, [])
 
-    function handleLogout() {
-        dispatch({ type: 'LOGOUT' });
-    }
-
     const renderCard = () => {
         switch (active) {
             case 'usersCard':
@@ -87,7 +83,7 @@ const Dashboard = () => {
     return (
         <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
             {/* Header */}
-            <Header name={state.user?.name} role={state.user?.role} onLogout={handleLogout} />
+            <Header name={state.user?.name} role={state.user?.role} />
             {/* Body */}
             <div className='w-3/4 min-h-full flex flex-col self-center my-5 gap-2'>
                 {/* Dashboard contents */}

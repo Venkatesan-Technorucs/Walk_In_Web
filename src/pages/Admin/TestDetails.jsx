@@ -47,7 +47,6 @@ const TestDetails = () => {
     return <Tag value={user.status} severity={user.status ==='Completed' ? 'danger' : 'success'}></Tag>
   };
   const timeTakenBodyTemplate = (user) => {
-    debugger;
     let startTime = user?.startTime?.split(' ')[1];
     let endTime = user?.endTime?.split(' ')[1];
     if(!startTime || !endTime) return <p>-</p>
@@ -77,7 +76,7 @@ const TestDetails = () => {
   return (
     <>
       {!state.apiLoading ? <div>
-        <Header name={state.user.name} role={state.user.role} />
+        <Header name={state.user.name} role={state.user.role}/>
         <div className='flex flex-col p-5'>
           <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
             <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
