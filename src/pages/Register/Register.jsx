@@ -53,7 +53,7 @@ const Register = () => {
     useEffect(() => {
         let fetchTests = async () => {
             try {
-                const today = new Date('2025-08-15');
+                const today = new Date('2025-09-26');
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');
@@ -206,7 +206,7 @@ const Register = () => {
 
     const dialogFooterContent = (
         <div>
-            <Button label="Ok" icon="pi pi-check" onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+            <Button label="Ok" icon="pi pi-check" onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
         </div>
     );
 
@@ -285,7 +285,7 @@ const Register = () => {
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}
                         </div>
                         <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                        <Button label='Register' loading={isBtnClicked} onClick={handleRegister} className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' pt={{ loadingIcon: "text-white", label: "text-white" }} />
+                        <Button label='Register' loading={isBtnClicked} onClick={handleRegister} className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' pt={{ loadingIcon: "text-white", label: "text-white" }} />
                     </form>
                 </Card>
             </div>

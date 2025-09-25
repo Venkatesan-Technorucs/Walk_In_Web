@@ -83,7 +83,7 @@ const Home = () => {
                                         <i className='pi pi-clock'></i>
                                         {test.duration}m
                                     </div>
-                                    <Button label="Take Test" icon="pi pi-book" onClick={()=>{handleTakeTest(test.id)}} className='w-28 bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%  p-2' />
+                                    <Button label="Take Test" icon="pi pi-book" onClick={()=>{handleTakeTest(test.id)}} className='w-30 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)  p-2' />
                                 </Card>
                             );
                         })}

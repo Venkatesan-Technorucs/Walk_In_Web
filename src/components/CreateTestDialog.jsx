@@ -222,7 +222,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                     {
                         'bg-(--header-bg) border-(--primary-color)': !context.checked,
 
-                        'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% border-(--primary-color-light)': context.checked
+                        'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) border-(--primary-color)': context.checked
                     }
                 )
             }),
@@ -362,7 +362,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                             </div>
                             <div className='flex items-center justify-end gap-2 '>
                                 <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color) p-1 w-18 h-8" pt={{ icon: "text-sm" }} />
-                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% p-2 h-8 w-18' pt={{ icon: "text-sm" }} />
+                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) p-2 h-8 w-18' pt={{ icon: "text-sm" }} />
                             </div>
                         </div>
                     </Panel>
@@ -375,7 +375,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                 {(errors.questionsFound && isErrorView) && <small className='text-xs text-red-500'>{errors.questionsFound}</small>}
                 <div className='flex items-center justify-end gap-2 '>
                     <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={handleCancel} className="text-(--primary-color)" />
-                    <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+                    <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
                 </div>
             </form>
         </Dialog>

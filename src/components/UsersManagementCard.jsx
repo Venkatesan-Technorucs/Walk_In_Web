@@ -146,7 +146,7 @@ const UsersManagementCard = ({ }) => {
                     <h1 className='font-medium text-xl'>User Management</h1>
                     <h2 className='text-(--secondary-text-color)'>Create and manage admin and applicant accounts</h2>
                 </div>
-                {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='w-42 h-9 bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' onClick={() => { setVisible(true) }} />}
+                {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(true) }} />}
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
                 <CreateAdminDialog visible={visible} setVisible={setVisible} show={show} />
             </div>
