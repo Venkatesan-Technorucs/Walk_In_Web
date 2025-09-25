@@ -140,7 +140,7 @@ const UsersManagementCard = ({ }) => {
     };
 
     return (
-        <div className='h-screen flex flex-col gap-2'>
+        <div className='min-h-screen h-full flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>User Management</h1>
@@ -174,7 +174,7 @@ const UsersManagementCard = ({ }) => {
                 header={state.user.role === 'Admin' ?
                     <div className='flex justify-between items-center p-4'>
                         <div>
-                            <div className='text-2xl font-medium text-(--primary-text-color)'>Users {totalRecords}</div>
+                            <div className='text-2xl font-medium text-(--primary-text-color)'>Users - ({totalRecords})</div>
                             <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Users in the system</div>
                         </div>
                         <span className="p-input-icon-left w-1/2">
@@ -182,7 +182,7 @@ const UsersManagementCard = ({ }) => {
                             <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Users" />
                         </span>
                     </div>: ''}>
-                <DataTable value={users} lazy paginator rows={rows} first={page*rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0' }}>
+                <DataTable value={users} lazy paginator rows={rows} first={page*rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
                     <Column className='w-1/3 p-0' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>
