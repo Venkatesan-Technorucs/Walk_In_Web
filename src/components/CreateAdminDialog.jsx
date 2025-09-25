@@ -47,7 +47,7 @@ const CreateAdminDialog = ({ visible, setVisible, show }) => {
             try {
                 console.log(newAdminData);
                 let response = await Axios.post('/api/users/createAdmin', { ...newAdminData, role: 'Admin' });
-                if (response.success) {
+                if (response?.data?.success) {
                     show('success', 'Success', 'Admin created successfully');
                     setVisible(false)
                     setIsErrorView(false);
@@ -57,7 +57,7 @@ const CreateAdminDialog = ({ visible, setVisible, show }) => {
                     setErrors(errors);
                 }
                 else {
-                    show('error', 'Error', response.data.message);
+                    show('error', 'Error', response?.data?.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let adminData = { firstName: '', lastName: '', email: '', password: '' };

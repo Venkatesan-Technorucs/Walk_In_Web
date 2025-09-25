@@ -179,7 +179,7 @@ const UsersManagementCard = ({ }) => {
                         </div>
                         <span className="p-input-icon-left w-1/2">
                             <InputIcon icon="pi pi-search"> </InputIcon>
-                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Users" />
+                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
                         </span>
                     </div>: ''}>
                 <DataTable value={users} lazy paginator rows={rows} first={page*rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
