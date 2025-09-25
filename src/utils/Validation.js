@@ -85,3 +85,9 @@ export const validateOptions = (options) => {
 
   return null;
 };
+
+
+export const validateStartDate = (date)=>{
+  let today = new Date();
+  // if(date)
+}

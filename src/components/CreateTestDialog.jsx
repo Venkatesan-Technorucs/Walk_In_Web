@@ -48,6 +48,19 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     })
     let [isQuestionErrorView, setIsQuestionErrorView] = useState(false);
 
+    let today = new Date();
+    let month = today.getMonth();
+    let year = today.getFullYear();
+    let nextMonth = month === 11 ? 0 : month + 1;
+    let secondMonth = month === 11 ? 0 : month + 2;
+    let nextYear = nextMonth === 0 ? year + 1 : year;
+    let startMaxDate = new Date();
+    startMaxDate.setMonth(nextMonth);
+    startMaxDate.setFullYear(nextYear);
+    let endMaxDate = new Date();
+    endMaxDate.setMonth(secondMonth);
+    endMaxDate.setFullYear(nextYear);
+
     const formatDate = (date) => {
         const d = new Date(date);
         const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -88,10 +101,14 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         else {
             try {
                 console.log(testData);
-                let newStartDate= formatDate(startDate);
-                let newEndDate= formatDate(endDate);
+                let newStartDate = formatDate(startDate);
+                let newEndDate = formatDate(endDate);
                 let newNumberOfQuestions = testData.questions.length + testData.assignedQuestionIds.length;
-                let response = await Axios.post('/api/tests/createtest', { ...testData, numberOfQuestions: newNumberOfQuestions,startDate: newStartDate,endDate:newEndDate });
+                let payload = {
+                    ...testData, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
+                }
+                console.log(payload);
+                let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
                     showTest('success', 'Success', response.data.message);
                     setTestVisible(false)
@@ -266,7 +283,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                             <label htmlFor="department" className={`${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}>Start Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="startDate" placeholder='Select start date' value={startDate} onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
+                        <Calendar id="startDate" placeholder='Select start date' value={startDate} minDate={today}  onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
                         {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                     </div>
                     <div className='w-1/2 flex flex-col gap-1'>
@@ -274,7 +291,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                             <label htmlFor="duration" className={`${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}>End Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="endDate" placeholder='Select end date' value={endDate} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', container: "", select: "", input: "", buttonbar: "" }} />
+                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', container: "", select: "", input: "", buttonbar: "" }} />
                         {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                     </div>
                 </div>
