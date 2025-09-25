@@ -1,21 +1,25 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card'
 import { Checkbox } from 'primereact/checkbox';
 import { Panel } from 'primereact/panel';
+import { Divider } from 'primereact/divider';
 import { Calendar } from 'primereact/calendar';
 import { validateDate, validateField, validateOptions, validateTestQuestion } from '../utils/Validation';
 import { Axios } from '../services/Axios';
 import { classNames } from 'primereact/utils';
+import QuestionCard from './QuestionCard';
+import { pt } from '../utils/pt';
 
-const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchTests }) => {
+const CreateTestDialog = ({ testVisible, setTestVisible, showTest, fetchTests }) => {
     const [collapsed, setCollapsed] = useState(true);
     const [hasPanelOpened, setHasPanelOpened] = useState(false);
     const toast = useRef(null);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    let [tests, setTests] = useState([]);
     let [testData, setTestData] = useState({
         title: '',
         duration: '',
@@ -49,17 +53,19 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
     let [isQuestionErrorView, setIsQuestionErrorView] = useState(false);
 
     let today = new Date();
-    let month = today.getMonth();
-    let year = today.getFullYear();
-    let nextMonth = month === 11 ? 0 : month + 1;
-    let secondMonth = month === 11 ? 0 : month + 2;
-    let nextYear = nextMonth === 0 ? year + 1 : year;
-    let startMaxDate = new Date();
-    startMaxDate.setMonth(nextMonth);
-    startMaxDate.setFullYear(nextYear);
-    let endMaxDate = new Date();
-    endMaxDate.setMonth(secondMonth);
-    endMaxDate.setFullYear(nextYear);
+
+    useEffect(() => {
+        let fetchTests = async () => {
+            let response = await Axios.get('/api/tests/getAllTests');
+            if (response?.data?.success) {
+                setTests(response.data.data.tests);
+                console.log(response.data)
+            } else {
+                console.log(response.data.message);
+            }
+        }
+        fetchTests();
+    }, [])
 
     const formatDate = (date) => {
         const d = new Date(date);
@@ -90,7 +96,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
             department: validateField('Department', testData.department),
             duration: validateField('Duration', testData.duration),
             startDate: validateDate('Start Date', startDate),
-            endDate: validateDate('End Date',endDate),
+            endDate: validateDate('End Date', endDate),
             questionsFound: validateTestQuestion(testData.assignedQuestionIds, testData.questions),
         };
         setErrors(newErrors);
@@ -111,7 +117,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
                     showTest('success', 'Success', response.data.message);
-                    fetchTests(0,5,'');
+                    fetchTests(0, 5, '');
                     setTestVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
@@ -231,22 +237,16 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
         }
     };
 
-
-    const pt = {
-        checkbox: {
-            box: ({ context }) => ({
-                className: classNames(
-                    'flex items-center justify-center border-2 rounded-sm transition-colors duration-200',
-                    {
-                        'bg-(--header-bg) border-(--primary-color)': !context.checked,
-
-                        'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) border-(--primary-color)': context.checked
-                    }
-                )
-            }),
-            icon: 'w-4 h-4 text-white transition-all duration-200'
+    let AddQuestionCard = ()=>{
+        let question = {
+            qtitle:"",
+            isMultiSelect:false,
+            options:[{title:"",isCorrect:""},{title:"",isCorrect:""},{title:"",isCorrect:""},{title:"",isCorrect:""}]
         }
+        setTestData({...testData,questions:[...testData.questions,question]})
     }
+
+    let handleQuestionDataChange = (e)=>{}
 
     return (
         <Dialog header="Create Test" visible={testVisible} style={{ width: '50vw', height: '80vh' }} pt={{ closeButton: 'hidden', root: '', content: 'bg-(--header-bg)', header: "bg-(--header-bg)", headerTitle: "text-2xl font-bold", }} >
@@ -284,7 +284,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
                             <label htmlFor="department" >Start Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="startDate" placeholder='Select start date' value={startDate} minDate={today}  onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
+                        <Calendar id="startDate" placeholder='Select start date' value={startDate} minDate={today} onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
                         {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                     </div>
                     <div className='w-1/2 flex flex-col gap-1'>
@@ -292,31 +292,30 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
                             <label htmlFor="duration" >End Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '',title:"hover:text-green-400",day:"" ,header:"",container: "", select: "bg-green-200", input: "", buttonbar: "" }} />
+                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", day: "", header: "", container: "", select: "bg-green-200", input: "", buttonbar: "" }} />
                         {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                     </div>
                 </div>
                 <Card title='Recent Tests' className='overflow-auto rounded-2xl' pt={{ title: 'text-lg', body: "p-4", content: "p-0" }}>
                     <ul>
                         {tests.map((test, index) => {
-                            const isChecked = Array.isArray(testData.assignedQuestionIds) && test.assignedQuestionIds?.every(id =>
-                                testData.assignedQuestionIds?.includes(id)
+                            const isChecked = Array.isArray(testData.questions) && test.questions?.every(id =>
+                                testData.questions?.includes(id)
                             );
                             return (
                                 <div className='flex items-center gap-2 mb-3' key={test.id}>
                                     <Checkbox inputId={index} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
-                                        let updatedIds;
+                                        let updatedQuestions;
                                         if (e.checked) {
-                                            updatedIds = [...testData.assignedQuestionIds, ...test.assignedQuestionIds.filter(id => !testData.assignedQuestionIds.includes(id))];
+                                            updatedQuestions = [...testData.questions, ...test.questions];
                                         }
                                         else {
-                                            updatedIds = testData.assignedQuestionIds.filter(
-                                                id => !test.assignedQuestionIds.includes(id)
-                                            );
+                                            const testQuestionIds = test.questions.map(q => q.id);
+                                            updatedQuestions = testData.questions.filter(q => !testQuestionIds.includes(q.id));
                                         }
                                         setTestData({
                                             ...testData,
-                                            assignedQuestionIds: updatedIds
+                                            questions: updatedQuestions
                                         });
                                     }} />
                                     <label htmlFor={test.id} className='capitalize'>{test.title}</label>
@@ -325,70 +324,18 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchT
                         })}
                     </ul>
                 </Card>
-                <Card title='Questions' className='rounded-2xl' pt={{ title: 'text-lg' }}>
-                    <Panel header='Add Question' toggleable onToggle={handleToggle} collapseIcon collapsed={collapsed} pt={{ title: "text-base font-bold", header: "bg-(--header-bg)", root: 'mb-2' }} >
-                        <div className='flex flex-col gap-4'>
-                            <div className='flex flex-col gap-1'>
-                                <div className='flex'>
-                                    <label htmlFor="qtitle" className={`${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}>Question</label>
-                                    <i className={`pi pi-asterisk text-[8px] mt-1 ${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}></i>
-                                </div>
-                                <InputText id='qtitle' type='text' placeholder='Enter question' value={questionData.qtitle} onChange={(e) => { handleQuestionChange('qtitle', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(questionErrors.qtitle && isQuestionErrorView)} />
-                                {(questionErrors.qtitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qtitle}</small>}
-                            </div>
-                            <div className='flex gap-2 items-center'>
-                                <Checkbox inputId='isMultiSelect' name='isMultiSelect' pt={pt.checkbox} checked={questionData.isMultiSelect} onChange={(e) => { if (e.checked) { setQuestionData({ ...questionData, isMultiSelect: true }) } else { setQuestionData({ ...questionData, isMultiSelect: false }) } }} />
-                                <label htmlFor="isMultiSelect">Multiple Choice</label>
-                            </div>
-                            <div className='flex justify-between items-start'>
-                                <h1 className='font-bold text-base'>Options</h1>
-                                <Button type='button' label='Add' outlined onClick={handleAddOption} className='p-1 text-(--primary-color)' />
-                            </div>
-                            <div className='flex flex-col gap-2'>
-                                {questionData.options.map((option, index) => {
-                                    const isSingleMode = !questionData.isMultiSelect;
-                                    const anyCorrectSelected = questionData.options.some(opt => opt.isCorrect);
-                                    return (
-                                        <div>
-                                            <div className='flex items-center justify-between'>
-                                                <Checkbox className='' pt={pt.checkbox} inputId={index} checked={option.isCorrect} disabled={isSingleMode && anyCorrectSelected && !option.isCorrect} onChange={(e) => {
-                                                    let newOptions = [...questionData.options];
-                                                    if (isSingleMode) {
-                                                        newOptions = newOptions.map((opt, i) => ({
-                                                            ...opt,
-                                                            isCorrect: i === index ? e.checked : false,
-                                                        }));
-                                                    } else {
-                                                        newOptions[index].isCorrect = e.checked;
-                                                    }
-                                                    setQuestionData({ ...questionData, options: newOptions });
-                                                }
-                                                } />
-                                                <InputText id={`option-${index}`} className='h-6 w-[80%] bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${index + 1}`} value={option.title} pt={{ root: 'py-1' }} onChange={(e) => {
-                                                    let newOptions = [...questionData.options];
-                                                    newOptions[index].title = e.target.value;
-                                                    setQuestionData({ ...questionData, options: newOptions });
-                                                }} />
-                                                <Button type='button' outlined icon='pi pi-trash text-xs' className='p-0 w-6 text-(--primary-color)' onClick={() => { handleRemoveOption(index) }} />
-                                                <div className='flex items-center gap-2'>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                                <p>Select the correct answers</p>
-                            </div>
-                            <div className='flex items-center justify-end gap-2 '>
-                                <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color) p-1 w-18 h-8" pt={{ icon: "text-sm" }} />
-                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) p-2 h-8 w-18' pt={{ icon: "text-sm" }} />
-                            </div>
+                <Card className='rounded-2xl' pt={{header:"p-4",body:"pt-0",content:"pt-0" }} header={() => {
+                    return <div className='flex justify-between items-center'>
+                        <h1 className='text-lg font-bold'>Questions</h1>
+                        <i className='pi pi-plus hover:cursor-pointer' onClick={AddQuestionCard}></i>
+                    </div>
+                }}>
+                    {testData.questions?.map((question,index) => {
+                        return <div key={question.id}>
+                            <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} questionData={questionData} setQuestionData={setQuestionData} />
+                            <Divider />
                         </div>
-                    </Panel>
-                    <ol type='1'>
-                        {testData.questions.map((question, index) => {
-                            return <li key={index}>{question.qtitle}</li>
-                        })}
-                    </ol>
+                    })}
                 </Card>
                 {(errors.questionsFound && isErrorView) && <small className='text-xs text-red-500'>{errors.questionsFound}</small>}
                 <div className='flex items-center justify-end gap-2 '>

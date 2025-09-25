@@ -9,47 +9,47 @@ import { Axios } from '../../services/Axios';
 import Header from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
- 
+
 const TestDetails = () => {
-  let {state, dispatch} = useAuth();
+  let { state, dispatch } = useAuth();
   let { id } = useParams();
   let [testDetails, setTestDetais] = useState({});
   let [testAttemptedUsers, setTestAttemptedUsers] = useState([])
   let [testQuestions, setTestQuestions] = useState([]);
   const navigate = useNavigate();
- 
+
   useEffect(() => {
     let fetchTestDetails = async () => {
-      try{
-        dispatch({type: 'API_LOADING', payload: true});
+      try {
+        dispatch({ type: 'API_LOADING', payload: true });
         let response = await Axios.get(`/api/tests/getTestDetails/${id}`);
         setTestDetais(response.data.data);
         setTestAttemptedUsers(response.data.data.testAttemptDetails);
         setTestQuestions(response.data.data.questions);
-        dispatch({type: 'API_LOADING', payload: false});
-      }catch(err){
+        dispatch({ type: 'API_LOADING', payload: false });
+      } catch (err) {
         console.log(err);
-        dispatch({type: 'API_LOADING', payload: false});
-        dispatch({type: 'ERROR', payload: err.message});
+        dispatch({ type: 'API_LOADING', payload: false });
+        dispatch({ type: 'ERROR', payload: err.message });
       }
     };
     fetchTestDetails();
   }, []);
- 
+
   const userBodyTemplate = (user) => {
     return <div>
       <p className='text-base font-medium'>{`${user.userDetails.firstName} ${user.userDetails.lastName}`}</p>
       <p className='text-sm text-(--secondary-text-color) font-normal'>{user.userDetails.email}</p>
     </div>
   };
- 
+
   const statusBodyTemplate = (user) => {
-    return <Tag value={user.status} severity={user.status ==='Completed' ? 'danger' : 'success'}></Tag>
+    return <Tag value={user.status} severity={user.status === 'Completed' ? 'danger' : 'success'}></Tag>
   };
   const timeTakenBodyTemplate = (user) => {
     let startTime = user?.startTime?.split(' ')[1];
     let endTime = user?.endTime?.split(' ')[1];
-    if(!startTime || !endTime) return <p>-</p>
+    if (!startTime || !endTime) return <p>-</p>
     let start = new Date(`1970-01-01T${startTime}Z`);
     let end = new Date(`1970-01-01T${endTime}Z`);
     let diff = new Date(end - start);
@@ -60,15 +60,15 @@ const TestDetails = () => {
       <p>{`${diffMinutes}m ${diffSeconds}s`}</p>
     </div>
   };
- 
-  const isMultiBodyTemplate = (question)=>{
-    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success': "danger"}></Tag>
+
+  const isMultiBodyTemplate = (question) => {
+    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
   }
  
   return (
     <>
       {!state.apiLoading ? <div>
-        <Header name={state.user.name} role={state.user.role}/>
+        <Header name={state.user.name} role={state.user.role} />
         <div className='flex flex-col p-5'>
           <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
             <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
@@ -83,8 +83,8 @@ const TestDetails = () => {
             <p>{testDetails.duration}m</p>
           </div>
           <h2 className='font-medium test-base'>Department: {testDetails.department}</h2>
-            <h2 className='font-medium text-base'>Start Date: {testDetails.startDate}</h2>
-            <h2 className='font-medium text-base'>End Date: {testDetails.endDate}</h2>
+          <h2 className='font-medium text-base'>Start Date: {testDetails.startDate}</h2>
+          <h2 className='font-medium text-base'>End Date: {testDetails.endDate}</h2>
         </div>
         <Card className='rounded-xl' title={`Question (${testQuestions.length})`}>
           <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
