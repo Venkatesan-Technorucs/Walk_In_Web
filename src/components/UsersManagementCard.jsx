@@ -60,7 +60,6 @@ const UsersManagementCard = ({ }) => {
     }, [])
 
     const onPageChange = (event) => {
-        debugger;
         setPage(event.page);
         setRows(event.rows);
         fetchUsers(event.page, event.rows, filterText, role?.name);
@@ -84,7 +83,6 @@ const UsersManagementCard = ({ }) => {
     const userBodyTemplate = (users) => {
         return <div>
             <p className='text-base text-(--secondary-text-color) font-medium'>{users.name}</p>
-            {/* <p className='text-sm text-(--secondary-text-color) font-normal'>{users.email}</p> */}
         </div>
     };
 

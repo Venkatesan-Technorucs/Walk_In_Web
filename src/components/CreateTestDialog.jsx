@@ -14,6 +14,8 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     const [collapsed, setCollapsed] = useState(true);
     const [hasPanelOpened, setHasPanelOpened] = useState(false);
     const toast = useRef(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     let [testData, setTestData] = useState({
         title: '',
         duration: '',
@@ -35,16 +37,24 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let [isErrorView, setIsErrorView] = useState(false);
 
     let [questionData, setQuestionData] = useState({
-        qTitle: '',
-        isMultiSelect: false,
+        qtitle: '',
+        isMultiSelect: '',
         options: [{ title: '', isCorrect: false }, { title: '', isCorrect: false }, { title: '', isCorrect: false }, { title: '', isCorrect: false }],
     });
     let [optionsCount, setOptionsCount] = useState(4);
     let [questionErrors, setQuestionErrors] = useState({
-        qTitle: '',
+        qtitle: '',
         options: '',
     })
     let [isQuestionErrorView, setIsQuestionErrorView] = useState(false);
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${month}/${day}/${year}`;
+    };
 
     let handleAddOption = () => {
         setOptionsCount((prev) => prev + 1);
@@ -78,38 +88,48 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         else {
             try {
                 console.log(testData);
-                // let response = await Axios.post('/api/users/createAdmin', { ...newAdminData, role: 'Admin' });
-                // if (response.success) {
-                //     show('success', 'Success', 'Admin created successfully');
-                //     setVisible(false)
-                //     setIsErrorView(false);
-                //     let adminData = { firstName: '', lastName: '', email: '', password: '' };
-                //     let errors = { firstName: null, lastName: null, email: null, password: null };
-                //     setNewAdminData(adminData);
-                //     setErrors(errors);
-                // }
-                // else {
-                //     show('error', 'Error', response.data.message);
-                //     setVisible(false)
-                //     setIsErrorView(false);
-                //     let adminData = { firstName: '', lastName: '', email: '', password: '' };
-                //     let errors = { firstName: null, lastName: null, email: null, password: null };
-                //     setNewAdminData(adminData);
-                //     setErrors(errors);
-                // }
+                let newStartDate= formatDate(startDate);
+                let newEndDate= formatDate(endDate);
+                let newNumberOfQuestions = testData.questions.length + testData.assignedQuestionIds.length;
+                let response = await Axios.post('/api/tests/createtest', { ...testData, numberOfQuestions: newNumberOfQuestions,startDate: newStartDate,endDate:newEndDate });
+                if (response.data.success) {
+                    showTest('success', 'Success', response.data.message);
+                    setTestVisible(false)
+                    setIsErrorView(false);
+                    let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
+                    let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
+                    setTestData(testData);
+                    setErrors(newErrors);
+                    setEndDate(null);
+                    setStartDate(null)
+                }
+                else {
+                    showTest('error', 'Error', response.data.message);
+                    setTestVisible(false)
+                    setIsErrorView(false);
+                    let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
+                    let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
+                    setTestData(testData);
+                    setErrors(newErrors);
+                    setEndDate(null);
+                    setStartDate(null)
+                }
             } catch (error) {
                 console.log(error);
-                // show('error', 'Error', error?.response?.data.message);
-                // setVisible(false)
-                // setIsErrorView(false);
-                // let adminData = { firstName: '', lastName: '', email: '', password: '' };
-                // let errors = { firstName: null, lastName: null, email: null, password: null };
-                // setNewAdminData(adminData);
-                // setErrors(errors);
+                showTest('error', 'Error', error?.response?.data.message);
+                setTestVisible(false)
+                setIsErrorView(false);
+                let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
+                let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
+                setTestData(testData);
+                setErrors(newErrors);
+                setEndDate(null);
+                setStartDate(null)
             }
 
         }
     }
+
 
     let handleChange = (fieldName, value) => {
         setTestData({ ...testData, [fieldName]: value });
@@ -128,8 +148,8 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
 
     let handleClear = () => {
         setIsQuestionErrorView(false);
-        let questionData = { qTitle: '', isMultiSelect: false, options: [] };
-        let newErrors = { qTitle: null, options: null };
+        let questionData = { qtitle: '', isMultiSelect: false, options: [{ title: "", isCorrect: false }, { title: "", isCorrect: false }, { title: "", isCorrect: false }, { title: "", isCorrect: false }] };
+        let newErrors = { qtitle: null, options: null };
         setQuestionData(questionData);
         setQuestionErrors(newErrors);
         setCollapsed(true);
@@ -139,7 +159,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let handleAddQuestion = (e) => {
         e.preventDefault();
         let newQuestionErrors = {
-            qTitle: validateField('Question', questionData.qTitle),
+            qtitle: validateField('Question', questionData.qTitle),
             options: validateOptions(questionData.options),
         };
         const correctOptions = questionData.options.filter(opt => opt.isCorrect);
@@ -159,7 +179,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         else {
             try {
                 console.log(questionData);
-                setTestData(prev => ({ ...prev, questions: questionData }));
+                setTestData(prev => ({ ...prev, questions: [...testData.questions, questionData] }));
                 handleClear();
                 setCollapsed(true);
                 setHasPanelOpened(false)
@@ -173,7 +193,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
     let handleQuestionChange = (fieldName, value) => {
         setQuestionData({ ...questionData, [fieldName]: value });
         switch (fieldName) {
-            case 'qTitle':
+            case 'qtitle':
                 setQuestionErrors({ ...questionErrors, [fieldName]: validateField(fieldName, value) })
                 break;
         }
@@ -193,18 +213,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
         }
     };
 
-    const handleClose = () => {
-        if (hasOpened) {
-            setCollapsed(true);
-        }
-    };
 
-    const calenderIconTemplate = ()=>{
-        return (
-            // <div></div>
-            <i className='pi pi-calendar bg-(--primary-color) p-2'></i>
-        )
-    }
     const pt = {
         checkbox: {
             box: ({ context }) => ({
@@ -257,7 +266,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                             <label htmlFor="department" className={`${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}>Start Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} onChange={(e) => handleChange('startDate', e)} showIcon className='h-10' icon={()=><i className='pi pi-clock bg-(--primary-color)'></i>} />
+                        <Calendar id="startDate" placeholder='Select start date' value={startDate} onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
                         {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                     </div>
                     <div className='w-1/2 flex flex-col gap-1'>
@@ -265,17 +274,33 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                             <label htmlFor="duration" className={`${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}>End Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} onChange={(e) => handleChange('endDate', e)} showIcon className='h-10' pt={{ root: '',buttonbar:"bg-green-400" }} />
+                        <Calendar id="endDate" placeholder='Select end date' value={endDate} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', container: "", select: "", input: "", buttonbar: "" }} />
                         {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                     </div>
                 </div>
-                <Card title='Recent Tests' className='overflow-auto rounded-2xl' pt={{ title:'text-lg',body:"p-4",content:"p-0" }}>
+                <Card title='Recent Tests' className='overflow-auto rounded-2xl' pt={{ title: 'text-lg', body: "p-4", content: "p-0" }}>
                     <ul>
-                        {tests.map((test) => {
+                        {tests.map((test, index) => {
+                            const isChecked = Array.isArray(testData.assignedQuestionIds) && test.assignedQuestionIds?.every(id =>
+                                testData.assignedQuestionIds?.includes(id)
+                            );
                             return (
                                 <div className='flex items-center gap-2 mb-3' key={test.id}>
-                                    <Checkbox inputId={test.id} name={test.title}
-                                    />
+                                    <Checkbox inputId={index} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
+                                        let updatedIds;
+                                        if (e.checked) {
+                                            updatedIds = [...testData.assignedQuestionIds, ...test.assignedQuestionIds.filter(id => !testData.assignedQuestionIds.includes(id))];
+                                        }
+                                        else {
+                                            updatedIds = testData.assignedQuestionIds.filter(
+                                                id => !test.assignedQuestionIds.includes(id)
+                                            );
+                                        }
+                                        setTestData({
+                                            ...testData,
+                                            assignedQuestionIds: updatedIds
+                                        });
+                                    }} />
                                     <label htmlFor={test.id} className='capitalize'>{test.title}</label>
                                 </div>
                             )
@@ -283,18 +308,18 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                     </ul>
                 </Card>
                 <Card title='Questions' className='rounded-2xl' pt={{ title: 'text-lg' }}>
-                    <Panel header='Add Question' toggleable onToggle={handleToggle} collapseIcon collapsed={collapsed} pt={{ title: "text-base font-bold",header:"bg-(--header-bg)" }} >
+                    <Panel header='Add Question' toggleable onToggle={handleToggle} collapseIcon collapsed={collapsed} pt={{ title: "text-base font-bold", header: "bg-(--header-bg)", root: 'mb-2' }} >
                         <div className='flex flex-col gap-4'>
                             <div className='flex flex-col gap-1'>
                                 <div className='flex'>
-                                    <label htmlFor="qTitle" className={`${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}>Question</label>
+                                    <label htmlFor="qtitle" className={`${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}>Question</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(questionErrors.qTitle && isQuestionErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <InputText id='qTitle' type='text' placeholder='Enter question' value={questionData.qTitle} onChange={(e) => { handleQuestionChange('qTitle', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(questionErrors.qTitle && isQuestionErrorView)} />
-                                {(questionErrors.qTitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qTitle}</small>}
+                                <InputText id='qtitle' type='text' placeholder='Enter question' value={questionData.qtitle} onChange={(e) => { handleQuestionChange('qtitle', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(questionErrors.qtitle && isQuestionErrorView)} />
+                                {(questionErrors.qtitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qtitle}</small>}
                             </div>
                             <div className='flex gap-2 items-center'>
-                                <Checkbox inputId='isMultiSelect' name='isMultiSelect' checked={questionData.isMultiSelect} onChange={(e) => { setQuestionData({ ...questionData, isMultiSelect: e.value }) }} />
+                                <Checkbox inputId='isMultiSelect' name='isMultiSelect' pt={pt.checkbox} checked={questionData.isMultiSelect} onChange={(e) => { if (e.checked) { setQuestionData({ ...questionData, isMultiSelect: true }) } else { setQuestionData({ ...questionData, isMultiSelect: false }) } }} />
                                 <label htmlFor="isMultiSelect">Multiple Choice</label>
                             </div>
                             <div className='flex justify-between items-start'>
@@ -336,11 +361,16 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                                 <p>Select the correct answers</p>
                             </div>
                             <div className='flex items-center justify-end gap-2 '>
-                                <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color) p-1 w-18 h-8" pt={{icon:"text-sm"}} />
-                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% p-2 h-8 w-18' pt={{icon:"text-sm"}} />
+                                <Button type='button' outlined label="Clear" icon="pi pi-times" onClick={handleClear} className="text-(--primary-color) p-1 w-18 h-8" pt={{ icon: "text-sm" }} />
+                                <Button type='button' label="Add" onClick={handleAddQuestion} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% p-2 h-8 w-18' pt={{ icon: "text-sm" }} />
                             </div>
                         </div>
                     </Panel>
+                    <ol type='1'>
+                        {testData.questions.map((question, index) => {
+                            return <li key={index}>{question.qtitle}</li>
+                        })}
+                    </ol>
                 </Card>
                 {(errors.questionsFound && isErrorView) && <small className='text-xs text-red-500'>{errors.questionsFound}</small>}
                 <div className='flex items-center justify-end gap-2 '>
