@@ -148,7 +148,7 @@ const UsersManagementCard = ({ }) => {
                 </div>
                 {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(true) }} />}
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                <CreateAdminDialog visible={visible} setVisible={setVisible} show={show} />
+                <CreateAdminDialog visible={visible} setVisible={setVisible} show={show} fetchUsers={fetchUsers} />
             </div>
             {state.user.role === 'SuperAdmin' && <Card title='Filters' className='rounded-xl'>
                 <div className='w-full flex justify-evenly gap-2'>

@@ -6,7 +6,7 @@ import { Password } from 'primereact/password';
 import { validateEmail, validateName, validatePassword } from '../utils/Validation';
 import { Axios } from '../services/Axios';
 
-const CreateAdminDialog = ({ visible, setVisible, show }) => {
+const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
     let [newAdminData, setNewAdminData] = useState({
         firstName: '',
         lastName: '',
@@ -45,10 +45,10 @@ const CreateAdminDialog = ({ visible, setVisible, show }) => {
         }
         else {
             try {
-                console.log(newAdminData);
                 let response = await Axios.post('/api/users/createAdmin', { ...newAdminData, role: 'Admin' });
                 if (response?.data?.success) {
                     show('success', 'Success', 'Admin created successfully');
+                    fetchUsers(0,5,'','');
                     setVisible(false)
                     setIsErrorView(false);
                     let adminData = { firstName: '', lastName: '', email: '', password: '' };

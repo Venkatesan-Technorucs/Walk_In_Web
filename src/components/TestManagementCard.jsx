@@ -123,7 +123,7 @@ const TestManagementCard = () => {
                 <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setTestVisible(true) }} />
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
             </div>
-            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} />}
+            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} fetchedTests={fetchTests} />}
             <Card className='rounded-xl' header={
                 <div className='flex justify-between items-center p-4'>
                     <div>

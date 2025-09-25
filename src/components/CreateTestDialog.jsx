@@ -6,11 +6,11 @@ import { Card } from 'primereact/card'
 import { Checkbox } from 'primereact/checkbox';
 import { Panel } from 'primereact/panel';
 import { Calendar } from 'primereact/calendar';
-import { validateField, validateOptions, validateTestQuestion } from '../utils/Validation';
+import { validateDate, validateField, validateOptions, validateTestQuestion } from '../utils/Validation';
 import { Axios } from '../services/Axios';
 import { classNames } from 'primereact/utils';
 
-const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
+const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchTests }) => {
     const [collapsed, setCollapsed] = useState(true);
     const [hasPanelOpened, setHasPanelOpened] = useState(false);
     const toast = useRef(null);
@@ -89,12 +89,12 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
             title: validateField('Test Title', testData.title),
             department: validateField('Department', testData.department),
             duration: validateField('Duration', testData.duration),
-            // startDate: validateName('Last Name', newAdminData.lastName),
-            // endDate: validateEmail(newAdminData.email),
+            startDate: validateDate('Start Date', startDate),
+            endDate: validateDate('End Date',endDate),
             questionsFound: validateTestQuestion(testData.assignedQuestionIds, testData.questions),
         };
         setErrors(newErrors);
-        if (newErrors.title || newErrors.department || newErrors.duration || newErrors.questionsFound) {
+        if (newErrors.title || newErrors.department || newErrors.duration || newErrors.questionsFound || newErrors.startDate || newErrors.endDate) {
             setIsErrorView(true);
             return;
         }
@@ -111,6 +111,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
                     showTest('success', 'Success', response.data.message);
+                    fetchTests(0,5,'');
                     setTestVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
@@ -252,7 +253,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
             <form className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <div className='flex'>
-                        <label htmlFor="title" className={`${(errors.title && isErrorView) ? 'text-red-500' : ''}`}>Test Title</label>
+                        <label htmlFor="title">Test Title</label>
                         <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.title && isErrorView) ? 'text-red-500' : ''}`}></i>
                     </div>
                     <InputText id='title' type='text' placeholder='Enter test name' value={testData.title} onChange={(e) => { handleChange('title', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.title && isErrorView)}
@@ -262,7 +263,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                 <div className='flex gap-3'>
                     <div className='w-1/2 flex flex-col gap-1'>
                         <div className='flex'>
-                            <label htmlFor="department" className={`${(errors.department && isErrorView) ? 'text-red-500' : ''}`}>Department</label>
+                            <label htmlFor="department" >Department</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.department && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
                         <InputText id='department' type='text' placeholder='Enter department' value={testData.department} onChange={(e) => { handleChange('department', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.lastName && isErrorView)} />
@@ -270,7 +271,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                     </div>
                     <div className='w-1/2 flex flex-col gap-1'>
                         <div className='flex'>
-                            <label htmlFor="duration" className={`${(errors.duration && isErrorView) ? 'text-red-500' : ''}`}>Duration (minutes)</label>
+                            <label htmlFor="duration" >Duration (minutes)</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.duration && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
                         <InputText id='duration' type='text' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.email && isErrorView)} />
@@ -280,7 +281,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                 <div className='flex gap-3'>
                     <div className='w-1/2 flex flex-col gap-1'>
                         <div className='flex'>
-                            <label htmlFor="department" className={`${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}>Start Date</label>
+                            <label htmlFor="department" >Start Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
                         <Calendar id="startDate" placeholder='Select start date' value={startDate} minDate={today}  onChange={(e) => setStartDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
@@ -288,10 +289,10 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                     </div>
                     <div className='w-1/2 flex flex-col gap-1'>
                         <div className='flex'>
-                            <label htmlFor="duration" className={`${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}>End Date</label>
+                            <label htmlFor="duration" >End Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', container: "", select: "", input: "", buttonbar: "" }} />
+                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '',title:"hover:text-green-400",day:"" ,header:"",container: "", select: "bg-green-200", input: "", buttonbar: "" }} />
                         {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                     </div>
                 </div>
