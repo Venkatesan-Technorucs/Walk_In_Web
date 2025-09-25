@@ -206,7 +206,7 @@ const Register = () => {
 
     const dialogFooterContent = (
         <div>
-            <Button label="Ok" icon="pi pi-check" onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+            <Button label="Ok" icon="pi pi-check" onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
         </div>
     );
 

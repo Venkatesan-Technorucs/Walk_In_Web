@@ -135,7 +135,7 @@ const CreateAdminDialog = ({ visible, setVisible, show }) => {
                 </div>
                 <div className='flex items-center justify-end gap-2 '>
                     <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={handleCancel} className="text-(--primary-color)" />
-                    <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+                    <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
                 </div>
             </form>
         </Dialog>

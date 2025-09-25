@@ -163,7 +163,7 @@ const TakeTest = () => {
 
     const dialogFooterContent = (
         <div className='text-sm'>
-            <Button label="Ok" icon="pi pi-check" onClick={() => { if (!visible) return; setVisible(false); }} autoFocus className='text-base h-9 xs:h-12 xs:text-lg bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' />
+            <Button label="Ok" icon="pi pi-check" onClick={() => { if (!visible) return; setVisible(false); }} autoFocus className='text-base h-9 xs:h-12 xs:text-lg bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
         </div>
     );
 
@@ -192,7 +192,7 @@ const TakeTest = () => {
                     {
                         'bg-(--header-bg) border-(--primary-color)': !context.checked,
 
-                        'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% border-(--primary-color-light)': context.checked
+                        'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) border-(--primary-color-light)': context.checked
                     }
                 )
             }),
@@ -221,12 +221,12 @@ const TakeTest = () => {
                             </div>
                             <div className='flex justify-center items-center gap-3'>
                                 <CountdownTimer duration={duration * 60} active={true} onComplete={handleSubmit} />
-                                <div className='h-6 rounded-4xl border-2 flex justify-center items-center p-1'>
+                                <div className='w-26 h-6 rounded-4xl border-2 flex justify-center items-center p-1'>
                                     <p className='text-[10px] sm:text-sm p-1 font-medium'>{answeredCount}/{totalQuestions} answered</p>
                                 </div>
                             </div>
                         </div>
-                        <ProgressBar value={progressCount} className='h-4 text-xs rounded-4xl font-bold' pt={{ value: 'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' }}></ProgressBar>
+                        <ProgressBar value={progressCount} className='h-4 text-xs rounded-4xl font-bold' pt={{ value: 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' }}></ProgressBar>
                     </Card>
                     {questions.slice(currentQuestionIndex, currentQuestionIndex + 1).map((question) => {
                         return <Card className='w-full self-center' key={question.id} pt={pt.questionsCard}>
@@ -244,7 +244,7 @@ const TakeTest = () => {
                                             </div>
                                         </li>)
                                         : (<li key={option.id}>
-                                            <div className={`h-8 w-full p-4 flex items-center rounded-2xl mb-2 ${isSelected(question.id, option.id) ? 'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% text-white' : 'bg-(--header-bg) border-1 border-(--primary-color)'} hover:bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% hover:text-white`} onClick={() => handleAnswer(question.id, option.id, false)} >
+                                            <div className={`h-8 w-full p-4 flex items-center rounded-2xl mb-2 ${isSelected(question.id, option.id) ? 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white' : 'bg-(--header-bg) border-1 border-(--primary-color)'} hover:bg-(--primary-color-light) hover:text-white`} onClick={() => handleAnswer(question.id, option.id, false)} >
                                                 {option.title}
                                             </div>
                                         </li>)
@@ -253,8 +253,8 @@ const TakeTest = () => {
                         </Card>
                     })}
                     <div className='w-full h-10 self-center flex p-1 justify-between'>
-                        <Button label='Previous' className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% rounded-sm ' onClick={handlePrevious} />
-                        <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex text-white justify-center bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100% rounded-sm ' onClick={() => {
+                        <Button label='Previous' className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={handlePrevious} />
+                        <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={() => {
                             if (currentQuestionIndex === totalQuestions - 1) {
                                 handleSubmit(answers);
                             } else {
@@ -268,7 +268,7 @@ const TakeTest = () => {
                                 if (a.questionId !== question.id) return false;
                                 return Array.isArray(a.options) ? a.options.length > 0 : a.options !== null;
                             });
-                            return <Button className={`h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center ${answered ? 'bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' : 'bg-white border-2 text-(--primary-color) border-(--primary-color)'}`} key={question.id} onClick={() => { setCurrentQuestionIndex(index) }}>{index + 1}</Button>
+                            return <Button className={`h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center ${answered ? 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' : 'bg-white border-2 text-(--primary-color) border-(--primary-color)'}`} key={question.id} onClick={() => { setCurrentQuestionIndex(index) }}>{index + 1}</Button>
                         })}
                     </Card>
                 </div>

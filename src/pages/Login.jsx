@@ -91,7 +91,7 @@ const Login = () => {
                         {(passwordError && isErrorView) && <small className='text-xs text-red-500'>{passwordError}</small>}
                     </div>
                     <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                    <Button type='submit' label='Login' loading={isLoading} className='h-11 text-xl font-bold rounded-lg bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' pt={{ loadingIcon: 'text-white', label: 'text-white' }} />
+                    <Button type='submit' label='Login' loading={isLoading} className='h-11 text-xl font-bold rounded-lg bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' pt={{ loadingIcon: 'text-white', label: 'text-white' }} />
                 </form>
             </Card>
         </div>
