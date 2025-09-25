@@ -10,7 +10,7 @@ import { validateDate, validateField, validateOptions, validateTestQuestion } fr
 import { Axios } from '../services/Axios';
 import { classNames } from 'primereact/utils';
 
-const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
+const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests, fetchTests }) => {
     const [collapsed, setCollapsed] = useState(true);
     const [hasPanelOpened, setHasPanelOpened] = useState(false);
     const toast = useRef(null);
@@ -111,6 +111,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, tests }) => {
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
                     showTest('success', 'Success', response.data.message);
+                    fetchTests(0,5,'');
                     setTestVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
