@@ -18,7 +18,7 @@ const Home = () => {
     useEffect(() => {
         let fetchTests = async () => {
             try {
-                const today = new Date('2025-09-20');
+                const today = new Date();
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');
@@ -53,7 +53,7 @@ const Home = () => {
 
     const pt = {
         testsNavigatorCard: {
-            root: 'w-60 h-40 p-3 rounded-xl ',
+            root: 'w-70 h-50 p-3 flex flex-col gap-1 items-center justify-center rounded-xl ',
             body: 'p-0',
             header: 'uppercase text-right',
             title: 'text-xl font-bold font-normal capitalize',
@@ -76,7 +76,7 @@ const Home = () => {
                 </div>
                 : <div className='w-full min-h-[calc(100vh-100px)] px-[5%] py-4 bg-[#E6ECF1]'>
                     <div className='w-full h-full flex flex-col items-center xs:flex-row xs:items-start xs:justify-center md:justify-start xs:flex-wrap gap-x-4 gap-y-2'>
-                        {tests.map((test) => {
+                        {tests?.map((test) => {
                             return (
                                 <Card className='' key={test.id} title={test.title} subTitle={`${test.totalQuestions} Questions`} pt={pt.testsNavigatorCard} >
                                     <div className='flex items-center gap-1 text-sm'>

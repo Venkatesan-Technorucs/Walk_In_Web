@@ -221,7 +221,7 @@ const TakeTest = () => {
                             </div>
                             <div className='flex justify-center items-center gap-3'>
                                 <CountdownTimer duration={duration * 60} active={true} onComplete={handleSubmit} />
-                                <div className='w-26 h-6 rounded-4xl border-2 flex justify-center items-center p-1'>
+                                <div className='w-28 h-8 rounded-4xl border-2 flex justify-center items-center p-1'>
                                     <p className='text-[10px] sm:text-sm p-1 font-medium'>{answeredCount}/{totalQuestions} answered</p>
                                 </div>
                             </div>

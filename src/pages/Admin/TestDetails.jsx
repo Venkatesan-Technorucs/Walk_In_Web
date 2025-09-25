@@ -65,14 +65,6 @@ const TestDetails = () => {
     return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success': "danger"}></Tag>
   }
  
-  const optionsBodyTemplate = (option) => {
-    return <p>{option.title}</p>
-  };
- 
-  const renderColumn = (row, index) => {
-    return <Column field={`option${index + 1}`} header={`Option ${index + 1}`} body={optionsBodyTemplate(row)}></Column>
-  }
- 
   return (
     <>
       {!state.apiLoading ? <div>
@@ -98,7 +90,21 @@ const TestDetails = () => {
           <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
             <Column field="title" header="Question"></Column>
             <Column field="isMultiSelect" header="Multiple Choice"  body={isMultiBodyTemplate}></Column>
-            {testQuestions[0]?.options && testQuestions[0]?.options.map((option, index) => renderColumn(option, index))}
+            <Column
+              header="Options"
+              body={(row) => (
+                <div className='flex flex-col gap-2'>
+                  {row.options?.map((option, index) => (
+                    <div  className='flex items-center justify-between'>
+                      <p key={option.id || index}>
+                        {index + 1}. {option.title}
+                      </p>
+                      <p>{option.isCorrect && <i className={`pi pi-check-circle`} style={{ color: "green" }}></i>}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            />
           </DataTable>
         </Card>
         <Card className='rounded-xl' title={`User (${testAttemptedUsers.length})`}>

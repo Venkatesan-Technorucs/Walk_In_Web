@@ -122,7 +122,7 @@ const UserDetails = () => {
                   </Card>
                   <Card className="rounded-2xl shadow border-0 bg-white mt-2" title={<span className="text-xl font-bold text-gray-800">Test Attempts <span className='text-base text-gray-500'>({attempts.length})</span></span>}>
                     <DataTable value={attempts} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '40rem' }} emptyMessage={<span className="p-6 text-center text-sm text-gray-400">No test attempts yet.</span>} className="mt-2">
-                      <Column field="testName" header={<span className="font-semibold text-gray-700">Test</span>} body={(row) => row.testName || '—'}></Column>
+                      <Column field="testName" header={<span className="font-semibold text-gray-700">Test</span>} body={(row) => row.name || '—'}></Column>
                       <Column field="score" header={<span className="font-semibold text-gray-700">Score</span>} body={(row) => (row.score != null ? row.score : '—')}></Column>
                       <Column field="timeTaken" header={<span className="font-semibold text-gray-700">Time Taken</span>} body={timeTakenBodyTemplate}></Column>
                       <Column field="status" header={<span className="font-semibold text-gray-700">Status</span>} body={statusBodyTemplate}></Column>

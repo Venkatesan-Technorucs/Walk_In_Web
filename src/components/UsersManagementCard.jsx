@@ -40,13 +40,13 @@ const UsersManagementCard = ({ }) => {
             let skip = pageIndex * pageSize;
             let response = await Axios.get(`/api/users/getAllUsers?skip=${skip}&limit=${pageSize}&search=${filterText}&role=${role}`);
             let fetchedUsers = response.data?.data.users || [];
-            let total = response.data?.data.totalUsers || 0;
+            let total = response.data?.data?.totalUsers || 0;
 
-            let filteredUsers = state.user.role === 'SuperAdmin'
-                ? fetchedUsers.filter((user) => user.role !== 'SuperAdmin').sort((a, b) => ((b.role === 'Admin') - (a.role === 'Admin')))
-                : fetchedUsers.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Admin');
-
-            setUsers(filteredUsers);
+            // let filteredUsers = state.user.role === 'SuperAdmin'
+            //     ? fetchedUsers.filter((user) => user.role !== 'SuperAdmin')
+            //     : fetchedUsers.filter((user) => user.role !== 'SuperAdmin' && user.role !== 'Admin');
+            // console.log(filteredUsers.length)
+            setUsers(fetchedUsers);
             setTotalRecords(total);
         } catch (error) {
             console.log(error);
@@ -131,7 +131,7 @@ const UsersManagementCard = ({ }) => {
     const actionBodyTemplate = (users) => {
         return (
             <div className='flex items-center gap-2'>
-                <Button outlined icon='pi pi-info-circle' onClick={() => {
+                <Button disabled={users.role === "Admin"} outlined icon='pi pi-info-circle' onClick={() => {
                     navigate(`/user/details/${users.id}`)
                 }} className='text-(--primary-color)' />
                 <Button outlined icon='pi pi-trash' className='text-(--primary-color)' />
@@ -182,7 +182,7 @@ const UsersManagementCard = ({ }) => {
                             <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
                         </span>
                     </div>: ''}>
-                <DataTable value={users} lazy paginator rows={rows} first={page*rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
+                <DataTable value={users} lazy paginator rows={rows} first={page} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
                     <Column className='w-1/3 p-0' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>
