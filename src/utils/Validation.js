@@ -87,7 +87,9 @@ export const validateOptions = (options) => {
 };
 
 
-export const validateStartDate = (date)=>{
-  let today = new Date();
-  // if(date)
+export const validateDate = (label,date)=>{
+  if(!date){
+    return `${label} must be required`;
+  }
+  else return null;
 }
