@@ -53,7 +53,7 @@ const Register = () => {
     useEffect(() => {
         let fetchTests = async () => {
             try {
-                const today = new Date('2025-09-26');
+                const today = new Date();
                 const yyyy = today.getFullYear();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const dd = String(today.getDate()).padStart(2, '0');

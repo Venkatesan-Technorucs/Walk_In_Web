@@ -70,8 +70,8 @@ const UserDetails = () => {
           <div className="w-full h-full mt-8 px-6">
             <div className="h-full flex flex-col gap-6">
               <div className="flex items-center gap-3">
-                <Button className="w-10 h-10 p-0 flex justify-center items-center border-none bg-white shadow hover:bg-gray-100 rounded-full" onClick={() => navigate(-1)}>
-                  <i className="pi pi-arrow-left text-gray-700 text-2xl"></i>
+                <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
+                  <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
                 </Button>
                 <h1 className="text-2xl font-medium text-gray-900 tracking-tight">User Details</h1>
               </div>
