@@ -25,7 +25,7 @@ const App = () => {
             <Route path='/create/test' element={<CreateTest />} />
             <Route path='/test/details/:id' element={<TestDetails />} />
             <Route path='/user/details/:id' element={<UserDetails />} />
-            <Route path='/user/test/details/:id' element={<UserTestDetails />} />
+            <Route path='/user/test/details/:userId/:testId' element={<UserTestDetails />} />
           </Route>
           <Route element={<PrivateRoute requiredRole={['Applicant']} />}>
             <Route path='/home' element={<Home />} />
