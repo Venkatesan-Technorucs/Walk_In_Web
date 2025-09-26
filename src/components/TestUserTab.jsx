@@ -2,9 +2,13 @@ import { Card } from 'primereact/card'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Tag } from 'primereact/tag'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const TestUserTab = ({ testAttemptedUsers }) => {
+    const [selectedUser, setSelectedUser] = useState({});
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     const userBodyTemplate = (user) => {
         return <div>
@@ -33,7 +37,16 @@ const TestUserTab = ({ testAttemptedUsers }) => {
 
     return (
         <Card className='rounded-xl' title={`User (${testAttemptedUsers.length})`}>
-            <DataTable value={testAttemptedUsers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
+            <DataTable value={testAttemptedUsers} selectionMode="single" paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}
+                selection={selectedUser} onSelectionChange={e => {
+                    setSelectedUser(e.value);
+                    const userId = e.value?.userDetails?.id;
+                    const testId = id;
+                    if (userId && testId){
+                        navigate(`/user/test/details/${userId}/${testId}`);
+                    }
+                    console.log(e.value, userId);
+                }}>
                 <Column field="user" header="User" body={userBodyTemplate}></Column>
                 <Column field="score" header="Score"></Column>
                 <Column field="timeTaken" header="Time Taken" body={timeTakenBodyTemplate}></Column>

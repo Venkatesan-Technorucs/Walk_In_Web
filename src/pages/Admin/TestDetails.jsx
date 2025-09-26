@@ -11,6 +11,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import TestQuestionTab from '../../components/TestQuestionTab';
 import TestUserTab from '../../components/TestUserTab';
+import LeaderBoardTab from '../../components/LeaderBoardTab';
 
 const TestDetails = () => {
   let { state, dispatch } = useAuth();
@@ -18,6 +19,7 @@ const TestDetails = () => {
   let [testDetails, setTestDetais] = useState({});
   let [testAttemptedUsers, setTestAttemptedUsers] = useState([])
   let [testQuestions, setTestQuestions] = useState([]);
+  let [leaderBoardData, setLeaderBoardData] = useState([]);
   const [active, setActive] = useState('TestQuestionTab')
   const navigate = useNavigate();
 
@@ -29,6 +31,7 @@ const TestDetails = () => {
         setTestDetais(response.data.data);
         setTestAttemptedUsers(response.data.data.testAttemptDetails);
         setTestQuestions(response.data.data.questions);
+        setLeaderBoardData(response.data.data.leaderboard);
         dispatch({ type: 'API_LOADING', payload: false });
       } catch (err) {
         console.log(err);
@@ -45,6 +48,8 @@ const TestDetails = () => {
           return <TestQuestionTab testQuestions={testQuestions}/>
       case 'testUserTab':
           return <TestUserTab testAttemptedUsers={testAttemptedUsers}/>
+      case 'leaderBoardTab':
+          return <LeaderBoardTab LeaderBoardData={leaderBoardData}/>
     }
   }
  
@@ -91,33 +96,47 @@ const TestDetails = () => {
                 </h2>
               </div>
             </div>
-            <div className="w-full h-12 bg-white rounded-2xl flex items-center p-1 border border-transparent mb-4">
-              <div
-                className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
-                onClick={() => setActive("TestQuestionTab")}
-                role="button"
-                aria-pressed={active === "TestQuestionTab"}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && setActive("TestQuestionTab")}
-              >
-                <p>Tests</p>
-              </div>
-
-              <div
-                className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
-                onClick={() => setActive("testUserTab")}
-                role="button"
-                aria-pressed={active === "testUserTab"}
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && setActive("testUserTab")}
-              >
-                <p>Users</p>
-              </div>
-            </div>
             <Card className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
-              {renderTab()}
+              <>
+                <div className="w-full h-12 border-r-green-200 flex items-center p-1 border border-transparent mb-4">
+                  <div
+                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
+              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+                    onClick={() => setActive("TestQuestionTab")}
+                    role="button"
+                    aria-pressed={active === "TestQuestionTab"}
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setActive("TestQuestionTab")}
+                  >
+                    <p>Tests</p>
+                  </div>
+
+                  <div
+                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
+              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+                    onClick={() => setActive("testUserTab")}
+                    role="button"
+                    aria-pressed={active === "testUserTab"}
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setActive("testUserTab")}
+                  >
+                    <p>Users</p>
+                  </div>
+
+                  <div
+                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
+              ${active === "leaderBoardTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+                    onClick={() => setActive("leaderBoardTab")}
+                    role="button"
+                    aria-pressed={active === "leaderBoardTab"}
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setActive("leaderBoardTab")}
+                  >
+                    <p>LeaderBoard</p>
+                  </div>
+                </div>
+                {renderTab()}
+              </>
             </Card>
           </div>
         </div>
