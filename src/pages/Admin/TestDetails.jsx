@@ -51,7 +51,7 @@ const TestDetails = () => {
   return (
     <>
       {!state.apiLoading ? (
-        <div className="min-h-scree">
+        <div className="min-h-screen">
           <Header name={state.user.name} role={state.user.role} />
 
           <div className='p-5'>

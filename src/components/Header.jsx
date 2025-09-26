@@ -14,7 +14,7 @@ const Header = ({name, role}) => {
             <img src={logo} alt="logo" className='h-[30px] xs:h-[40px] sm:h-[50px]' />
             <div className='w-full flex justify-between sm:gap-3 sm:items-center sm:justify-end'>
             <h1 className='capitalize font-medium text-base xs:text-xl sm:text-2xl pl-4 xs:text-center xs:pl-0'>Welcome, {name}</h1>
-            {(role==='Admin' || role=== 'SuperAdmin') && <Button label='Logout' className='w-16 h-8 xs:w-18 xs:h-10 text-sm xs:text-lg font-medium rounded-lg flex items-center justify-center bg-linear-135 from-(--primary-color-light) from-0% to-(--primary-color) to-100%' onClick={handleLogout}/>}
+            {(role==='Admin' || role=== 'SuperAdmin') && <Button label='Logout' className='w-16 h-8 xs:w-18 xs:h-10 text-sm xs:text-lg font-medium rounded-lg flex items-center justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) ' onClick={handleLogout}/>}
             </div>
         </div>
     )

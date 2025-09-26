@@ -11,6 +11,7 @@ import PrivateRoute from './services/PrivateRoute'
 import TestDetails from './pages/Admin/TestDetails'
 import UserDetails from './pages/Admin/UserDetails'
 import UserTestDetails from './pages/Admin/UserTestDetails'
+import CreateTest from './pages/Admin/CreateTest'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route element={<PrivateRoute requiredRole={['Admin', 'SuperAdmin']} />}>
             <Route path='/' element={<Dashboard />} />
+            <Route path='/create/test' element={<CreateTest />} />
             <Route path='/test/details/:id' element={<TestDetails />} />
             <Route path='/user/details/:id' element={<UserDetails />} />
             <Route path='/user/test/details/:id' element={<UserTestDetails />} />
