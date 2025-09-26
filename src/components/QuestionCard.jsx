@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import React from 'react'
 import { pt } from '../utils/pt';
 
-const QuestionCard = ({question, testData, setTestData,index, questionData,setQuestionData}) => {
+const QuestionCard = ({question, testData, setTestData,index, questionData,setQuestionData, handleQuestionChange, handleOptionChange}) => {
 
 
     let onRemove = ()=>{
@@ -22,11 +22,11 @@ const QuestionCard = ({question, testData, setTestData,index, questionData,setQu
                     </div>
                     <i className='pi pi-times hover:cursor-pointer' onClick={onRemove}></i>
                 </div>
-                <InputText id='qtitle' type='text' placeholder='Enter question' value={question.qtitle} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
+                <InputText id='qtitle' type='text' placeholder='Enter question' value={question.qtitle} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' onChange={(e)=>{handleQuestionChange('qtitle',e.target.value,index)}} />
                 {/* {(questionErrors.qtitle && isQuestionErrorView) && <small className='text-xs text-red-500'>{questionErrors.qtitle}</small>} */}
             </div>
             <div className='flex gap-2 items-center'>
-                <Checkbox inputId='isMultiSelect' name='isMultiSelect'
+                <Checkbox inputId='isMultiSelect' name='isMultiSelect' value={question.isMultiSelect}
                  pt={pt.checkbox} 
                  />
                 <label htmlFor="isMultiSelect">Multiple Choice</label>
@@ -36,7 +36,7 @@ const QuestionCard = ({question, testData, setTestData,index, questionData,setQu
                 <Button type='button' label='Add' outlined className='p-1 text-(--primary-color)' />
             </div>
             <div className='flex flex-col gap-2'>
-                {question.options.map((option, index) => {
+                {question.options.map((option, i) => {
                     const isSingleMode = !question.isMultiSelect;
                     const anyCorrectSelected = question.options.some(opt => opt.isCorrect);
                     return (
@@ -44,23 +44,24 @@ const QuestionCard = ({question, testData, setTestData,index, questionData,setQu
                             <div className='flex items-center justify-between'>
                                 <Checkbox className=''
                                  pt={pt.checkbox}
-                                  inputId={index} checked={option.isCorrect} disabled={isSingleMode && anyCorrectSelected && !option.isCorrect} onChange={(e) => {
+                                  inputId={i} checked={option.isCorrect} disabled={isSingleMode && anyCorrectSelected && !option.isCorrect} onChange={(e) => {
                                     let newOptions = [...question.options];
                                     if (isSingleMode) {
-                                        newOptions = newOptions.map((opt, i) => ({
+                                        newOptions = newOptions.map((opt, optionIndex) => ({
                                             ...opt,
-                                            isCorrect: i === index ? e.checked : false,
+                                            isCorrect: optionIndex === index ? e.checked : false,
                                         }));
                                     } else {
-                                        newOptions[index].isCorrect = e.checked;
+                                        newOptions[i].isCorrect = e.checked;
                                     }
                                     // setQuestionData({ ...questionData, options: newOptions });
                                 }
                                 } />
-                                <InputText id={`option-${index}`} className='h-6 w-[80%] bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${index + 1}`} value={option.title} pt={{ root: 'py-1' }} 
+                                <InputText id={`option-${i}`} className='h-6 w-[80%] bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${i + 1}`} value={option.title} pt={{ root: 'py-1' }} 
+                                onChange={(e)=>{handleOptionChange(`option${index+1}`,index,i,e.target.value)}}
                                 // onChange={(e) => {
                                 //     let newOptions = [...questionData.options];
-                                //     newOptions[index].title = e.target.value;
+                                //     newOptions[index][title] = e.target.value;
                                 //     setQuestionData({ ...questionData, options: newOptions });
                                 // }} 
                                 />

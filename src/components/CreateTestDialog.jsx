@@ -214,13 +214,24 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, fetchTests })
         }
     }
 
-    let handleQuestionChange = (fieldName, value) => {
-        setQuestionData({ ...questionData, [fieldName]: value });
-        switch (fieldName) {
-            case 'qtitle':
-                setQuestionErrors({ ...questionErrors, [fieldName]: validateField(fieldName, value) })
-                break;
-        }
+    let handleOptionChange = (fieldName,qIndex,oIndex,value)=>{
+        let updatedOptions = [...testData.questions[qIndex].options]
+        console.log(updatedOptions);
+        updatedOptions[oIndex][fieldName] = value;
+        let question = {...testData.questions[qIndex],options:updatedOptions}
+        testData.questions[qIndex] = question
+        setTestData({...testData,})
+    }
+    let handleQuestionChange = (fieldName, value,qIndex) => {
+        let updatedQuestions = [...testData.questions]
+        updatedQuestions[qIndex][fieldName] = value;
+        setTestData({...testData,questions:updatedQuestions})
+        // setQuestionData({ ...questionData, [fieldName]: value });
+        // switch (fieldName) {
+        //     case 'qtitle':
+        //         setQuestionErrors({ ...questionErrors, [fieldName]: validateField(fieldName, value) })
+        //         break;
+        // }
     }
 
     let handleRemoveOption = (indexToRemove) => {
@@ -292,7 +303,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, fetchTests })
                             <label htmlFor="duration" >End Date</label>
                             <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                         </div>
-                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", day: "", header: "", container: "", select: "bg-green-200", input: "", buttonbar: "" }} />
+                        <Calendar id="endDate" placeholder='Select end date' value={endDate} minDate={today} onChange={(e) => setEndDate(e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400",  }} />
                         {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                     </div>
                 </div>
@@ -332,7 +343,7 @@ const CreateTestDialog = ({ testVisible, setTestVisible, showTest, fetchTests })
                 }}>
                     {testData.questions?.map((question,index) => {
                         return <div key={question.id}>
-                            <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} questionData={questionData} setQuestionData={setQuestionData} />
+                            <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} questionData={questionData} setQuestionData={setQuestionData} handleQuestionChange={handleQuestionChange} handleOptionChange={handleOptionChange} />
                             <Divider />
                         </div>
                     })}
