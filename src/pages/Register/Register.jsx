@@ -152,6 +152,12 @@ const Register = () => {
             case 'email':
                 setErrors({ ...errors, [fieldName]: validateEmail(value) })
                 break;
+            case 'phoneNumber':
+                setErrors({ ...errors, [fieldName]: validatePhoneNumber(value) })
+                break;
+            case 'skills':
+                setErrors({ ...errors, [fieldName]: validateSkills(value)})
+                break;
         }
     }
 
@@ -260,7 +266,10 @@ const Register = () => {
                             {(errors.email && isErrorView) && <small className='text-xs text-red-500'>{errors.email}</small>}
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <label htmlFor="phNumber">Phone Number</label>
+                            <div className='flex' >
+                                <label htmlFor="phNumber" className={`${(errors.phNumber && isErrorView) ? 'text-red-500' : ''}`}>Phone Number</label>
+                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.phNumber && isErrorView) ? 'text-red-500' : ''}`}></i>
+                            </div>
                             <InputText id='phNumber' placeholder='Enter your phone number' keyfilter={'pint'} maxLength={10} value={registerData.phoneNumber} onChange={(e) => { handleChange('phoneNumber', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.phNumber && isErrorView)} />
                             {(errors.phNumber && isErrorView) && <small className='text-xs text-red-500'>{errors.phNumber}</small>}
                         </div>
@@ -280,7 +289,10 @@ const Register = () => {
                             {(errors.referredBy && isErrorView) && <small className='text-xs text-red-500'>{errors.referredBy}</small>}
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <label htmlFor="skills">Skills</label>
+                            <div className='flex'>
+                                <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
+                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}></i>
+                            </div>
                             <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} />
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}
                         </div>

@@ -43,7 +43,7 @@ export const validateOptionalName = (label,name) => {
 };
 
 export const validatePhoneNumber = (phNumber)=>{
-  if(!phNumber) return null;
+  if(!phNumber) return `phone number is required`;
   if(phNumber.length<10){
     return "Invalid phone number";
   }
@@ -51,7 +51,7 @@ export const validatePhoneNumber = (phNumber)=>{
 }
 
 export const validateSkills =(skills)=>{
-  if(!skills || skills.length===0) return null;
+  if(!skills || skills.length===0) return 'skills is required';
   if(skills.length>10){
     return "You can add upto 10 skills only";
   }

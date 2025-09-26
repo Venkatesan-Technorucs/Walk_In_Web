@@ -9,6 +9,8 @@ import { Axios } from '../../services/Axios';
 import Header from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import TestQuestionTab from '../../components/TestQuestionTab';
+import TestUserTab from '../../components/TestUserTab';
 
 const TestDetails = () => {
   let { state, dispatch } = useAuth();
@@ -16,6 +18,7 @@ const TestDetails = () => {
   let [testDetails, setTestDetais] = useState({});
   let [testAttemptedUsers, setTestAttemptedUsers] = useState([])
   let [testQuestions, setTestQuestions] = useState([]);
+  const [active, setActive] = useState('TestQuestionTab')
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,88 +39,96 @@ const TestDetails = () => {
     fetchTestDetails();
   }, []);
 
-  const userBodyTemplate = (user) => {
-    return <div>
-      <p className='text-base font-medium'>{`${user.userDetails.firstName} ${user.userDetails.lastName}`}</p>
-      <p className='text-sm text-(--secondary-text-color) font-normal'>{user.userDetails.email}</p>
-    </div>
-  };
-
-  const statusBodyTemplate = (user) => {
-    return <Tag value={user.status} severity={user.status === 'Completed' ? 'danger' : 'success'}></Tag>
-  };
-  const timeTakenBodyTemplate = (user) => {
-    let startTime = user?.startTime?.split(' ')[1];
-    let endTime = user?.endTime?.split(' ')[1];
-    if (!startTime || !endTime) return <p>-</p>
-    let start = new Date(`1970-01-01T${startTime}Z`);
-    let end = new Date(`1970-01-01T${endTime}Z`);
-    let diff = new Date(end - start);
-    let diffMinutes = diff.getUTCMinutes();
-    let diffSeconds = diff.getUTCSeconds();
-    return <div className='flex items-center gap-1'>
-      <i className='pi pi-clock'></i>
-      <p>{`${diffMinutes}m ${diffSeconds}s`}</p>
-    </div>
-  };
-
-  const isMultiBodyTemplate = (question) => {
-    return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
+  const renderTab = () => {
+    switch (active) {
+      case 'TestQuestionTab':
+          return <TestQuestionTab testQuestions={testQuestions}/>
+      case 'testUserTab':
+          return <TestUserTab testAttemptedUsers={testAttemptedUsers}/>
+    }
   }
  
   return (
     <>
-      {!state.apiLoading ? <div>
-        <Header name={state.user.name} role={state.user.role} />
-        <div className='flex flex-col p-5'>
-          <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
-            <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
-          </Button>
-          <div className='flex justify-between'>
-            <h1 className='capitalize font-bold text-2xl'>Title: {testDetails.title}</h1>
-            <Tag value={testDetails.isActive ? 'Active' : 'Expired'} severity={testDetails.isActive ? 'success' : 'danger'}></Tag>
+      {!state.apiLoading ? (
+        <div className="min-h-scree">
+          <Header name={state.user.name} role={state.user.role} />
+
+          <div className='p-5'>
+            <div className="my-4">
+              <Button
+                className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none hover:bg-transparent"
+                onClick={() => navigate(-1)}
+                aria-label="Go back"
+              >
+                <i className="pi pi-arrow-left text-[var(--primary-color)] text-xl" />
+              </Button>
+            </div>
+            <div className="p-6 bg-white rounded-2xl shadow-md border border-gray-200 space-y-3 mb-4 ">
+              <div className="flex justify-between items-center">
+                <h1 className="capitalize font-bold text-2xl text-gray-800">
+                  Title: {testDetails.title}
+                </h1>
+                <Tag
+                  value={testDetails.isActive ? "Active" : "Expired"}
+                  severity={testDetails.isActive ? "success" : "danger"}
+                />
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <p className="text-base font-medium">Duration:</p>
+                <i className="pi pi-clock text-gray-500" />
+                <p className="text-base">{testDetails.duration}m</p>
+              </div>
+              <h2 className="font-medium text-base text-gray-700">
+                Department: {testDetails.department}
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-gray-700">
+                <h2 className="font-medium text-base">
+                  Start Date: {testDetails.startDate}
+                </h2>
+                <h2 className="font-medium text-base">
+                  End Date: {testDetails.endDate}
+                </h2>
+              </div>
+            </div>
+            <div className="w-full h-12 bg-white rounded-2xl flex items-center p-1 border border-transparent mb-4">
+              <div
+                className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
+              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+                onClick={() => setActive("TestQuestionTab")}
+                role="button"
+                aria-pressed={active === "TestQuestionTab"}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setActive("TestQuestionTab")}
+              >
+                <p>Tests</p>
+              </div>
+
+              <div
+                className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
+              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+                onClick={() => setActive("testUserTab")}
+                role="button"
+                aria-pressed={active === "testUserTab"}
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && setActive("testUserTab")}
+              >
+                <p>Users</p>
+              </div>
+            </div>
+            <Card className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
+              {renderTab()}
+            </Card>
           </div>
-          <div className='flex items-center gap-1'>
-            <p className='text-base font-medium'>Duration: </p>
-            <i className='pi pi-clock'></i>
-            <p>{testDetails.duration}m</p>
-          </div>
-          <h2 className='font-medium test-base'>Department: {testDetails.department}</h2>
-          <h2 className='font-medium text-base'>Start Date: {testDetails.startDate}</h2>
-          <h2 className='font-medium text-base'>End Date: {testDetails.endDate}</h2>
         </div>
-        <Card className='rounded-xl' title={`Question (${testQuestions.length})`}>
-          <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
-            <Column field="title" header="Question"></Column>
-            <Column field="isMultiSelect" header="Multiple Choice"  body={isMultiBodyTemplate}></Column>
-            <Column
-              header="Options"
-              body={(row) => (
-                <div className='flex flex-col gap-2'>
-                  {row.options?.map((option, index) => (
-                    <div  className='flex items-center justify-between'>
-                      <p key={option.id || index}>
-                        {index + 1}. {option.title}
-                      </p>
-                      <p>{option.isCorrect && <i className={`pi pi-check-circle`} style={{ color: "green" }}></i>}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            />
-          </DataTable>
-        </Card>
-        <Card className='rounded-xl' title={`User (${testAttemptedUsers.length})`}>
-          <DataTable value={testAttemptedUsers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
-            <Column field="user" header="User" body={userBodyTemplate}></Column>
-            <Column field="score" header="Score"></Column>
-            <Column field="timeTaken" header="Time Taken" body={timeTakenBodyTemplate}></Column>
-            <Column field='status' header="Status" body={statusBodyTemplate}></Column>
-          </DataTable>
-        </Card>
-      </div> : <ProgressSpinner className='absolute top-1/2 left-1/2' />}
+      ) : (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/20 z-50">
+          <ProgressSpinner />
+        </div>
+      )}
     </>
-  )
+  );
+
 }
 
 export default TestDetails;
