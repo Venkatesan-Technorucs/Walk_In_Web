@@ -65,12 +65,6 @@ export const validateField = (label,field)=>{
   else return null;
 }
 
-export const validateTestQuestion =(questionIds,questions)=>{
-  if(questionIds.length<0 || questions.length<0){
-    return `Choose previous test questions or create questions`
-  }
-  else return null;
-}
 
 export const validateOptions = (options) => {
   if (!Array.isArray(options)) {
@@ -91,5 +85,46 @@ export const validateDate = (label,date)=>{
   if(!date){
     return `${label} must be required`;
   }
+  if(date.getMinutes() ===0){
+    return `${label} atleast minutes`
+  }
   else return null;
 }
+
+export const validateTestQuestions = (questions) => {
+  if (!questions || questions.length === 0) {
+    return "Choose previous test questions or create at least one question.";
+  }
+
+  for (let qIndex = 0; qIndex < questions.length; qIndex++) {
+    const q = questions[qIndex];
+
+    if (!q.qtitle || q.qtitle.trim() === "") {
+      return `Question ${qIndex + 1}: Title is required.`;
+    }
+
+    if (!q.options || q.options.length < 2) {
+      return `Question ${qIndex + 1}: At least 2 options are required.`;
+    }
+
+    for (let oIndex = 0; oIndex < q.options.length; oIndex++) {
+      const opt = q.options[oIndex];
+      if (!opt.title || opt.title.trim() === "") {
+        return `Question ${qIndex + 1}: Option ${oIndex + 1} cannot be empty.`;
+      }
+    }
+
+    const correctOptions = q.options.filter((opt) => opt.isCorrect);
+    if (q.isMultiSelect) {
+      if (correctOptions.length === 0) {
+        return `Question ${qIndex + 1}: At least one correct option must be selected.`;
+      }
+    } else {
+      if (correctOptions.length !== 1) {
+        return `Question ${qIndex + 1}: Exactly one correct option must be selected.`;
+      }
+    }
+  }
+
+  return null;
+};

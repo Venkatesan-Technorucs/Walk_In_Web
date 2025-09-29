@@ -11,7 +11,7 @@ import CustomCard from '../../components/common/Card.Jsx';
 
 const Dashboard = () => {
     let { state, dispatch } = useAuth();
-    let [active, setActive] = useState('');
+    let [active, setActive] = useState('usersCard');
     let [dashboardData, setDashboardData] = useState({
         totalAdmins: '',
         totalApplicants: '',
@@ -21,7 +21,6 @@ const Dashboard = () => {
 
     console.log(state);
     useEffect(() => {
-        setActive('usersCard');
         let fetchData = async () => {
             try {
                 let response = await Axios.get('/api/users/getUsersDashboardDetails');

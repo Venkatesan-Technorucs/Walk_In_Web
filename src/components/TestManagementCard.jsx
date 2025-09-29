@@ -11,8 +11,6 @@ import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import { Axios } from '../services/Axios';
 import DateFilter from './DateFilter';
-// import CreateTestDialog from './CreateTestDialog';
-
 
 const TestManagementCard = () => {
     let navigate = useNavigate();
@@ -23,9 +21,9 @@ const TestManagementCard = () => {
     let [page, setPage] = useState(0);
     let [loading, setLoading] = useState(false);
     let [filterText, setFilterText] = useState('');
-    let [recentTests, setRecentTests] = useState([]);
     const toast = useRef(null);
     const [testVisible, setTestVisible] = useState(false);
+    let [msg,setMsg] = useState('');
 
 
     let fetchTests = async (pageIndex = 0, pageSize = 0, filterText = '', dateRange = {}) => {
@@ -39,11 +37,11 @@ const TestManagementCard = () => {
                 setAllTests(fetchedTests);
                 setTotalRecords(total);
             } else {
-                console.log(response.data.message);
+                setMsg(response?.data?.message);
             }
         }
         catch (error) {
-            console.log(error);
+            setMsg(error?.response?.data?.message);
         }
         finally {
             setLoading(false);

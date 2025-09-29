@@ -4,12 +4,10 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card'
 import { Checkbox } from 'primereact/checkbox';
-import { Panel } from 'primereact/panel';
 import { Divider } from 'primereact/divider';
 import { Calendar } from 'primereact/calendar';
-import { validateDate, validateField, validateOptions, validateTestQuestion } from '../../utils/Validation';
+import { validateDate, validateField, validateTestQuestions } from '../../utils/Validation';
 import { Axios } from '../../services/Axios';
-import { classNames } from 'primereact/utils';
 import QuestionCard from '../../components/QuestionCard';
 import { pt } from '../../utils/pt';
 import Header from '../../components/Header';
@@ -34,7 +32,7 @@ const CreateTest = () => {
         startDate: '',
         endDate: '',
         assignedQuestionIds: [],
-        questions: [questionData],
+        questions: [],
         numberOfQuestions: ''
     });
     let [errors, setErrors] = useState({
@@ -43,18 +41,12 @@ const CreateTest = () => {
         department: '',
         startDate: '',
         endDate: '',
-        questionsFound: '',
+        questions: '',
     })
     let [isErrorView, setIsErrorView] = useState(false);
 
-    let [optionsCount, setOptionsCount] = useState(4);
-    let [questionErrors, setQuestionErrors] = useState({
-        qtitle: '',
-        options: '',
-    })
-    let [isQuestionErrorView, setIsQuestionErrorView] = useState(false);
-
     let today = new Date();
+
     const showTest = (severity, summary, msg) => {
         toast.current.show({ severity: severity, summary: summary, detail: msg });
     };
@@ -73,22 +65,19 @@ const CreateTest = () => {
 
     const formatDate = (label, date) => {
         if (label === 'startDate' || label === 'endDate') {
+            console.log(label, date)
             const d = new Date(date);
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             const year = d.getFullYear();
             return `${month}/${day}/${year}`;
         }
-        else {
+        if (label === 'duration') {
+            console.log()
             const d = new Date(date);
-            return minutes = `${(d.getHours() * 60) + d.getMinutes()}`;
+            return `${(d.getHours() * 60) + d.getMinutes()}`;
         }
     };
-
-    let handleAddOption = () => {
-        setOptionsCount((prev) => prev + 1);
-        setQuestionData({ ...questionData, options: [...questionData.options, { title: '', isCorrect: false }] });
-    }
 
 
     let handleCreate = async (e) => {
@@ -99,26 +88,26 @@ const CreateTest = () => {
             duration: validateDate('Duration', testData.duration),
             startDate: validateDate('Start Date', testData.startDate),
             endDate: validateDate('End Date', testData.endDate),
-            questionsFound: validateTestQuestion(testData.assignedQuestionIds, testData.questions),
+            questions: validateTestQuestions(testData.questions),
         };
         setErrors(newErrors);
-        if (newErrors.title || newErrors.department || newErrors.duration || newErrors.questionsFound || newErrors.startDate || newErrors.endDate) {
+        if (newErrors.title || newErrors.department || newErrors.duration || newErrors.questions || newErrors.startDate || newErrors.endDate) {
             setIsErrorView(true);
             return;
         }
         else {
             try {
-                console.log(testData);
-                let newStartDate = formatDate(startDate);
-                let newEndDate = formatDate(endDate);
-                let newNumberOfQuestions = testData.questions.length + testData.assignedQuestionIds.length;
+                let newStartDate = formatDate('startDate', testData.startDate);
+                let newEndDate = formatDate('endDate', testData.endDate);
+                let newDuration = formatDate('duration', testData.duration);
+                let newNumberOfQuestions = testData.questions.length;
                 let payload = {
-                    ...testData, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
+                    ...testData, duration: newDuration, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
                 }
-                console.log(payload);
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
-                    showTest('success', 'Success', response.data.message);
+                    navigate(-1);
+                    // showTest('success', 'Success', response.data.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
@@ -127,7 +116,8 @@ const CreateTest = () => {
                     setErrors(newErrors);
                 }
                 else {
-                    showTest('error', 'Error', response.data.message);
+                    navigate(-1);
+                    // showTest('error', 'Error', response.data.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
@@ -137,7 +127,8 @@ const CreateTest = () => {
                 }
             } catch (error) {
                 console.log(error);
-                showTest('error', 'Error', error?.response?.data.message);
+                // showTest('error', 'Error', error?.response?.data.message);
+                navigate(-1);
                 setVisible(false)
                 setIsErrorView(false);
                 let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
@@ -175,73 +166,24 @@ const CreateTest = () => {
         }
     }
 
-
-    // let handleAddQuestion = (e) => {
-    //     e.preventDefault();
-    //     let newQuestionErrors = {
-    //         qtitle: validateField('Question', questionData.qTitle),
-    //         options: validateOptions(questionData.options),
-    //     };
-    //     const correctOptions = questionData.options.filter(opt => opt.isCorrect);
-    //     if (correctOptions.length === 0) {
-    //         newQuestionErrors.options = 'At least one correct option must be selected.';
-    //     }
-
-    //     if (!questionData.isMultiSelect && correctOptions.length > 1) {
-    //         newQuestionErrors.options = 'Only one correct option can be selected for a single-select question.';
-    //     }
-
-    //     setQuestionErrors(newQuestionErrors);
-    //     if (newQuestionErrors.qTitle || newQuestionErrors.options) {
-    //         setIsQuestionErrorView(true);
-    //         return;
-    //     }
-    //     else {
-    //         try {
-    //             console.log(questionData);
-    //             setTestData(prev => ({ ...prev, questions: [...testData.questions, questionData] }));
-    //             handleClear();
-    //             setCollapsed(true);
-    //             setHasPanelOpened(false)
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-
-    //     }
-    // }
-
     let handleOptionChange = (fieldName, qIndex, oIndex, value) => {
         let updatedQuestions = [...testData.questions];
         let updatedOptions = [...testData.questions[qIndex].options]
         updatedOptions[oIndex] = {
             ...updatedOptions[oIndex],
-            [fieldName]:value
+            [fieldName]: value
         };
-        updatedQuestions[qIndex]={
+        updatedQuestions[qIndex] = {
             ...updatedQuestions[qIndex],
-            options:updatedOptions,
+            options: updatedOptions,
         }
-        setTestData({ ...testData, questions:updatedQuestions});
+        setTestData({ ...testData, questions: updatedQuestions });
     }
     let handleQuestionChange = (fieldName, value, qIndex) => {
         let updatedQuestions = [...testData.questions]
         updatedQuestions[qIndex][fieldName] = value;
         setTestData({ ...testData, questions: updatedQuestions })
-        // setQuestionData({ ...questionData, [fieldName]: value });
-        // switch (fieldName) {
-        //     case 'qtitle':
-        //         setQuestionErrors({ ...questionErrors, [fieldName]: validateField(fieldName, value) })
-        //         break;
-        // }
     }
-
-    // let handleRemoveOption = (indexToRemove) => {
-    //     setQuestionData(prevData => {
-    //         const newOptions = prevData.options.filter((_, index) => index !== indexToRemove);
-    //         return { ...prevData, options: newOptions };
-    //     });
-    // };
-
 
     let AddQuestionCard = () => {
         let question = {
@@ -280,7 +222,7 @@ const CreateTest = () => {
                                     <label htmlFor="department" >Department</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.department && isErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <InputText id='department' type='text' placeholder='Enter department' value={testData.department} onChange={(e) => { handleChange('department', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.lastName && isErrorView)} />
+                                <InputText id='department' type='text' placeholder='Enter department' value={testData.department} onChange={(e) => { handleChange('department', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.department && isErrorView)} />
                                 {(errors.department && isErrorView) && <small className='text-xs text-red-500'>{errors.department}</small>}
                             </div>
                         </div>
@@ -289,8 +231,9 @@ const CreateTest = () => {
                                 <div className='flex'>
                                     <label htmlFor="duration" >Duration</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.duration && isErrorView) ? 'text-red-500' : ''}`}></i>
+                                    <p className=''>(HH:MM)</p>
                                 </div>
-                                <Calendar id='duration' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.value) }} className='w-full h-10 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.email && isErrorView)} timeOnly hourFormat='24' showIcon icon={() => <i className='pi pi-clock text-(--primary-color)'></i>} />
+                                <Calendar id='duration' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.value) }} className='w-full h-10 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.duration && isErrorView)} timeOnly hourFormat='24' showIcon icon={() => <i className='pi pi-clock text-(--primary-color)'></i>} />
                                 {(errors.duration && isErrorView) && <small className='text-xs text-red-500'>{errors.duration}</small>}
                             </div>
                             <div className='w-1/3 flex flex-col gap-1'>
@@ -298,7 +241,7 @@ const CreateTest = () => {
                                     <label htmlFor="department" >Start Date</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} minDate={today} onChange={(e) => handleChange('startDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} />
+                                <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} minDate={today} onChange={(e) => handleChange('startDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} invalid={(errors.startDate && isErrorView)} />
                                 {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                             </div>
                             <div className='w-1/3 flex flex-col gap-1'>
@@ -306,11 +249,11 @@ const CreateTest = () => {
                                     <label htmlFor="duration" >End Date</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} />
+                                <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} invalid={(errors.endDate && isErrorView)} />
                                 {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                             </div>
                         </div>
-                        <Dialog header='Recent Tests' visible={visible} className='h-[50%] w-[50%] flex flex-col' pt={{headerTitle:"text-2xl", closeButton: "hidden" }} footer={() => {
+                        <Dialog header='Recent Tests' visible={visible} className='h-[50%] w-[50%] flex flex-col' pt={{ headerTitle: "text-2xl", closeButton: "hidden" }} footer={() => {
                             return <Button label='Ok' className='self-end bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(false) }} />
                         }}>
                             <ul className='overflow-auto'>
@@ -340,7 +283,6 @@ const CreateTest = () => {
                                 })}
                             </ul>
                         </Dialog>
-                        {/* {(errors.questionsFound && isErrorView) && <small className='text-xs text-red-500'>{errors.questionsFound}</small>} */}
                     </form>
                 </Card>
                 <Card className='w-full rounded-2xl overflow-auto' pt={{ header: "p-3 pb-0", body: "py-0", content: "pt-0 pl-4" }} header={() => {
@@ -357,14 +299,15 @@ const CreateTest = () => {
                             {testData.questions?.map((question, index) => {
                                 return <li key={question.id}>
                                     <div>
-                                        <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} questionData={questionData} setQuestionData={setQuestionData} handleQuestionChange={handleQuestionChange} handleOptionChange={handleOptionChange} />
+                                        <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} handleQuestionChange={handleQuestionChange} handleOptionChange={handleOptionChange} />
                                         <Divider className='m-0' />
                                     </div>
                                 </li>
                             })}
                         </ol>
+                        {(errors.questions && isErrorView) && <small className='text-xs text-red-500'>{errors.questions}</small>}
                         <div className='flex items-center justify-end gap-2 '>
-                            <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={()=>{navigate(-1)}} className="text-(--primary-color)" />
+                            <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={() => { navigate(-1) }} className="text-(--primary-color)" />
                             <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
                         </div>
                     </div>
