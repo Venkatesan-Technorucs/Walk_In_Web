@@ -41,10 +41,10 @@ const UserTestDetails = () => {
         {rowData.question.options.map((option) => {
           const isSelected = rowData.selectedOptions.includes(option.id.toString());
           return (
-            <div key={option.id} className={`flex items-center justify-between px-3 py-2 rounded-lg border ${option.isCorrect ? 'border-green-400 bg-green-50' : isSelected ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'} shadow-sm`}> 
+            <div key={option.id} className={`flex items-center justify-between px-3 py-2 rounded-lg border ${option.isCorrect && isSelected ? 'border-green-400 bg-green-50' : isSelected ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white'} shadow-sm`}>
               <span className="flex items-center gap-2 font-medium text-gray-700">
-                {option.isCorrect && <i className="pi pi-check-circle text-green-500" title="Correct Option"></i>}
-                {isSelected && <i className="pi pi-user-check text-blue-500" title="Selected Option"></i>}
+                {/* {option.isCorrect && <i className="pi pi-check-circle text-green-500" title="Correct Option"></i>}
+                {isSelected && <i className="pi pi-user-check text-blue-500" title="Selected Option"></i>} */}
                 {option.title}
               </span>
             </div>
@@ -70,14 +70,14 @@ const UserTestDetails = () => {
             </Button>
             <div className="flex gap-6 mt-4 mb-2">
               <div className="flex items-center gap-2">
-                <div className="bg-blue-200 border-black w-5 h-5 shadow-sm"></div>
-                -
-                <p>selected answer</p>
-              </div>
-              <div className="flex items-center gap-2">
                 <div className="bg-green-200 border-black w-5 h-5 shadow-sm"></div>
                 -
                 <p>correct answer</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="bg-red-200 border-black w-5 h-5 shadow-sm"></div>
+                -
+                <p>incorrect answer</p>
               </div>
             </div>
           </div>

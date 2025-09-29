@@ -10,13 +10,15 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import { Axios } from '../services/Axios';
-import CreateTestDialog from './CreateTestDialog';
+import DateFilter from './DateFilter';
+// import CreateTestDialog from './CreateTestDialog';
 
 
 const TestManagementCard = () => {
     let navigate = useNavigate();
     let [allTests, setAllTests] = useState([]);
     let [totalRecords, setTotalRecords] = useState(0);
+    let [dateRange, setDateRange] = useState({ startDate: new Date(), endDate: new Date() });
     let [rows, setRows] = useState(5);
     let [page, setPage] = useState(0);
     let [loading, setLoading] = useState(false);
@@ -26,11 +28,11 @@ const TestManagementCard = () => {
     const [testVisible, setTestVisible] = useState(false);
 
 
-    let fetchTests = async (pageIndex = 0, pageSize = 0, filterText = '') => {
+    let fetchTests = async (pageIndex = 0, pageSize = 0, filterText = '', dateRange = {}) => {
         setLoading(true);
         try {
             let skip = pageIndex * pageSize;
-            let response = await Axios.get(`/api/tests/getAllTests?skip=${skip}&limit=${pageSize}&search=${filterText}`);
+            let response = await Axios.post(`/api/tests/getAllTests?skip=${skip}&limit=${pageSize}&search=${filterText}`, { dateRange });
             if (response.data.success) {
                 let fetchedTests = response.data?.data.tests || [];
                 let total = response.data?.data.totalTests || 0;
@@ -49,13 +51,20 @@ const TestManagementCard = () => {
     }
 
     useEffect(() => {
+        if (dateRange.startDate && dateRange.endDate) {
+            fetchTests(page, rows, filterText, dateRange);
+            return;
+        }
+    }, [dateRange.startDate, dateRange.endDate]);
+
+    useEffect(() => {
         fetchTests(page, rows, filterText);
-    }, [])
+    }, []);
 
     const onPageChange = (event) => {
         setPage(event.page);
         setRows(event.rows);
-        fetchTests(event.page, event.rows, filterText);
+        fetchTests(event.page, event.rows, filterText, dateRange);
     };
 
     let handleChange = (e) => {
@@ -130,10 +139,15 @@ const TestManagementCard = () => {
                         <div className='text-2xl font-medium text-(--primary-text-color)'>Tests - ({totalRecords})</div>
                         <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Tests in the system</div>
                     </div>
-                    <span className="p-input-icon-left w-1/2">
-                        <InputIcon icon="pi pi-search"> </InputIcon>
-                        <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Tests" />
-                    </span>
+                    <div className='flex gap-4'>
+                        <span className='p-input-icon-left mr-4'>
+                            <DateFilter dateRange={dateRange} setDateRange={setDateRange} />
+                        </span>
+                        <span className="p-input-icon-left w-1/2">
+                            <InputIcon icon="pi pi-search"> </InputIcon>
+                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Tests" />
+                        </span>
+                    </div>
                 </div>}>
                 <DataTable lazy value={allTests} paginator rows={rows} first={page * rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>

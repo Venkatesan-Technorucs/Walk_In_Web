@@ -26,7 +26,7 @@ function userReducer(state, action) {
         case "LOADING":
             return { ...state, loading: true };
         case "API_LOADING":
-            return { ...state, apiLoading: true, apiLoading: action.payload };
+            return { ...state, apiLoading: action.payload };
         case "ERROR":
             return { ...state, loading: false, error: action.payload }
         default:
@@ -53,9 +53,9 @@ const AuthProvider = ({ children }) => {
                 console.log(decodedToken);
                 const now = Date.now();
                 if (now < decodedToken.exp * 1000) {
-                        dispatch({ type: "LOGIN_SUCCESS", payload: { ...decodedToken, token: token } });
+                    dispatch({ type: "LOGIN_SUCCESS", payload: { ...decodedToken, token: token } });
                 } else {
-                    dispatch({ type: "ERROR", error: 'Token expired' })
+                    dispatch({ type: "ERROR", payload: 'Token expired' })
                 }
             }
             else {

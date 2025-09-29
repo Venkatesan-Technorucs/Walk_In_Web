@@ -55,9 +55,9 @@ const TestDetails = () => {
  
   return (
     <>
-      {!state.apiLoading ? (
+      {!state?.apiLoading ? (
         <div className="min-h-screen">
-          <Header name={state.user.name} role={state.user.role} />
+          <Header name={state?.user?.name} role={state?.user?.role} />
 
           <div className='p-5'>
             <div className="my-4">
@@ -87,12 +87,12 @@ const TestDetails = () => {
               <h2 className="font-medium text-base text-gray-700">
                 Department: {testDetails.department}
               </h2>
-              <div className="grid grid-cols-2 gap-4 text-gray-700">
-                <h2 className="font-medium text-base">
-                  Start Date: {testDetails.startDate}
+              <div className="flex gap-4 text-gray-700">
+                <h2 className="">
+                  <p className='font-bold text-base'>Start Date:</p> {testDetails.startDate}
                 </h2>
-                <h2 className="font-medium text-base">
-                  End Date: {testDetails.endDate}
+                <h2 className="">
+                  <p className='font-bold text-base'>End Date:</p> {testDetails.endDate}
                 </h2>
               </div>
             </div>
