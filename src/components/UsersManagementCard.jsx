@@ -140,7 +140,7 @@ const UsersManagementCard = ({ }) => {
     };
 
     return (
-        <div className='min-h-screen h-full flex flex-col gap-2'>
+        <div className='min-h-full flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>User Management</h1>

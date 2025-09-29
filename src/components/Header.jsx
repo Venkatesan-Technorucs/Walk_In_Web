@@ -8,6 +8,9 @@ const Header = ({name, role}) => {
     
     const handleLogout = () => {
         dispatch({ type: 'LOGOUT' });
+        localStorage.removeItem('token');
+        localStorage.removeItem('test');
+        localStorage.removeItem('activeDashboardCard')
     }
     return (
         <div className='w-full h-[100px] border-b-2 flex flex-col sm:flex-row justify-center xs:justify-between items-center py-2 border-b-gray-300 bg-(--header-bg) gap-2 xs:px-[5%] xs:py-4'>

@@ -79,6 +79,18 @@ const Dashboard = () => {
         </div>
     );
 
+    const handleChange = (card) => {
+        setActive(card);
+        localStorage.setItem('activeDashboardCard', card);
+    }
+
+    useEffect(() => {
+        const storedCard = localStorage.getItem('activeDashboardCard');
+        if (storedCard) {
+            setActive(storedCard);
+        }
+    }, [])
+
     return (
         <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
             {/* Header */}
@@ -114,10 +126,10 @@ const Dashboard = () => {
                 </div>
                 {/* Users or Tests */}
                 <div className='w-full h-12 bg-white rounded-4xl flex items-center p-2 gap-1 hover:cursor-pointer'>
-                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'usersCard' ? 'bg-green-100' : ''}`} onClick={() => { setActive('usersCard') }}>
+                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'usersCard' ? 'bg-green-100' : ''}`} onClick={() => { handleChange('usersCard') }}>
                         <p>Users</p>
                     </div>
-                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'testsCard' ? 'bg-green-100' : ''}`} onClick={() => { setActive('testsCard') }}>
+                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'testsCard' ? 'bg-green-100' : ''}`} onClick={() => { handleChange('testsCard') }}>
                         <p>Tests</p>
                     </div>
                 </div>

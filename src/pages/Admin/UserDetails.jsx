@@ -65,9 +65,9 @@ const UserDetails = () => {
   return (
     <>
       {!apiLoading ? (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-full w-11/12 self-center justify-self-center rounded-2xl bg-white p-5 mt-10">
           {/* <Header name={user.name} role={user.role} /> */}
-          <div className="w-full h-full mt-8 px-6">
+          <div className="w-full h-full px-6">
             <div className="h-full flex flex-col gap-6">
               <div className="flex items-center gap-3">
                 <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
@@ -76,7 +76,7 @@ const UserDetails = () => {
                 <h1 className="text-2xl font-medium text-gray-900 tracking-tight">User Details</h1>
               </div>
               <div className="flex flex-col md:flex-row gap-6">
-                <div className="flex-1 bg-white rounded-2xl shadow p-6 flex flex-col items-center">
+                <div className="flex-1 bg-white rounded-2xl shadow-2xl p-6 flex flex-col items-center">
                   <Avatar label={user?.name?.split(' ')?.map(n => n[0])?.join('')?.toUpperCase()} size="xlarge" shape="circle" className="mb-4 shadow" />
                   <div className="text-2xl font-medium text-gray-800 mb-1">{user.name}</div>
                   <div className="text-base text-gray-500 mb-2">{user.role}</div>
@@ -100,7 +100,7 @@ const UserDetails = () => {
                   </div>
                 </div>
                 <div className="flex-[2] flex flex-col gap-6">
-                  <Card className="rounded-2xl shadow border-0 bg-white" title={<span className="text-xl font-bold text-gray-800">Profile Information</span>}>
+                  <Card className="rounded-2xl shadow-xl border-0 bg-white" title={<span className="text-xl font-bold text-gray-800">Profile Information</span>}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-gray-700 mt-2">
                       <div>
                         <div className="text-gray-500">Email</div>
@@ -120,7 +120,7 @@ const UserDetails = () => {
                       </div>
                     </div>
                   </Card>
-                  <Card className="rounded-2xl shadow border-0 bg-white mt-2" title={<span className="text-xl font-bold text-gray-800">Test Attempts <span className='text-base text-gray-500'>({attempts.length})</span></span>}>
+                  <Card className="rounded-2xl shadow-xl border-0 bg-white mt-2" title={<span className="text-xl font-bold text-gray-800">Test Attempts <span className='text-base text-gray-500'>({attempts.length})</span></span>}>
                     <DataTable value={attempts} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '40rem' }} emptyMessage={<span className="p-6 text-center text-sm text-gray-400">No test attempts yet.</span>} className="mt-2">
                       <Column field="testName" header={<span className="font-semibold text-gray-700">Test</span>} body={(row) => row.name || '—'}></Column>
                       <Column field="score" header={<span className="font-semibold text-gray-700">Score</span>} body={(row) => (row.score != null ? row.score : '—')}></Column>

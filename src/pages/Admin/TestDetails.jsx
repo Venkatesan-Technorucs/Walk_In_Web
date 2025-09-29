@@ -12,6 +12,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import TestQuestionTab from '../../components/TestQuestionTab';
 import TestUserTab from '../../components/TestUserTab';
 import LeaderBoardTab from '../../components/LeaderBoardTab';
+import { Divider } from 'primereact/divider';
 
 const TestDetails = () => {
   let { state, dispatch } = useAuth();
@@ -52,6 +53,10 @@ const TestDetails = () => {
           return <LeaderBoardTab LeaderBoardData={leaderBoardData}/>
     }
   }
+
+  const handleChange = (card) => {
+    setActive(card);
+  }
  
   return (
     <>
@@ -61,13 +66,13 @@ const TestDetails = () => {
 
           <div className='p-5'>
             <div className="my-4">
-              <Button
-                className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none hover:bg-transparent"
+              <div
+                className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none cursor-pointer hover:bg-transparent"
                 onClick={() => navigate(-1)}
                 aria-label="Go back"
               >
                 <i className="pi pi-arrow-left text-[var(--primary-color)] text-xl" />
-              </Button>
+              </div>
             </div>
             <div className="p-6 bg-white rounded-2xl shadow-md border border-gray-200 space-y-3 mb-4 ">
               <div className="flex justify-between items-center">
@@ -98,10 +103,11 @@ const TestDetails = () => {
             </div>
             <Card className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
               <>
-                <div className="w-full h-12 border-r-green-200 flex items-center p-1 border border-transparent mb-4">
-                  <div
+                <div className="flex flex-col mb-4">
+                  <div className='w-full h-12 bg-white shadow-md rounded-2xl flex items-center p-1 border-transparent border'>
+                    <div
                     className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
                     onClick={() => setActive("TestQuestionTab")}
                     role="button"
                     aria-pressed={active === "TestQuestionTab"}
@@ -113,7 +119,7 @@ const TestDetails = () => {
 
                   <div
                     className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
                     onClick={() => setActive("testUserTab")}
                     role="button"
                     aria-pressed={active === "testUserTab"}
@@ -125,7 +131,7 @@ const TestDetails = () => {
 
                   <div
                     className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "leaderBoardTab" ? "bg-green-100 text-green-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
+              ${active === "leaderBoardTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
                     onClick={() => setActive("leaderBoardTab")}
                     role="button"
                     aria-pressed={active === "leaderBoardTab"}
@@ -134,6 +140,8 @@ const TestDetails = () => {
                   >
                     <p>LeaderBoard</p>
                   </div>
+                  </div>
+                  {/* <Divider className='border-green-200 border' /> */}
                 </div>
                 {renderTab()}
               </>

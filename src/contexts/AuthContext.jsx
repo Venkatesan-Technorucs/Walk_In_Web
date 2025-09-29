@@ -2,6 +2,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import React, { useContext, useEffect, useReducer } from 'react'
 import { createContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -44,18 +45,25 @@ let initialState = {
 let { Provider } = AuthContext;
 
 const AuthProvider = ({ children }) => {
-    let [state, dispatch] = useReducer(userReducer, initialState)
+    let [state, dispatch] = useReducer(userReducer, initialState);
+    const navigate = useNavigate();
+
     useEffect(() => {
         let persistUser = async () => {
             let token = localStorage.getItem('token');
+            let currentPath = window.location.pathname;
             if (token) {
                 const decodedToken = jwtDecode(token);
-                console.log(decodedToken);
                 const now = Date.now();
                 if (now < decodedToken.exp * 1000) {
+                    if(currentPath && currentPath !== '/login' && currentPath !== '/register'){
+                        navigate(currentPath);
+                    }else{
+                        navigate('/');
+                    }
                     dispatch({ type: "LOGIN_SUCCESS", payload: { ...decodedToken, token: token } });
                 } else {
-                    dispatch({ type: "ERROR", payload: 'Token expired' })
+                    dispatch({ type: "LOGOUT" })
                 }
             }
             else {
@@ -63,8 +71,8 @@ const AuthProvider = ({ children }) => {
             }
         }
         persistUser();
-
     }, []);
+
     return (
         <Provider value={{ state, dispatch }}>
             {children}

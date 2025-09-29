@@ -196,15 +196,15 @@ const CreateTest = () => {
 
     return (
         <div className='w-full h-full flex flex-col'>
-            <Header name={state.user.name} role={state.user.role} />
-            <div className='flex flex-col bg-(--header-bg) p-4 gap-2 h-full'>
-                <Button
-                    className="w-8 h-8 p-0 pl-3 flex items-center justify-center bg-transparent border-none hover:bg-transparent"
+            {/* <Header name={state.user.name} role={state.user.role} /> */}
+            <div className='flex flex-col p-4 gap-2 h-full'>
+                <div
+                    className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none cursor-pointer hover:bg-transparent"
                     onClick={() => navigate(-1)}
                     aria-label="Go back"
                 >
                     <i className="pi pi-arrow-left text-[var(--primary-color)] text-xl" />
-                </Button>
+                </div>
                 <Card title="Create Test" pt={{ root: 'w-full rounded-2xl', title: "text-xl font-fold", content: "pt-0", body: "px-4 pb-0" }} >
                     <form className='flex flex-col gap-3'>
                         <div className='flex gap-2'>

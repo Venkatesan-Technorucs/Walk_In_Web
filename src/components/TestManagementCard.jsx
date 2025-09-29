@@ -55,9 +55,9 @@ const TestManagementCard = () => {
         }
     }, [dateRange.startDate, dateRange.endDate]);
 
-    useEffect(() => {
-        fetchTests(page, rows, filterText);
-    }, []);
+    // useEffect(() => {
+    //     fetchTests(page, rows, filterText);
+    // }, []);
 
     const onPageChange = (event) => {
         setPage(event.page);
@@ -121,7 +121,7 @@ const TestManagementCard = () => {
     };
 
     return (
-        <div className='min-h-screen h-full flex flex-col gap-2'>
+        <div className='min-h-full flex flex-col gap-2'>
             <div className='flex justify-between items-center p-2'>
                 <div>
                     <h1 className='font-medium text-xl'>Test Management</h1>
@@ -130,7 +130,7 @@ const TestManagementCard = () => {
                 <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { navigate('/create/test') }} />
                 <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
             </div>
-            {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} fetchedTests={fetchTests} />}
+            {/* {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} fetchedTests={fetchTests} />} */}
             <Card className='rounded-xl' header={
                 <div className='flex justify-between items-center p-4'>
                     <div>
