@@ -66,7 +66,7 @@ const UserDetails = () => {
     <>
       {!apiLoading ? (
         <div className="min-h-screen bg-gray-50">
-          <Header name={user.name} role={user.role} />
+          {/* <Header name={user.name} role={user.role} /> */}
           <div className="w-full h-full mt-8 px-6">
             <div className="h-full flex flex-col gap-6">
               <div className="flex items-center gap-3">

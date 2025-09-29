@@ -82,14 +82,14 @@ const Dashboard = () => {
     return (
         <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
             {/* Header */}
-            <Header name={state.user?.name} role={state.user?.role} />
+            {/* <Header name={state.user?.name} role={state.user?.role} /> */}
             {/* Body */}
             <div className='w-3/4 min-h-full flex flex-col self-center my-5 gap-2'>
                 {/* Dashboard contents */}
-                <div className=''>
+                {/* <div className=''>
                     <h1 className='text-xl md:text-2xl font-medium'>{state.user.role === 'SuperAdmin' ? 'Super' : ''} Admin Dashboard</h1>
                     <h2 className='text-base xs:text-lg text-(--secondary-text-color) '>Manage the entire aptitude test platform</h2>
-                </div>
+                </div> */}
                 <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-3'>
                     {/* {state.user.role === 'SuperAdmin' && <Card className='w-full xs:w-50 h-20 xs:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
                         <p className='text-4xl'>{dashboardData.totalAdmins}</p>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                         <p>Tests</p>
                     </div>
                 </div>
-                <div className=''>
+                <div className='min-h-full'>
                     {renderCard()}
                 </div>
             </div>

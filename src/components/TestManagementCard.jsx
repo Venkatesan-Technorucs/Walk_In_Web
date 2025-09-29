@@ -69,7 +69,7 @@ const TestManagementCard = () => {
         let search = e.target.value;
         setFilterText(search);
         setPage(0);
-        fetchTests(0, rows, search);
+        fetchTests(0, rows, search, dateRange);
     }
 
     const titleBodyTemplate = (allTests) => {

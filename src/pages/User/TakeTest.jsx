@@ -203,7 +203,7 @@ const TakeTest = () => {
     return (
         <div className='w-full h-full flex flex-col'>
             {/* Header */}
-            <Header name={state.user.name} role={state.user.role} />
+            {/* <Header name={state.user.name} role={state.user.role} /> */}
             {/* Body */}
             {isLoading
                 ? <div className='w-full min-h-[calc(100vh-80px)] flex items-center justify-center self-center bg-[#E6ECF1]'>

@@ -56,7 +56,7 @@ const UserTestDetails = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <Header name={state.user.name} role={state.user.role} />
+      {/* <Header name={state.user.name} role={state.user.role} /> */}
       <div className="flex items-center justify-center my-6">
         <Card className="rounded-2xl shadow-xl w-11/12 border border-gray-200"
           title={<div className="flex items-center gap-3"><span className="text-3xl font-medium">User Test Details</span></div>}>

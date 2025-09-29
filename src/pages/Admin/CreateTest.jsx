@@ -53,7 +53,7 @@ const CreateTest = () => {
 
     useEffect(() => {
         let fetchTests = async () => {
-            let response = await Axios.get('/api/tests/getAllTests');
+            let response = await Axios.post('/api/tests/getAllTests?skip=&limit=&search=', { dateRange: {} });
             if (response?.data?.success) {
                 setTests(response.data.data.tests);
             } else {
