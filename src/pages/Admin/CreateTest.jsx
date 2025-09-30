@@ -21,6 +21,7 @@ const CreateTest = () => {
     let { state } = useAuth();
     let [visible, setVisible] = useState(false);
     let [tests, setTests] = useState([]);
+    const [loading, setLoading] = useState(false);
     let [questionData, setQuestionData] = useState({
         qtitle: '',
         isMultiSelect: '',
@@ -109,6 +110,7 @@ const CreateTest = () => {
                 let payload = {
                     ...testData, durationMinutes: newDuration, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
                 }
+                setLoading(true);
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
                     showToast('success', 'Success', response.data.message);

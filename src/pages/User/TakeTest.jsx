@@ -25,6 +25,7 @@ const TakeTest = () => {
     let [answeredCount, setAnsweredCount] = useState(0);
     let [progressCount, setProgressCount] = useState(0);
     let [isLoading, setisLoading] = useState(true);
+    let [loading, setLoading] = useState(false);
     let [switchCount, setSwitchCount] = useState(0);
     let [visible, setVisible] = useState(false);
     let [test, setTest] = useState({});
@@ -111,6 +112,7 @@ const TakeTest = () => {
     let handleSubmit = async (answers) => {
         setLoading(true);
         try {
+            setLoading(true);
             let response = await Axios.post('/api/tests/submitAnswer', { "attemptId": test.attempt, 'questionAnswers': answers });
         } catch (error) {
             setMsg(error?.message);
