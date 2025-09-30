@@ -25,7 +25,6 @@ const TakeTest = () => {
     let [answeredCount, setAnsweredCount] = useState(0);
     let [progressCount, setProgressCount] = useState(0);
     let [isLoading, setisLoading] = useState(true);
-    let [loading, setLoading] = useState(false);
     let [switchCount, setSwitchCount] = useState(0);
     let [visible, setVisible] = useState(false);
     let [test, setTest] = useState({});

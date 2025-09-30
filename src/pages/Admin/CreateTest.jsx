@@ -46,7 +46,6 @@ const CreateTest = () => {
         questions: '',
     })
     let [isErrorView, setIsErrorView] = useState(false);
-    let [loading, setLoading] = useState(false);
     let today = new Date();
     let [msg, setMsg] = useState('');
 
