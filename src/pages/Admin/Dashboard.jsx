@@ -19,7 +19,6 @@ const Dashboard = () => {
         totalActiveTests: '',
     });
 
-    console.log(state);
     useEffect(() => {
         let fetchData = async () => {
             try {

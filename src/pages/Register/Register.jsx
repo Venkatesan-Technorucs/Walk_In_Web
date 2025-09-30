@@ -15,9 +15,10 @@ import { transformData } from '../../utils/transformData';
 import '../Register/Register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import AutoComplete from '../../components/AutoComplete';
+import { useToast } from '../../contexts/ToastContext';
 
 const Register = () => {
-    const toast = useRef(null);
+    let { showToast } = useToast();
     let { dispatch } = useAuth();
     let navigate = useNavigate();
     let [isErrorView, setIsErrorView] = useState(false);
@@ -89,10 +90,6 @@ const Register = () => {
     }, []);
 
 
-    const show = (severity, msg) => {
-        toast.current.show({ severity: severity, summary: 'Error', detail: msg });
-    };
-
     const handleTyping = async (e) => {
         const value = e.target.value;
         setTypedSkill(value);
@@ -126,6 +123,16 @@ const Register = () => {
         }
     };
 
+    const handleBlur = () => {
+        if (!typedSkill.trim()) return;
+
+        if (!registerData.skills.find(s => s.skillName === typedSkill)) {
+            setRegisterData({ ...registerData, skills: [...registerData.skills, { skillName: typedSkill }] });
+        }
+        setTypedSkill('');
+        setFilteredSkills([]);
+    }
+
 
     const handleSelectSuggestion = (skill) => {
         if (!registerData.skills.find(s => s.skillName === skill.skillName)) {
@@ -156,7 +163,7 @@ const Register = () => {
                 setErrors({ ...errors, [fieldName]: validatePhoneNumber(value) })
                 break;
             case 'skills':
-                setErrors({ ...errors, [fieldName]: validateSkills(value)})
+                setErrors({ ...errors, [fieldName]: validateSkills(value) })
                 break;
         }
     }
@@ -195,11 +202,11 @@ const Register = () => {
                     }
                 } else {
                     setIsBtnClicked(false);
-                    show('warn', response?.data?.message)
+                    showToast('warn', response?.data?.message)
                 }
             } catch (error) {
                 setIsBtnClicked(false);
-                show('error', error.response.data.message);
+                showToast('error', error.response.data.message);
             }
         }
     }
@@ -293,10 +300,9 @@ const Register = () => {
                                 <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
                                 <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}></i>
                             </div>
-                            <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} />
+                            <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} onBlur={handleBlur} />
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}
                         </div>
-                        <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
                         <Button label='Register' loading={isBtnClicked} onClick={handleRegister} className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' pt={{ loadingIcon: "text-white", label: "text-white" }} />
                     </form>
                 </Card>

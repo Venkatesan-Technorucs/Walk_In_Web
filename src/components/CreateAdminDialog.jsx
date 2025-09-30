@@ -5,8 +5,10 @@ import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { validateEmail, validateName, validatePassword } from '../utils/Validation';
 import { Axios } from '../services/Axios';
+import { useToast } from '../contexts/ToastContext';
 
-const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
+const CreateAdminDialog = ({ visible, setVisible, fetchUsers }) => {
+    let { showToast } = useToast();
     let [newAdminData, setNewAdminData] = useState({
         firstName: '',
         lastName: '',
@@ -47,8 +49,8 @@ const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
             try {
                 let response = await Axios.post('/api/users/createAdmin', { ...newAdminData, role: 'Admin' });
                 if (response?.data?.success) {
-                    show('success', 'Success', 'Admin created successfully');
-                    fetchUsers(0,5,'','');
+                    showToast('success', 'Success', 'Admin created successfully');
+                    fetchUsers(0, 5, '', '');
                     setVisible(false)
                     setIsErrorView(false);
                     let adminData = { firstName: '', lastName: '', email: '', password: '' };
@@ -57,7 +59,7 @@ const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
                     setErrors(errors);
                 }
                 else {
-                    show('error', 'Error', response?.data?.message);
+                    showToast('error', 'Error', response?.data?.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let adminData = { firstName: '', lastName: '', email: '', password: '' };
@@ -67,7 +69,7 @@ const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
                 }
             } catch (error) {
                 console.log(error);
-                show('error', 'Error', error?.response?.data.message);
+                showToast('error', 'Error', error?.response?.data.message);
                 setVisible(false)
                 setIsErrorView(false);
                 let adminData = { firstName: '', lastName: '', email: '', password: '' };
@@ -99,7 +101,7 @@ const CreateAdminDialog = ({ visible, setVisible, show, fetchUsers }) => {
 
 
     return (
-        <Dialog header="Create Admin" visible={visible} style={{ width: '50vw' }} pt={{ closeButton: 'hidden',content:'bg-(--header-bg)',header:"bg-(--header-bg)",headerTitle:"text-2xl font-bold", }} >
+        <Dialog header="Create Admin" visible={visible} style={{ width: '50vw' }} pt={{ closeButton: 'hidden', content: 'bg-(--header-bg)', header: "bg-(--header-bg)", headerTitle: "text-2xl font-bold", }} >
             <form className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <div className='flex'>

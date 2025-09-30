@@ -28,6 +28,8 @@ const TakeTest = () => {
     let [switchCount, setSwitchCount] = useState(0);
     let [visible, setVisible] = useState(false);
     let [test, setTest] = useState({});
+    let [loading,setLoading] = useState(false);
+    let [msg,setMsg] = useState('');
 
     useEffect(() => {
         const storedTest = JSON.parse(localStorage.getItem('test'));
@@ -46,7 +48,7 @@ const TakeTest = () => {
                     setTotalQuestions(response.data?.data?.totalQuestions);
                 }
             } catch (error) {
-                console.log(error);
+                setMsg(error?.message);
             } finally {
                 setisLoading(false);
             }
@@ -107,12 +109,16 @@ const TakeTest = () => {
     }
 
     let handleSubmit = async (answers) => {
+        setLoading(true);
         try {
             let response = await Axios.post('/api/tests/submitAnswer', { "attemptId": test.attempt, 'questionAnswers': answers });
-            dispatch({ type: "LOGOUT" });
-            navigate('/logout');
         } catch (error) {
-            console.log(error);
+            setMsg(error?.message);
+        }
+        finally{
+            setLoading(false);
+            navigate('/logout');
+
         }
     }
 
@@ -253,8 +259,8 @@ const TakeTest = () => {
                         </Card>
                     })}
                     <div className='w-full h-10 self-center flex p-1 justify-between'>
-                        <Button label='Previous' className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={handlePrevious} />
-                        <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={() => {
+                        <Button label='Previous' className='h-8 w-22 text-sm xs:h-10 xs:w-30 xs:text-base flex justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={handlePrevious} />
+                        <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} loading={loading} className='h-8 w-22 text-sm xs:h-10 xs:w-30 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={() => {
                             if (currentQuestionIndex === totalQuestions - 1) {
                                 handleSubmit(answers);
                             } else {

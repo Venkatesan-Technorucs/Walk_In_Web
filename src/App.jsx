@@ -13,29 +13,32 @@ import UserDetails from './pages/Admin/UserDetails'
 import UserTestDetails from './pages/Admin/UserTestDetails'
 import CreateTest from './pages/Admin/CreateTest'
 import Layout from './utils/Layout'
+import ToastProvider from './contexts/ToastContext'
 
 const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/' element={<Layout />} >
-            <Route element={<PrivateRoute requiredRole={['Admin', 'SuperAdmin']} />}>
-              <Route path='/' element={<Dashboard />} />
-              <Route path='/create/test' element={<CreateTest />} />
-              <Route path='/test/details/:id' element={<TestDetails />} />
-              <Route path='/user/details/:id' element={<UserDetails />} />
-              <Route path='/user/test/details/:userId/:testId' element={<UserTestDetails />} />
+        <ToastProvider>
+          <Routes>
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/logout' element={<Logout />} />
+            <Route path='/' element={<Layout />} >
+              <Route element={<PrivateRoute requiredRole={['Admin', 'SuperAdmin']} />}>
+                <Route path='/' element={<Dashboard />} />
+                <Route path='/create/test' element={<CreateTest />} />
+                <Route path='/test/details/:id' element={<TestDetails />} />
+                <Route path='/user/details/:id' element={<UserDetails />} />
+                <Route path='/user/test/details/:userId/:testId' element={<UserTestDetails />} />
+              </Route>
+              <Route element={<PrivateRoute requiredRole={['Applicant']} />}>
+                <Route path='/home' element={<Home />} />
+                <Route path='/take-test/:id' element={<TakeTest />} />
+              </Route>
             </Route>
-            <Route element={<PrivateRoute requiredRole={['Applicant']} />}>
-              <Route path='/home' element={<Home />} />
-              <Route path='/take-test/:id' element={<TakeTest />} />
-              <Route path='/logout' element={<Logout />} />
-            </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   )

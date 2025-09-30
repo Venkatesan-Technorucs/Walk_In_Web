@@ -10,13 +10,14 @@ import { validateDate, validateField, validateTestQuestions } from '../../utils/
 import { Axios } from '../../services/Axios';
 import QuestionCard from '../../components/QuestionCard';
 import { pt } from '../../utils/pt';
-import Header from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTimeout } from 'primereact/hooks';
+import { useToast } from '../../contexts/ToastContext';
 
 const CreateTest = () => {
+    let { showToast } = useToast();
     let navigate = useNavigate();
-    const toast = useRef(null);
     let { state } = useAuth();
     let [visible, setVisible] = useState(false);
     let [tests, setTests] = useState([]);
@@ -32,7 +33,7 @@ const CreateTest = () => {
         startDate: '',
         endDate: '',
         assignedQuestionIds: [],
-        questions: [],
+        questions: [questionData],
         numberOfQuestions: ''
     });
     let [errors, setErrors] = useState({
@@ -44,20 +45,23 @@ const CreateTest = () => {
         questions: '',
     })
     let [isErrorView, setIsErrorView] = useState(false);
-
+    let [loading, setLoading] = useState(false);
     let today = new Date();
-
-    const showTest = (severity, summary, msg) => {
-        toast.current.show({ severity: severity, summary: summary, detail: msg });
-    };
+    let [msg, setMsg] = useState('');
 
     useEffect(() => {
+        let time = new Date();
+        time.setHours(0);
+        time.setMinutes(30);
+        time.setSeconds(0);
+        time.setMilliseconds(0);
+        setTestData({ ...testData, duration: time });
         let fetchTests = async () => {
             let response = await Axios.post('/api/tests/getAllTests?skip=&limit=&search=', { dateRange: {} });
             if (response?.data?.success) {
                 setTests(response.data.data.tests);
             } else {
-                console.log(response.data.message);
+                setMsg(response.data.message);
             }
         }
         fetchTests();
@@ -73,7 +77,6 @@ const CreateTest = () => {
             return `${month}/${day}/${year}`;
         }
         if (label === 'duration') {
-            // console.log()
             const d = new Date(date);
             return `${(d.getHours() * 60) + d.getMinutes()}`;
         }
@@ -81,6 +84,7 @@ const CreateTest = () => {
 
 
     let handleCreate = async (e) => {
+        setLoading(true);
         e.preventDefault();
         let newErrors = {
             title: validateField('Test Title', testData.title),
@@ -93,6 +97,7 @@ const CreateTest = () => {
         setErrors(newErrors);
         if (newErrors.title || newErrors.department || newErrors.duration || newErrors.questions || newErrors.startDate || newErrors.endDate) {
             setIsErrorView(true);
+            setLoading(false);
             return;
         }
         else {
@@ -106,35 +111,37 @@ const CreateTest = () => {
                 }
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
-                    navigate(-1);
-                    // showTest('success', 'Success', response.data.message);
+                    showToast('success', 'Success', response.data.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
                     let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
                     setTestData(testData);
                     setErrors(newErrors);
+                    setLoading(false);
+                    navigate('/');
                 }
                 else {
-                    navigate(-1);
-                    // showTest('error', 'Error', response.data.message);
+                    showToast('error', 'Error', response.data.message);
                     setVisible(false)
                     setIsErrorView(false);
                     let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
                     let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
                     setTestData(testData);
                     setErrors(newErrors);
+                    setLoading(false);
+                    navigate('/');
                 }
             } catch (error) {
-                console.log(error);
-                // showTest('error', 'Error', error?.response?.data.message);
-                navigate(-1);
+                showToast('error', 'Error', error?.response?.data.message);
                 setVisible(false)
                 setIsErrorView(false);
                 let testData = { title: '', duration: '', department: '', startDate: '', endDate: '', assignedQuestionIds: [], questions: [], numberOfQuestions: '' };
                 let newErrors = { title: null, duration: null, department: null, startDate: null, endDate: null, assignedQuestionIds: null, questions: null };
                 setTestData(testData);
                 setErrors(newErrors);
+                setLoading(false);
+                navigate('/');
             }
 
         }
@@ -263,7 +270,7 @@ const CreateTest = () => {
                                     );
                                     return (
                                         <div className='flex items-center gap-2 mb-3' key={test.id}>
-                                            <Checkbox inputId={index} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
+                                            <Checkbox inputId={test.title} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
                                                 let updatedQuestions;
                                                 if (e.checked) {
                                                     updatedQuestions = [...testData.questions, ...test.questions];
@@ -277,7 +284,7 @@ const CreateTest = () => {
                                                     questions: updatedQuestions
                                                 });
                                             }} />
-                                            <label htmlFor={test.id} className='capitalize'>{test.title}</label>
+                                            <label htmlFor={test.title} className='capitalize'>{test.title}</label>
                                         </div>
                                     )
                                 })}
@@ -308,7 +315,7 @@ const CreateTest = () => {
                         {(errors.questions && isErrorView) && <small className='text-xs text-red-500'>{errors.questions}</small>}
                         <div className='flex items-center justify-end gap-2 '>
                             <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={() => { navigate(-1) }} className="text-(--primary-color)" />
-                            <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
+                            <Button loading={loading} label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
                         </div>
                     </div>
                 </Card>

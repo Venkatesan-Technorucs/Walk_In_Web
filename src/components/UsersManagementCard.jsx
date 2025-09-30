@@ -9,7 +9,6 @@ import { InputIcon } from 'primereact/inputicon';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { useAuth } from '../contexts/AuthContext';
-import { Toast } from 'primereact/toast';
 import { Axios } from '../services/Axios';
 import CreateAdminDialog from './CreateAdminDialog';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +18,6 @@ const UsersManagementCard = ({ }) => {
     let { state } = useAuth();
     let navigate = useNavigate();
     let [users, setUsers] = useState([]);
-    const toast = useRef(null);
     const [visible, setVisible] = useState(false);
     let [filterText, setFilterText] = useState('');
     const [role, setRole] = useState('');
@@ -97,10 +95,6 @@ const UsersManagementCard = ({ }) => {
         }
     };
 
-    const show = (severity, summary, msg) => {
-        toast.current.show({ severity: severity, summary: summary, detail: msg });
-    };
-
     const getIcon = (users) => {
         switch (users.role) {
             case 'SuperAdmin':
@@ -147,8 +141,7 @@ const UsersManagementCard = ({ }) => {
                     <h2 className='text-(--secondary-text-color)'>Create and manage admin and applicant accounts</h2>
                 </div>
                 {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(true) }} />}
-                <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                <CreateAdminDialog visible={visible} setVisible={setVisible} show={show} fetchUsers={fetchUsers} />
+                <CreateAdminDialog visible={visible} setVisible={setVisible} fetchUsers={fetchUsers} />
             </div>
             {state.user.role === 'SuperAdmin' && <Card title='Filters' className='rounded-xl'>
                 <div className='w-full flex justify-evenly gap-2'>

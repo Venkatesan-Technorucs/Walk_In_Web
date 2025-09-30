@@ -15,5 +15,9 @@ export const transformData = (cities) => {
     stateMap[stateName].cities.push({ cname: city.name });
   });
 
+  // console.log(stateMap);
+  // stateMap.sort((a,b)=>a.stateName==='Tamil Nadu' - b.stateName==='Tamil Nadu')
+  // console.log(stateMap);
+
   return Object.values(stateMap);
 };

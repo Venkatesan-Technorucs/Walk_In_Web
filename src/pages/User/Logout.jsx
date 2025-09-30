@@ -1,7 +1,21 @@
 import { Card } from 'primereact/card'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useAuth } from '../../contexts/AuthContext'
+import { useTimeout } from 'primereact/hooks';
+import { useNavigate } from 'react-router-dom';
 
 const logout = () => {
+  let { dispatch } = useAuth();
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/register');
+      dispatch({ type: "LOGOUT" });
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [])
 
   return (
     <div className='min-w-screen min-h-screen flex justify-center items-center bg-(--header-bg)'>
