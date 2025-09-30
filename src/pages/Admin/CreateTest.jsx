@@ -20,6 +20,7 @@ const CreateTest = () => {
     let { state } = useAuth();
     let [visible, setVisible] = useState(false);
     let [tests, setTests] = useState([]);
+    const [loading, setLoading] = useState(false);
     let [questionData, setQuestionData] = useState({
         qtitle: '',
         isMultiSelect: '',
@@ -104,8 +105,10 @@ const CreateTest = () => {
                 let payload = {
                     ...testData, durationMinutes: newDuration, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
                 }
+                setLoading(true);
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
+                    setLoading(false);
                     navigate(-1);
                     // showTest('success', 'Success', response.data.message);
                     setVisible(false)
@@ -116,6 +119,7 @@ const CreateTest = () => {
                     setErrors(newErrors);
                 }
                 else {
+                    setLoading(false);
                     navigate(-1);
                     // showTest('error', 'Error', response.data.message);
                     setVisible(false)
@@ -126,6 +130,7 @@ const CreateTest = () => {
                     setErrors(newErrors);
                 }
             } catch (error) {
+                setLoading(false);
                 console.log(error);
                 // showTest('error', 'Error', error?.response?.data.message);
                 navigate(-1);
@@ -308,7 +313,7 @@ const CreateTest = () => {
                         {(errors.questions && isErrorView) && <small className='text-xs text-red-500'>{errors.questions}</small>}
                         <div className='flex items-center justify-end gap-2 '>
                             <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={() => { navigate(-1) }} className="text-(--primary-color)" />
-                            <Button label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
+                            <Button label="Create" onClick={handleCreate} loading={loading} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
                         </div>
                     </div>
                 </Card>

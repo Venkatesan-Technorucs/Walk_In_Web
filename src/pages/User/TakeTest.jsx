@@ -25,6 +25,7 @@ const TakeTest = () => {
     let [answeredCount, setAnsweredCount] = useState(0);
     let [progressCount, setProgressCount] = useState(0);
     let [isLoading, setisLoading] = useState(true);
+    let [loading, setLoading] = useState(false);
     let [switchCount, setSwitchCount] = useState(0);
     let [visible, setVisible] = useState(false);
     let [test, setTest] = useState({});
@@ -108,10 +109,13 @@ const TakeTest = () => {
 
     let handleSubmit = async (answers) => {
         try {
+            setLoading(true);
             let response = await Axios.post('/api/tests/submitAnswer', { "attemptId": test.attempt, 'questionAnswers': answers });
+            setLoading(false);
             dispatch({ type: "LOGOUT" });
             navigate('/logout');
         } catch (error) {
+            setLoading(false);
             console.log(error);
         }
     }
@@ -254,7 +258,7 @@ const TakeTest = () => {
                     })}
                     <div className='w-full h-10 self-center flex p-1 justify-between'>
                         <Button label='Previous' className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={handlePrevious} />
-                        <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={() => {
+                        <Button loading={loading} label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} className='h-8 w-16 text-sm xs:h-10 xs:w-20 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ' onClick={() => {
                             if (currentQuestionIndex === totalQuestions - 1) {
                                 handleSubmit(answers);
                             } else {
