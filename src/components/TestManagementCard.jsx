@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { lazy, useEffect, useRef, useState } from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
@@ -59,11 +59,11 @@ const TestManagementCard = () => {
     //     fetchTests(page, rows, filterText);
     // }, []);
 
-    const onPageChange = (event) => {
-        setPage(event.page);
-        setRows(event.rows);
-        fetchTests(event.page, event.rows, filterText, dateRange);
-    };
+    // const onPageChange = (event) => {
+    //     setPage(event.page);
+    //     setRows(event.rows);
+    //     // fetchTests(event.page, event.rows, filterText, dateRange);
+    // };
 
     let handleChange = (e) => {
         let search = e.target.value;
@@ -147,7 +147,7 @@ const TestManagementCard = () => {
                         </span>
                     </div>
                 </div>}>
-                <DataTable lazy value={allTests} paginator rows={rows} first={page * rows} totalRecords={totalRecords} onPage={onPageChange} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
+                <DataTable value={allTests} paginator rows={rows} totalRecords={totalRecords} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>
                     <Column field='questions' header="Questions" body={questionsBodyTemplate}></Column>
                     <Column field="duration" header="Duration" body={durationBodyTemplate}></Column>

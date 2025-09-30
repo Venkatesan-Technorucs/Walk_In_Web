@@ -59,11 +59,11 @@ const UsersManagementCard = ({ }) => {
         fetchUsers(page, rows, filterText, role);
     }, [])
 
-    const onPageChange = (event) => {
-        setPage(event.page);
-        setRows(event.rows);
-        fetchUsers(event.page, event.rows, filterText, role?.name);
-    };
+    // const onPageChange = (event) => {
+    //     setPage(event.page);
+    //     setRows(event.rows);
+    //     fetchUsers(event.page, event.rows, filterText, role?.name);
+    // };
 
     let handleChange = (fieldName, e) => {
         let newRole = role;
@@ -182,7 +182,7 @@ const UsersManagementCard = ({ }) => {
                             <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
                         </span>
                     </div>: ''}>
-                <DataTable value={users} lazy paginator rows={rows} first={page} totalRecords={totalRecords} onPage={onPageChange} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
+                <DataTable value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
                     <Column className='w-1/3 p-0' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>

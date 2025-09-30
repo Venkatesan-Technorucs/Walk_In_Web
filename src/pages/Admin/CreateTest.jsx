@@ -73,7 +73,7 @@ const CreateTest = () => {
             return `${month}/${day}/${year}`;
         }
         if (label === 'duration') {
-            console.log()
+            // console.log()
             const d = new Date(date);
             return `${(d.getHours() * 60) + d.getMinutes()}`;
         }
@@ -102,7 +102,7 @@ const CreateTest = () => {
                 let newDuration = formatDate('duration', testData.duration);
                 let newNumberOfQuestions = testData.questions.length;
                 let payload = {
-                    ...testData, duration: newDuration, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
+                    ...testData, durationMinutes: newDuration, startDate: newStartDate, endDate: newEndDate, numberOfQuestions: newNumberOfQuestions
                 }
                 let response = await Axios.post('/api/tests/createtest', payload);
                 if (response.data.success) {
