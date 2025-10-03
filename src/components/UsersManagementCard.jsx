@@ -160,14 +160,15 @@ const UsersManagementCard = ({ }) => {
                 <CreateAdminDialog visible={visible} setVisible={setVisible} fetchUsers={fetchUsers} />
             </div>}
             <div>
-                {state.user.role === 'Admin' ?
+                {state.user.role === 'Admin' &&
                     <div className='flex justify-start items-center gap-3 mb-4 mr-4'>
                         {/* <label htmlFor="filterText" className="font-medium ml-1">Search:</label> */}
                         <IconField iconPosition='left' className="w-1/3">
                             <InputIcon className="pi pi-search"> </InputIcon>
                             <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full bg-gray-100 h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
-                        </IconField>
-                    </div> : ''}
+                        </IconField>                       
+                        <ClearFilter onClear={handleClearFilter} />
+                    </div>}
                 <DataTable className='mt-4 border-1 border-gray-200' value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'hover:bg-gray-50 cursor-pointer', columns: 'px-2' }}>
                     <Column className='w-1/3' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
