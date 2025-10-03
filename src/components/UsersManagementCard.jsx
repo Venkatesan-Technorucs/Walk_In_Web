@@ -141,7 +141,6 @@ const UsersManagementCard = ({ }) => {
 
     return (
         <div className='min-h-full flex flex-col gap-2'>
-
             {state.user.role === 'SuperAdmin' && <div className='flex justify-between items-center p-2'>
                 <div className='w-full flex gap-2'>
                     <>
@@ -151,7 +150,7 @@ const UsersManagementCard = ({ }) => {
                         </IconField>
                         <div className='w-1/6 border-gray-400 border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
                             <Dropdown id='role' name='role' value={role} onChange={(e) => handleChange('role', e)} options={roles} optionLabel="name"
-                                placeholder="Select Role" className="w-full h-11.5 border-none focus-within:border-0 focus-within:shadow-none" />
+                                placeholder="Select Role" className="w-full h-11.5 border-none focus-within:border-0 focus-within:shadow-none" pt={{input:"p-[10px]"}} />
                         </div>
                         <ClearFilter onClear={handleClearFilter} />
                     </>

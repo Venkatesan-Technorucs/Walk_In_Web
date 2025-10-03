@@ -205,7 +205,7 @@ const CreateTest = () => {
     return (
         <div className='w-full h-full flex flex-col'>
             {/* <Header name={state.user.name} role={state.user.role} /> */}
-            <div className='flex flex-col p-4 gap-2 h-full'>
+            <div className='flex flex-col px-4 gap-4 h-full'>
                 <div
                     className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none cursor-pointer hover:bg-transparent"
                     onClick={() => navigate(-1)}

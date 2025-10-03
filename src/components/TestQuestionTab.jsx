@@ -7,14 +7,16 @@ import React from 'react'
 const TestQuestionTab = ({ testQuestions }) => {
 
     const isMultiBodyTemplate = (question) => {
-        return <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
+        return <i className={question.isMultiSelect ? 'pi pi-check text-(--primary-color)' : ''}></i>
+        // <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
     }
 
     return (
-        <Card className='rounded-xl' title={`Question (${testQuestions.length})`}>
-            <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}>
+        <div className=''>
+            <h1 className='pl-3 font-bold text-xl'>Questions ({testQuestions.length})</h1>
+            <DataTable value={testQuestions} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
                 <Column field="title" header="Question"></Column>
-                <Column field="isMultiSelect" header="Multiple Choice" body={isMultiBodyTemplate}></Column>
+                <Column field="isMultiSelect" header="Multiple Choice" body={isMultiBodyTemplate} ></Column>
                 <Column
                     header="Options"
                     body={(row) => (
@@ -31,7 +33,7 @@ const TestQuestionTab = ({ testQuestions }) => {
                     )}
                 />
             </DataTable>
-        </Card>
+         </div> 
     )
 }
 

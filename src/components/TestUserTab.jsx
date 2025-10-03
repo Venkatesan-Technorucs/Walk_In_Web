@@ -36,7 +36,8 @@ const TestUserTab = ({ testAttemptedUsers }) => {
     };
 
     return (
-        <Card className='rounded-xl' title={`User (${testAttemptedUsers.length})`}>
+        <div className=''>
+            <h1 className='pl-3 font-bold text-xl'>Users ({testAttemptedUsers.length})</h1>
             <DataTable value={testAttemptedUsers} selectionMode="single" paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '60rem' }}
                 selection={selectedUser} onSelectionChange={e => {
                     setSelectedUser(e.value);
@@ -45,14 +46,13 @@ const TestUserTab = ({ testAttemptedUsers }) => {
                     if (userId && testId){
                         navigate(`/user/test/details/${userId}/${testId}`);
                     }
-                    console.log(e.value, userId);
                 }}>
                 <Column field="user" header="User" body={userBodyTemplate}></Column>
                 <Column field="score" header="Score"></Column>
                 <Column field="timeTaken" header="Time Taken" body={timeTakenBodyTemplate}></Column>
                 <Column field='status' header="Status" body={statusBodyTemplate}></Column>
             </DataTable>
-        </Card>
+        </div>
     )
 }
 

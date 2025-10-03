@@ -137,7 +137,7 @@ const TestManagementCard = () => {
                     <div className='w-full flex gap-2 items-center'>
                         <IconField iconPosition='left' className="w-1/3 h-12">
                             <InputIcon className="pi pi-search"> </InputIcon>
-                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full h-12' placeholder="Search Tests" />
+                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder="Search Tests" />
                         </IconField>
                         <span className='w-1/6 h-12 m-0'>
                             <DateFilter startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />

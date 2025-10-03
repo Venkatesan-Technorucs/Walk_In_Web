@@ -43,9 +43,9 @@ const TestDetails = () => {
   const renderTab = () => {
     switch (active) {
       case 'TestQuestionTab':
-          return <TestQuestionTab testQuestions={testQuestions}/>
+        return <TestQuestionTab testQuestions={testQuestions} />
       case 'testUserTab':
-          return <TestUserTab testAttemptedUsers={testAttemptedUsers}/>
+        return <TestUserTab testAttemptedUsers={testAttemptedUsers} />
       // case 'leaderBoardTab':
       //     return <LeaderBoardTab LeaderBoardData={leaderBoardData}/>
     }
@@ -54,17 +54,17 @@ const TestDetails = () => {
   const handleChange = (card) => {
     setActive(card);
   }
- 
+
   return (
     <>
       {!state?.apiLoading ? (
         <div className="min-h-screen">
           {/* <Header name={state?.user?.name} role={state?.user?.role} /> */}
 
-          <div className='p-5'>
-            <div className="my-4">
+          <div className='px-4'>
+            <div className="">
               <div
-                className="w-8 h-8 p-0 flex items-center justify-center bg-transparent border-none cursor-pointer hover:bg-transparent"
+                className="w-8 h-8 p-0 mb-2 flex items-center justify-center bg-transparent border-none cursor-pointer hover:bg-transparent"
                 onClick={() => navigate(-1)}
                 aria-label="Go back"
               >
@@ -98,49 +98,22 @@ const TestDetails = () => {
                 </h2>
               </div>
             </div>
-            <Card className="p-6 bg-white rounded-2xl shadow-md border border-gray-200">
+            <Card className="bg-white rounded-2xl shadow-md border border-gray-200" pt={{root:"p-4",body:"p-0",content:"p-0"}}>
               <>
-                <div className="flex flex-col mb-4">
-                  <div className='w-full h-12 bg-white shadow-md rounded-2xl flex items-center p-1 border-transparent border'>
-                    <div
-                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "TestQuestionTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
-                    onClick={() => setActive("TestQuestionTab")}
-                    role="button"
-                    aria-pressed={active === "TestQuestionTab"}
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setActive("TestQuestionTab")}
-                  >
-                    <p>Questions</p>
+                <div className='w-full flex border-b-1 border-gray-200 gap-10 mb-2'>
+                  <div className={`h-8 w-1/12 py-6 flex justify-center items-center ${active === 'TestQuestionTab' ? 'border-b-4 border-green-100' : ''}  hover:cursor-pointer`} onClick={() => { setActive("TestQuestionTab") }}>
+                    <p className={`${active === 'TestQuestionTab' ? 'text-green-600' : 'text-gray-600'}`}>Questions</p>
                   </div>
-
-                  <div
-                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "testUserTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
-                    onClick={() => setActive("testUserTab")}
-                    role="button"
-                    aria-pressed={active === "testUserTab"}
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setActive("testUserTab")}
-                  >
-                    <p>Users</p>
+                  <div className={`h-8 w-1/12 py-6 flex justify-center items-center ${active === 'testUserTab' ? 'border-b-4 border-green-100' : ''} hover:cursor-pointer`} onClick={() => { setActive("testUserTab") }}>
+                    <p className={`${active === 'testUserTab' ? 'text-green-600' : 'text-gray-600'}`}>Users</p>
                   </div>
-
-                  {/* <div
-                    className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
-              ${active === "leaderBoardTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
-                    onClick={() => setActive("leaderBoardTab")}
-                    role="button"
-                    aria-pressed={active === "leaderBoardTab"}
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setActive("leaderBoardTab")}
-                  >
-                    <p>LeaderBoard</p>
-                  </div> */}
-                  </div>
-                  {/* <Divider className='border-green-200 border' /> */}
                 </div>
-                {renderTab()}
+
+                <div className='min-h-full'>
+                  {renderTab()}
+                </div>
+
+                {/* {renderTab()} */}
               </>
             </Card>
           </div>

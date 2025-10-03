@@ -91,8 +91,8 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <div className='w-full min-h-full flex flex-col bg-[#E6ECF1] p-4'>
-            <div className='w-full min-h-full flex flex-col self-center my-5 gap-2'>
+        <div className='w-full min-h-full flex flex-col bg-[#E6ECF1] px-4'>
+            <div className='w-full min-h-full flex flex-col self-center gap-2'>
                 <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-12'>
                    {state.user.role === 'SuperAdmin' && <CustomCard pt={pt.dashboardCard} header={adminHeader}>
                         <p className='text-4xl'>{dashboardData.totalAdmins}</p>
@@ -101,8 +101,8 @@ const Dashboard = () => {
                         <p className='text-4xl'>{dashboardData.totalApplicants}</p>
                     </CustomCard>
                     <CustomCard pt={pt.dashboardCard} header={testHeader}>
-                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
-                        <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
+                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}/{dashboardData.totalTests}</p>
+                        {/* <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p> */}
                     </CustomCard>
                 </div>
                 {/* Users or Tests */}

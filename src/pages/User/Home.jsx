@@ -14,6 +14,8 @@ const Home = () => {
     let [tests, setTests] = useState([]);
     let [msg, setMsg] = useState('');
     let [isLoading, setIsLoading] = useState(true);
+    let [isBtnClicked,setIsBtnClicked] = useState(false);
+    let [loadingTestId,setLoadingTestId] = useState('');
 
     useEffect(() => {
         let fetchTests = async () => {
@@ -41,13 +43,16 @@ const Home = () => {
     }, []);
 
     let handleTakeTest = async (id) => {
+        setLoadingTestId(id);
         try {
             let response = await Axios.post('/api/tests/startAttempt', { testId: id }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
             let user = { ...state.user, test: { ...response.data.data } };
             dispatch({ type: "TEST_STARTED", payload: user });
             navigate(`/take-test/${id}`)
+            setLoadingTestId('');
         } catch (error) {
-            console.log(error);
+            setLoadingTestId('');
+            setMsg(error.message);
         }
     }
 
@@ -83,7 +88,7 @@ const Home = () => {
                                         <i className='pi pi-clock'></i>
                                         {test.duration}m
                                     </div>
-                                    <Button label="Take Test" icon="pi pi-book" onClick={()=>{handleTakeTest(test.id)}} className='w-30 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)  p-2' />
+                                    <Button label="Take Test" icon="pi pi-book" loading={loadingTestId ===test.id} onClick={()=>{handleTakeTest(test.id)}} className='w-30 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)  p-2' />
                                 </Card>
                             );
                         })}
