@@ -11,12 +11,14 @@ import { Toast } from 'primereact/toast';
 import { useNavigate } from 'react-router-dom';
 import { Axios } from '../services/Axios';
 import DateFilter from './DateFilter';
+import ClearFilter from './common/ClearFilter';
 
 const TestManagementCard = () => {
     let navigate = useNavigate();
     let [allTests, setAllTests] = useState([]);
     let [totalRecords, setTotalRecords] = useState(0);
-    let [dateRange, setDateRange] = useState({ startDate: new Date(), endDate: new Date() });
+    let [startDate, setStartDate] = useState(new Date());
+    let [endDate, setEndDate] = useState(new Date());
     let [rows, setRows] = useState(5);
     let [page, setPage] = useState(0);
     let [loading, setLoading] = useState(false);
@@ -49,11 +51,11 @@ const TestManagementCard = () => {
     }
 
     useEffect(() => {
-        if (dateRange.startDate && dateRange.endDate) {
-            fetchTests(page, rows, filterText, dateRange);
+        if (startDate && endDate) {
+            fetchTests(page, rows, filterText, { startDate, endDate });
             return;
         }
-    }, [dateRange.startDate, dateRange.endDate]);
+    }, [startDate, endDate]);
 
     // useEffect(() => {
     //     fetchTests(page, rows, filterText);
@@ -116,37 +118,38 @@ const TestManagementCard = () => {
         }
     };
 
+    const handleClearFilter = () => {
+        setFilterText('');
+        setStartDate(new Date());
+        setEndDate(new Date());
+        fetchTests(0, rows, '', {});
+    }
+
     const showTest = (severity, summary, msg) => {
         toast.current.show({ severity: severity, summary: summary, detail: msg });
     };
 
     return (
         <div className='min-h-full flex flex-col gap-2'>
-            <div className='flex justify-between items-center p-2'>
-                <div>
-                    <h1 className='font-medium text-xl'>Test Management</h1>
-                    <h2 className='text-(--secondary-text-color)'>Create and manage aptitude tests</h2>
-                </div>
-                <Button icon='pi pi-plus' label='Create Test' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { navigate('/create/test') }} />
-                <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-            </div>
             {/* {testVisible && <CreateTestDialog testVisible={testVisible} setTestVisible={setTestVisible} showTest={showTest} tests={allTests} fetchedTests={fetchTests} />} */}
-            <Card className='rounded-xl' header={
-                <div className='flex justify-between items-center p-4'>
-                    <div>
-                        <div className='text-2xl font-medium text-(--primary-text-color)'>Tests - ({totalRecords})</div>
-                        <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Tests in the system</div>
-                    </div>
-                    <div className='flex gap-4'>
-                        <span className='p-input-icon-left mr-4'>
-                            <DateFilter dateRange={dateRange} setDateRange={setDateRange} />
+            <div>
+                {<div className='w-full flex justify-between items-center gap-1 py-2'>
+                    <div className='w-full flex gap-2 items-center'>
+                        <IconField iconPosition='left' className="w-1/3 h-12">
+                            <InputIcon className="pi pi-search"> </InputIcon>
+                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full h-12' placeholder="Search Tests" />
+                        </IconField>
+                        <span className='w-1/6 h-12 m-0'>
+                            <DateFilter startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
                         </span>
-                        <span className="p-input-icon-left w-1/2">
-                            <InputIcon icon="pi pi-search"> </InputIcon>
-                            <InputText id="filterText" type="search" value={filterText} onChange={handleChange} className='w-full' placeholder="Search Tests" />
-                        </span>
+                        <ClearFilter onClear={handleClearFilter} />
                     </div>
-                </div>}>
+                    
+                    <div className='flex justify-between items-center p-2'>
+                        <Button icon='pi pi-plus' label='Create Test' className='w-42 h-12 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { navigate('/create/test') }} />
+                        <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
+                    </div>
+                </div>}
                 <DataTable value={allTests} paginator rows={rows} totalRecords={totalRecords} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>
                     <Column field='questions' header="Questions" body={questionsBodyTemplate}></Column>
@@ -155,7 +158,7 @@ const TestManagementCard = () => {
                     <Column field='status' header="Status" body={statusBodyTemplate}></Column>
                     <Column field="action" header="Action" body={actionBodyTemplate}></Column>
                 </DataTable>
-            </Card>
+            </div>
         </div>
     )
 }

@@ -91,27 +91,9 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <div className='w-full min-h-full flex flex-col bg-[#E6ECF1]'>
-            {/* Header */}
-            {/* <Header name={state.user?.name} role={state.user?.role} /> */}
-            {/* Body */}
-            <div className='w-3/4 min-h-full flex flex-col self-center my-5 gap-2'>
-                {/* Dashboard contents */}
-                {/* <div className=''>
-                    <h1 className='text-xl md:text-2xl font-medium'>{state.user.role === 'SuperAdmin' ? 'Super' : ''} Admin Dashboard</h1>
-                    <h2 className='text-base xs:text-lg text-(--secondary-text-color) '>Manage the entire aptitude test platform</h2>
-                </div> */}
-                <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-3'>
-                    {/* {state.user.role === 'SuperAdmin' && <Card className='w-full xs:w-50 h-20 xs:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={adminHeader}>
-                        <p className='text-4xl'>{dashboardData.totalAdmins}</p>
-                    </Card>}
-                    <Card className='w-full xs:w-50 h-20 xs:h-35 sm:h-30 p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={applicantsHeader}>
-                        <p className='text-4xl'>{dashboardData.totalApplicants}</p>
-                    </Card>
-                    <Card className='w-full xs:w-50 h-20 xs:h-40 sm:h-30 flex flex-col xs:justify-between p-4 rounded-2xl border border-gray-400' pt={pt.dashboardCard} header={testHeader}>
-                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}</p>
-                        <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p>
-                    </Card> */}
+        <div className='w-full min-h-full flex flex-col bg-[#E6ECF1] p-4'>
+            <div className='w-full min-h-full flex flex-col self-center my-5 gap-2'>
+                <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-12'>
                    {state.user.role === 'SuperAdmin' && <CustomCard pt={pt.dashboardCard} header={adminHeader}>
                         <p className='text-4xl'>{dashboardData.totalAdmins}</p>
                     </CustomCard>}
@@ -124,16 +106,19 @@ const Dashboard = () => {
                     </CustomCard>
                 </div>
                 {/* Users or Tests */}
-                <div className='w-full h-12 bg-white rounded-4xl flex items-center p-2 gap-1 hover:cursor-pointer'>
-                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'usersCard' ? 'bg-green-100' : ''}`} onClick={() => { handleChange('usersCard') }}>
-                        <p>Users</p>
+                <div className='w-full bg-white rounded-xl flex flex-col p-2 gap-1'>
+                    <div className='w-full flex border-b-1 border-gray-200 gap-10 mb-2'>
+                        <div className={`h-8 w-1/12 py-6 flex justify-center items-center ${active === 'usersCard' ? 'border-b-4 border-green-100' : ''}  hover:cursor-pointer`} onClick={() => { handleChange('usersCard') }}>
+                            <p className={`${active === 'usersCard' ? 'text-green-600' : 'text-gray-600'}`}>Users</p>
+                        </div>
+                        <div className={`h-8 w-1/12 py-6 flex justify-center items-center ${active === 'testsCard' ? 'border-b-4 border-green-100' : ''} hover:cursor-pointer`} onClick={() => { handleChange('testsCard') }}>
+                            <p className={`${active === 'testsCard' ? 'text-green-600' : 'text-gray-600'}`}>Tests</p>
+                        </div>
                     </div>
-                    <div className={`h-8 rounded-4xl w-1/2 flex justify-center items-center ${active === 'testsCard' ? 'bg-green-100' : ''}`} onClick={() => { handleChange('testsCard') }}>
-                        <p>Tests</p>
+                    
+                    <div className='min-h-full'>
+                        {renderCard()}
                     </div>
-                </div>
-                <div className='min-h-full'>
-                    {renderCard()}
                 </div>
             </div>
         </div>

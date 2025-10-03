@@ -12,6 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Axios } from '../services/Axios';
 import CreateAdminDialog from './CreateAdminDialog';
 import { useNavigate } from 'react-router-dom';
+import ClearFilter from './common/ClearFilter';
 
 
 const UsersManagementCard = ({ }) => {
@@ -26,7 +27,6 @@ const UsersManagementCard = ({ }) => {
     const [page, setPage] = useState(0);
     const [rows, setRows] = useState(5);
     const roles = [
-        { name: '', code: 'A' },
         { name: 'Admin', code: 'AD' },
         { name: 'Applicant', code: 'AP' },
     ];
@@ -80,9 +80,15 @@ const UsersManagementCard = ({ }) => {
     }
     const userBodyTemplate = (users) => {
         return <div>
-            <p className='text-base text-(--secondary-text-color) font-medium'>{users.name}</p>
+            <p className='px-1 text-base text-(--secondary-text-color) font-medium'>{users.name}</p>
         </div>
     };
+
+    const handleClearFilter = () => {
+        setFilterText('');
+        setRole('');
+        fetchUsers(0, rows, '', '');
+    }
 
     const getSeverity = (users) => {
         switch (users.role) {
@@ -128,60 +134,47 @@ const UsersManagementCard = ({ }) => {
                 <Button disabled={users.role === "Admin"} outlined icon='pi pi-info-circle' onClick={() => {
                     navigate(`/user/details/${users.id}`)
                 }} className='text-(--primary-color)' />
-                <Button outlined icon='pi pi-trash' className='text-(--primary-color)' />
+                {/* <Button outlined icon='pi pi-trash' className='text-(--primary-color)' /> */}
             </div>
         )
     };
 
     return (
         <div className='min-h-full flex flex-col gap-2'>
-            <div className='flex justify-between items-center p-2'>
-                <div>
-                    <h1 className='font-medium text-xl'>User Management</h1>
-                    <h2 className='text-(--secondary-text-color)'>Create and manage admin and applicant accounts</h2>
-                </div>
-                {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='w-42 h-9 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(true) }} />}
-                <CreateAdminDialog visible={visible} setVisible={setVisible} fetchUsers={fetchUsers} />
-            </div>
-            {state.user.role === 'SuperAdmin' && <Card title='Filters' className='rounded-xl'>
-                <div className='w-full flex justify-evenly gap-2'>
+
+            {state.user.role === 'SuperAdmin' && <div className='flex justify-between items-center p-2'>
+                <div className='w-full flex gap-2'>
                     <>
-                        <div className='w-1/2 flex flex-col gap-1'>
-                            <label htmlFor="filterText" name='filterText' className=''>Search Users</label>
-                            <IconField iconPosition="left">
-                                <InputIcon className="pi pi-search"> </InputIcon>
-                                <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
-                            </IconField>
+                        <IconField className='w-1/3' iconPosition="left">
+                            <InputIcon className="pi pi-search"> </InputIcon>
+                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
+                        </IconField>
+                        <div className='w-1/6 border-gray-400 border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
+                            <Dropdown id='role' name='role' value={role} onChange={(e) => handleChange('role', e)} options={roles} optionLabel="name"
+                                placeholder="Select Role" className="w-full h-11.5 border-none focus-within:border-0 focus-within:shadow-none" />
                         </div>
-                        <div className="w-1/2 flex flex-col gap-1 ">
-                            <label htmlFor="role" name='role'>Filter by Role</label>
-                            <div className='w-full border-gray-400 border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
-                                <Dropdown id='role' name='role' value={role} onChange={(e) => handleChange('role', e)} options={roles} optionLabel="name"
-                                    placeholder="Select Role" className="w-full h-12 border-none focus-within:border-0 focus-within:shadow-none" />
-                            </div>
-                        </div>
+                        <ClearFilter onClear={handleClearFilter} />
                     </>
                 </div>
-            </Card>}
-            <Card className='rounded-xl' pt={{}} 
-                header={state.user.role === 'Admin' ?
-                    <div className='flex justify-between items-center p-4'>
-                        <div>
-                            <div className='text-2xl font-medium text-(--primary-text-color)'>Users - ({totalRecords})</div>
-                            <div className='text-shadow-2xs font-light text-(--secondary-text-color)'>Manage all Users in the system</div>
-                        </div>
-                        <span className="p-input-icon-left w-1/2">
-                            <InputIcon icon="pi pi-search"> </InputIcon>
-                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
-                        </span>
-                    </div>: ''}>
-                <DataTable value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'p-0', column: 'text-center p-0'}}>
-                    <Column className='w-1/3 p-0' field="user" header="User" body={userBodyTemplate} ></Column>
+                {state.user.role === 'SuperAdmin' && <Button icon='pi pi-user-plus' label='Create Admin' className='max-w-1/6 w-48 h-11.5 bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(true) }} />}
+                <CreateAdminDialog visible={visible} setVisible={setVisible} fetchUsers={fetchUsers} />
+            </div>}
+            <div>
+                {state.user.role === 'Admin' ?
+                    <div className='flex justify-start items-center gap-3 mb-4 mr-4'>
+                        {/* <label htmlFor="filterText" className="font-medium ml-1">Search:</label> */}
+                        <IconField iconPosition='left' className="w-1/3">
+                            <InputIcon className="pi pi-search"> </InputIcon>
+                            <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full bg-gray-100 h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
+                        </IconField>
+                    </div> : ''}
+                <DataTable className='mt-4 border-1 border-gray-200' value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'hover:bg-gray-50 cursor-pointer', columns: 'px-2' }}>
+                    <Column className='w-1/3' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>
                     <Column className='w-1/3' field='action' header="Action" body={actionBodyTemplate}></Column>
                 </DataTable>
-            </Card>
+            </div>
         </div>
     )
 }
