@@ -6,7 +6,7 @@ import TestManagementCard from '../../components/TestManagementCard';
 import UsersManagementCard from '../../components/UsersManagementCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { Axios } from '../../services/Axios';
-import CustomCard from '../../components/common/Card.Jsx';
+import CustomCard from '../../components/common/Card.jsx';
 
 
 const Dashboard = () => {
