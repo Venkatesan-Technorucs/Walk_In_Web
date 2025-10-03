@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { Axios } from '../../services/Axios';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Divider } from 'primereact/divider';
 
 const UserDetails = () => {
   const { id } = useParams();
@@ -65,76 +66,138 @@ const UserDetails = () => {
   return (
     <>
       {!apiLoading ? (
-        <div className="min-h-full w-11/12 self-center justify-self-center rounded-2xl bg-white p-5 mt-10">
-          {/* <Header name={user.name} role={user.role} /> */}
-          <div className="w-full h-full px-6">
-            <div className="h-full flex flex-col gap-6">
-              <div className="flex items-center gap-3">
-                <Button className='w-8 h-8 mb-3 p-0 flex justify-start items-start border-none bg-transparent hover:bg-transparent'>
-                  <i className='pi pi-arrow-left text-(--primary-color) text-xl hover:bg-(--primary-color-hover)' onClick={() => navigate(-1)}></i>
-                </Button>
-                <h1 className="text-2xl font-medium text-gray-900 tracking-tight">User Details</h1>
-              </div>
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="flex-1 bg-white rounded-2xl shadow-2xl p-6 flex flex-col items-center">
-                  <Avatar label={user?.name?.split(' ')?.map(n => n[0])?.join('')?.toUpperCase()} size="xlarge" shape="circle" className="mb-4 shadow" />
-                  <div className="text-2xl font-medium text-gray-800 mb-1">{user.name}</div>
-                  <div className="text-base text-gray-500 mb-2">{user.role}</div>
-                  <div className="text-sm text-gray-700 mb-2"><i className="pi pi-envelope mr-1 text-gray-400" />{user.email}</div>
-                  <div className="text-sm text-gray-500 mb-2"><i className="pi pi-map-marker mr-1 text-gray-400" />{user.city || '—'}</div>
-                  <div className="flex items-center gap-2 mt-2">
-                    {statusTag(user.isActive)}
-                    <span className="text-xs text-gray-400">Joined: {user.createdDate}</span>
+        <div className="flex flex-col" style={{ height: 'calc(100vh - 150px)' }}>
+          <div className="flex-1 flex flex-col p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <i
+                className="pi pi-arrow-left cursor-pointer text-primary text-xl hover:bg-primary/10 rounded-full p-2 transition"
+                onClick={() => navigate(-1)}
+              ></i>
+              <h1 className="text-xl font-medium text-gray-900 tracking-tight">User Details</h1>
+            </div>
+            <div className="flex flex-1 flex-col md:flex-row justify-center gap-6 h-full">
+              <div className="w-full md:w-1/3 h-full flex flex-col gap-4">
+                <div className="bg-white rounded-2xl p-8 flex flex-col justify-center items-center w-full h-full">
+                  <div className="relative mb-6">
+                    <Avatar
+                      label={user?.name?.split(' ')?.map(n => n[0])?.join('')?.toUpperCase()}
+                      size="xlarge"
+                      shape="circle"
+                      className="shadow-md"
+                      style={{ 
+                        background: 'linear-gradient(135deg, #E9ECFF 0%, #E5E1FF 100%)',
+                        color: '#6366F1',
+                        fontSize: '2rem',
+                        width: '100px',
+                        height: '100px'
+                      }}
+                    />
                   </div>
-                  <div className="mt-6 w-full">
-                    <div className="font-semibold text-gray-700 mb-2">Skills</div>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.isArray(user.skills) && user.skills.length > 0 ? (
-                        user.skills.map((skill) => (
-                          <Tag key={skill.id} value={skill.skillName} rounded className="bg-gray-100 text-gray-700 font-medium px-3 py-1" />
-                        ))
-                      ) : (
-                        <span className="text-sm text-gray-400">No skills listed</span>
-                      )}
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{user.name || '—'}</div>
+                  <div className="text-sm font-medium text-gray-500 mb-6">{'Applicant'}</div>
+
+                  <div className="flex flex-col w-full gap-3 mt-6">
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="pi pi-envelope mr-3 text-gray-400" />
+                      <span className="font-medium">{user.email || '—'}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <i className="pi pi-map-marker mr-3 text-gray-400" />
+                      <span className="font-medium">{user.city || '—'}</span>
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <i className="pi pi-calendar mr-3 text-gray-400" />
+                      <span>Joined: {user.createdDate || '—'}</span>
+                    </div>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <i className="pi pi-user mr-3 text-gray-400" />
+                      <span>Referred By: {user.referredBy || '—'}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex-[2] flex flex-col gap-6">
-                  <Card className="rounded-2xl shadow-xl border-0 bg-white" title={<span className="text-xl font-bold text-gray-800">Profile Information</span>}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-gray-700 mt-2">
-                      <div>
-                        <div className="text-gray-500">Email</div>
-                        <div className="font-medium">{user.email}</div>
+
+                <div className="w-full h-1/4 bg-white rounded-xl p-4 shadow-md">
+                  <div className="font-semibold text-gray-700 mb-2">Skills</div>
+                  <div className="flex flex-wrap gap-2">
+                    {Array.isArray(user.skills) && user.skills.length > 0 ? (
+                      user.skills.map((skill) => (
+                        <Tag
+                          key={skill.id}
+                          value={skill.skillName}
+                          rounded
+                          className="bg-gray-100 text-gray-700 font-medium px-3 py-1"
+                        />
+                      ))
+                    ) : (
+                      <span className="text-sm text-gray-400">No skills listed</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="h-full w-full md:w-2/3 bg-white rounded-xl flex flex-col">
+                <span className="text-xl font-medium text-gray-800 p-6">
+                  Test Attempts <span className="text-base text-gray-500">({attempts.length})</span>
+                </span>
+                <Divider className='mt-2'/>
+                <div className='flex-1 overflow-auto px-6'>
+                  {attempts.length > 0 ? <DataTable
+                  value={attempts}
+                  title='Test Attempts'
+                  paginator
+                  rows={5}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                  tableStyle={{ minWidth: '40rem' }}
+                  pt={{
+                    root: 'rounded-lg border border-gray-200 overflow-hidden',
+                    headerRow: 'border-none',
+                    headerCell: 'py-3 px-4 text-gray-700 font-semibold',
+                    bodyRow: ({ context }) => context.selected ? 'bg-primary/5' : 'hover:bg-gray-50 transition-colors',
+                    bodyCell: 'py-3 px-4',
+                    paginator: 'border-t border-gray-200 py-3'
+                  }}
+                  className="mt-6 flex-1"
+                >
+                  <Column
+                    field="testName"
+                    header={<span className="text-sm">Test Name</span>}
+                    body={(row) => (
+                      <div className="font-medium text-gray-900">{row.name || '—'}</div>
+                    )}
+                  ></Column>
+                  <Column
+                    field="score"
+                    header={<span className="text-sm">Score</span>}
+                    body={(row) => (
+                      <div className="font-medium text-gray-900">
+                        {row.score != null ? `${row.score}%` : '—'}
                       </div>
-                      <div>
-                        <div className="text-gray-500">Role</div>
-                        <div className="font-medium">{user.role}</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-500">City</div>
-                        <div className="font-medium">{user.city || '—'}</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-500">Referred By</div>
-                        <div className="font-medium">{user.referredBy || '—'}</div>
-                      </div>
-                    </div>
-                  </Card>
-                  <Card className="rounded-2xl shadow-xl border-0 bg-white mt-2" title={<span className="text-xl font-bold text-gray-800">Test Attempts <span className='text-base text-gray-500'>({attempts.length})</span></span>}>
-                    <DataTable value={attempts} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '40rem' }} emptyMessage={<span className="p-6 text-center text-sm text-gray-400">No test attempts yet.</span>} className="mt-2">
-                      <Column field="testName" header={<span className="font-semibold text-gray-700">Test</span>} body={(row) => row.name || '—'}></Column>
-                      <Column field="score" header={<span className="font-semibold text-gray-700">Score</span>} body={(row) => (row.score != null ? row.score : '—')}></Column>
-                      <Column field="timeTaken" header={<span className="font-semibold text-gray-700">Time Taken</span>} body={timeTakenBodyTemplate}></Column>
-                      <Column field="status" header={<span className="font-semibold text-gray-700">Status</span>} body={statusBodyTemplate}></Column>
-                    </DataTable>
-                  </Card>
+                    )}
+                  ></Column>
+                  <Column
+                    field="timeTaken"
+                    header={<span className="text-sm">Time Taken</span>}
+                    body={timeTakenBodyTemplate}
+                    bodyClassName="text-gray-600"
+                  ></Column>
+                  <Column
+                    field="status"
+                    header={<span className="text-sm">Status</span>}
+                    body={statusBodyTemplate}
+                  ></Column>
+                </DataTable> : 
+                <div className="flex flex-col items-center justify-center h-full py-12">
+                  <i className="pi pi-file text-4xl text-gray-300 mb-4"></i>
+                  <span className="text-sm text-gray-400">No test attempts yet</span>
+                </div>}
                 </div>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <ProgressSpinner className="absolute top-1/2 left-1/2" />
+        <div className="flex items-center justify-center min-h-screen">
+          <ProgressSpinner />
+        </div>
       )}
     </>
   );
