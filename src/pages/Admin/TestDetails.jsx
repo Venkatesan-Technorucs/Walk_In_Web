@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Card } from 'primereact/card'
-import { Button } from 'primereact/button';
-import { DataTable } from 'primereact/datatable';
 import { Tag } from 'primereact/tag';
-import { Column } from 'primereact/column';
 import { useNavigate, useParams } from 'react-router-dom'
 import { Axios } from '../../services/Axios';
-import Header from '../../components/Header';
+// import Header from '../../components/Header';
 import { useAuth } from '../../contexts/AuthContext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import TestQuestionTab from '../../components/TestQuestionTab';
 import TestUserTab from '../../components/TestUserTab';
-import LeaderBoardTab from '../../components/LeaderBoardTab';
-import { Divider } from 'primereact/divider';
+// import LeaderBoardTab from '../../components/LeaderBoardTab';
+// import { Divider } from 'primereact/divider';
 
 const TestDetails = () => {
   let { state, dispatch } = useAuth();
@@ -49,8 +46,8 @@ const TestDetails = () => {
           return <TestQuestionTab testQuestions={testQuestions}/>
       case 'testUserTab':
           return <TestUserTab testAttemptedUsers={testAttemptedUsers}/>
-      case 'leaderBoardTab':
-          return <LeaderBoardTab LeaderBoardData={leaderBoardData}/>
+      // case 'leaderBoardTab':
+      //     return <LeaderBoardTab LeaderBoardData={leaderBoardData}/>
     }
   }
 
@@ -114,7 +111,7 @@ const TestDetails = () => {
                     tabIndex={0}
                     onKeyDown={(e) => e.key === "Enter" && setActive("TestQuestionTab")}
                   >
-                    <p>Tests</p>
+                    <p>Questions</p>
                   </div>
 
                   <div
@@ -129,7 +126,7 @@ const TestDetails = () => {
                     <p>Users</p>
                   </div>
 
-                  <div
+                  {/* <div
                     className={`h-9 w-1/2 flex justify-center items-center rounded-xl transition-colors duration-200 cursor-pointer
               ${active === "leaderBoardTab" ? "bg-green-100 text-green-700 font-medium border-b-2 border-b-green-500" : "text-gray-600 hover:bg-gray-100"}`}
                     onClick={() => setActive("leaderBoardTab")}
@@ -139,7 +136,7 @@ const TestDetails = () => {
                     onKeyDown={(e) => e.key === "Enter" && setActive("leaderBoardTab")}
                   >
                     <p>LeaderBoard</p>
-                  </div>
+                  </div> */}
                   </div>
                   {/* <Divider className='border-green-200 border' /> */}
                 </div>
