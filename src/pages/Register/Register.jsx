@@ -16,6 +16,7 @@ import '../Register/Register.css'
 import { ProgressSpinner } from 'primereact/progressspinner';
 import AutoComplete from '../../components/AutoComplete';
 import { useToast } from '../../contexts/ToastContext';
+import { Avatar } from 'primereact/avatar';
 
 const Register = () => {
     let { showToast } = useToast();
@@ -212,14 +213,19 @@ const Register = () => {
     }
 
     const dialogHeaderContent = (
-        <div className="inline-flex align-items-center justify-content-center gap-2">
-            <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px]' />
+        <div className="flex flex-col items-center justify-center gap-2">
+            <Avatar 
+                icon="pi pi-exclamation-circle text-2xl text-green-500" 
+                size="normal" 
+                shape="circle" 
+                className='!w-15 !h-15 bg-green-200'
+            />
         </div>
     );
 
     const dialogFooterContent = (
-        <div>
-            <Button label="Ok" icon="pi pi-check" onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
+        <div className='w-full flex flex-col items-center justify-center gap-2 pb-4'>
+            <Button label="EXIT"  onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='w-10/12 rounded bg-green-500 duration-700 hover:bg-(--primary-color-light)' />
         </div>
     );
 
@@ -234,8 +240,12 @@ const Register = () => {
     if (!todayTestPresent) {
         return (
             <div className="w-screen h-screen flex justify-center items-center">
-                <Dialog header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[50%] h[50%]' pt={{ root: 'text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', header: 'p-4', closeButton: 'hidden', footer: 'p-2' }}>
-                    <p className="m-0">{msg}</p>
+                <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px]' />
+                <Dialog header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[30%] h-[30%]' pt={{ root: 'min-w-[300px] min-h-[200px] text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', header: 'p-4', closeButton: 'hidden', footer: 'p-2' }}>
+                    <div className='flex flex-col items-center justify-center gap-4'>
+                        <p className="m-0 text-lg font-semibold">No Test Available</p>
+                        <p className="m-0 text-sm text-gray-500 text-center">There is no test scheduled for today. Please check back later or contact support for more information.</p>
+                    </div>
                 </Dialog>
             </div>
         )

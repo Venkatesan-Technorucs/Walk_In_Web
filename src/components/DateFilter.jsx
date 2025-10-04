@@ -50,7 +50,7 @@ const DateFilter = ({ startDate, endDate, setStartDate, setEndDate }) => {
                         onChange={(e) => setStartDate(e.value)}
                         showIcon
                         className="h-10 w-full"
-                        inputClassName="w-full border border-gray-300 rounded px-2 py-2 focus:border-blue-500"
+                        inputClassName="w-full rounded px-2 py-2 focus:border-blue-500"
                         icon={() => <i className="pi pi-calendar text-blue-600"></i>}
                     />
                     <span className="self-center text-gray-500 font-semibold">to</span>
@@ -65,7 +65,7 @@ const DateFilter = ({ startDate, endDate, setStartDate, setEndDate }) => {
                         onChange={(e) => setEndDate(e.value)}
                         showIcon
                         className="h-10 w-full"
-                        inputClassName="w-full border border-gray-300 rounded px-2 py-2 focus:border-blue-500"
+                        inputClassName="w-full border border-transparent rounded px-2 py-2 focus:border-blue-500"
                         icon={() => <i className="pi pi-calendar text-blue-600"></i>}
                     />
                 </div>
