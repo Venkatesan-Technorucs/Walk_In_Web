@@ -14,11 +14,13 @@ import CreateAdminDialog from './CreateAdminDialog';
 import { useNavigate } from 'react-router-dom';
 import ClearFilter from './common/ClearFilter';
 import { OverlayPanel } from 'primereact/overlaypanel';
+import { pt } from '../utils/pt';
 
 
 const UsersManagementCard = ({ }) => {
     let { state } = useAuth();
     let overlayRef = useRef(null);
+    let [selectedUser, setSelectedUser] = useState(null);
     let navigate = useNavigate();
     let [users, setUsers] = useState([]);
     const [visible, setVisible] = useState(false);
@@ -105,10 +107,10 @@ const UsersManagementCard = ({ }) => {
 
     const getIcon = (users) => {
         switch (users.role) {
-            case 'SuperAdmin':
-                return 'pi pi-shield text-red-500';
+            // case 'SuperAdmin':
+            //     return 'pi pi-shield text-red-500';
             case 'Admin':
-                return 'pi pi-shield text-green-500';
+                return 'pi pi-shield text-[#689f38]';
             case 'Applicant':
                 return 'pi pi-users text-blue-500';
             default:
@@ -132,14 +134,8 @@ const UsersManagementCard = ({ }) => {
     // };
     const actionBodyTemplate = (users) => {
         return (
-            <div className='flex items-center gap-2'>
-                <Button icon='pi pi-ellipsis-v' className='bg-white text-(--primary-color)' onClick={(e) => { overlayRef.current.toggle(e) }} />
-                <OverlayPanel ref={overlayRef}  className='flex flex-col gap-2' pt={{content:"flex flex-col gap-2"}}>
-                    <Button disabled={users.role === "Admin"} icon='pi pi-info-circle' label='View' onClick={() => {
-                        navigate(`/user/details/${users.id}`)
-                    }} className='text-(--primary-color) h-6  border-none bg-white hover:bg-gray-300 p-4' />
-                    {/* <Button icon='pi pi-trash' label='Delete' className='text-(--primary-color) border-none bg-white h-6' /> */}
-                </OverlayPanel>
+            <div className='flex items-center gap-2 '>
+                <Button icon='pi pi-ellipsis-v' className='bg-white text-(--primary-color) hover:bg-gray-50 rounded-[50%]' onClick={(e) => { setSelectedUser(users); overlayRef.current.toggle(e) }} />
             </div>
         )
     };
@@ -173,12 +169,22 @@ const UsersManagementCard = ({ }) => {
                         </IconField>
                         <ClearFilter onClear={handleClearFilter} />
                     </div>}
-                <DataTable className='mt-4 border-1 border-gray-200' value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'hover:bg-gray-50 cursor-pointer', columns: 'px-2' }}>
+                <DataTable className='mt-4 border-1 border-gray-200' value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: '', columns: 'px-2', paginator:pt.paginator }}>
                     <Column className='w-1/3' field="user" header="User" body={userBodyTemplate} ></Column>
                     <Column className='w-1/3' field='email' header="Email" body={emailBodyTemplate}></Column>
                     <Column className='w-1/3' field='role' header="Role" body={roleBodyTemplate}></Column>
-                    <Column className='w-1/3' field='action' header="Action" body={actionBodyTemplate}></Column>
+                    <Column className='w-1/3' field='actions' header="Actions" body={actionBodyTemplate}></Column>
                 </DataTable>
+                <OverlayPanel ref={overlayRef}>
+                    {selectedUser &&
+                        <div className='flex flex-col gap-2'>
+                            <Button disabled={selectedUser?.role === "Admin"} icon='pi pi-info-circle' label='View' onClick={() => {
+                                navigate(`/user/details/${selectedUser?.id}`)
+                            }} className='text-gray-600 hover:text-white h-6 bg-green-100 hover:bg-(--primary-color-light) border-none p-4' />
+                            <Button disabled icon='pi pi-trash' label='Delete' className='text-gray-600 hover:text-white h-6 bg-green-100 hover:bg-(--primary-color-light) border-none p-4' />
+                        </div>
+                    }
+                </OverlayPanel>
             </div>
         </div>
     )

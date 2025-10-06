@@ -49,9 +49,9 @@ const DateFilter = ({ startDate, endDate, setStartDate, setEndDate }) => {
                         value={startDate}
                         onChange={(e) => setStartDate(e.value)}
                         showIcon
-                        className="h-10 w-full"
+                        className="h-10 w-full focus:shadow-none focus-within:shadow-none focus-within:border-2 focus-within:border-(--primary-color)"
                         inputClassName="w-full rounded px-2 py-2 focus:border-blue-500"
-                        icon={() => <i className="pi pi-calendar text-blue-600"></i>}
+                        icon={() => <i className="pi pi-calendar text-(--primary-color)"></i>}
                     />
                     <span className="self-center text-gray-500 font-semibold">to</span>
                     <label htmlFor="endDate-dropdown" className="text-xs text-gray-600 mb-1">
@@ -64,9 +64,10 @@ const DateFilter = ({ startDate, endDate, setStartDate, setEndDate }) => {
                         value={endDate}
                         onChange={(e) => setEndDate(e.value)}
                         showIcon
-                        className="h-10 w-full"
-                        inputClassName="w-full border border-transparent rounded px-2 py-2 focus:border-blue-500"
-                        icon={() => <i className="pi pi-calendar text-blue-600"></i>}
+                        className="h-10 w-full focus:shadow-none focus-within:shadow-none focus-within:border-2 focus-within:border-(--primary-color)"
+                        inputClassName="w-full border border-transparent rounded px-2 py-2 "
+                        icon={() => <i className="pi pi-calendar text-(--primary-color)"></i>
+                        }
                     />
                 </div>
             )}

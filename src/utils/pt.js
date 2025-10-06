@@ -1,6 +1,17 @@
 import { classNames } from "primereact/utils";
 
 export const pt = {
+  paginator:{
+    // root:"bg-red-400",
+    firstPageButton:"text-(--primary-color)",
+    lastPageButton:"text-(--primary-color)",
+    nextPageButton:"text-(--primary-color)",
+    prevPageButton:"text-(--primary-color)",
+    // current:"text-red-400",
+    pageButton:"focus:text-(--primary-color)",
+    // RPPDropdown:"bg-red-400 focus:bg-green-500 border-5 border-red-400",
+    // JTPInput:"bg-red-400 border-red-400 border-5"
+  },
   checkbox: {
     box: ({ context }) => ({
       className: classNames(

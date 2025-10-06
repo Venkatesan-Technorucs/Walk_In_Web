@@ -229,7 +229,7 @@ const Register = () => {
                 label="EXIT"  
                 onClick={() => window.open('https://www.technorucs.com/', '_self')} 
                 autoFocus 
-                className='w-full max-w-[300px] rounded-lg bg-[#4CAF50] text-white font-semibold py-3 duration-300 hover:bg-(--primary-color-light) shadow-none border-none' 
+                className='w-full rounded-lg bg-[#4CAF50] text-white font-semibold duration-300 hover:bg-(--primary-color-light) shadow-none border-none' 
             />
         </div>
     );
@@ -246,9 +246,9 @@ const Register = () => {
         return (
             <div className="w-screen h-screen flex justify-center items-center bg-gray-400">
                 {/* <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px] bg-white' /> */}
-                <Card header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[30%] lg:h-[30%] h-[40%] p-4' pt={{ root: 'min-w-[300px] min-h-[200px] text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', closeButton: 'hidden', }}>
+                <Card header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='' pt={{ root: 'w-[300px] min-h-[300px] xs:w-[420px] xs:min-h-[250px] text-base xs:text-xl md:text-2xl p-4', content: 'pt-[2px] pb-[8px]', closeButton: 'hidden', }}>
                     <div className='flex flex-col items-center justify-center gap-2 h-full'>
-                        <p className="m-0 text-lg font-semibold">No Test Available</p>
+                        <p className="m-0 text-lg font-semibold text-center">No Test Available</p>
                         <p className="m-0 text-sm text-gray-500 text-center">There is no test scheduled for today. Please check back later or contact support for more information.</p>
                     </div>
                 </Card>
@@ -256,7 +256,7 @@ const Register = () => {
         )
     } else {
         return (
-            <div className='w-full h-screen flex flex-col justify-center items-center bg-[#E6ECF1] p-6'>
+            <div className='w-full h-full flex flex-col justify-center items-center bg-[#E6ECF1] p-6 gap-8'>
                 <div className='w-full h-[15%] flex flex-col justify-center items-center'>
                     <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-gray-600'>Online Assessment Platform</h2>
                 </div>
@@ -265,7 +265,7 @@ const Register = () => {
                         <div className='flex flex-col justify-center items-center gap-2 mb-3'>
                             <img src={logo} alt="logo" className='h-[40px] xs:h-[40px]' />
                         </div>
-                        <h3 className='text-gray-700 text-sm xs:text-base text-center mb-6'>Please fill in the details below to register and start your test.</h3>
+                        <h3 className='text-gray-700 text-sm xs:text-base text-center mb-6'>Please fill the details below to register and start your test.</h3>
                         <p className='text-gray-500 text-xs'>Fields marked with <span className='inline text-red-500'>*</span> are required</p>
                     </div>
                     <form action="" className='flex flex-col gap-4'>
@@ -330,7 +330,7 @@ const Register = () => {
                             <div className='flex flex-col gap-1 lg:w-1/2 xs:w-full'>
                                 <div className='flex items-center gap-0.5'>
                                     <label htmlFor="email">Referred By</label>
-                                    <i title='Fill in the name of the person who referred you' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
+                                    <i title='Fill the name of the person who referred you' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
                                 </div>
                                 <span className="p-input-icon-left w-full flex items-center">
                                     <i className="pi pi-user mx-2 text-gray-400" />
@@ -345,7 +345,7 @@ const Register = () => {
                                     <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
                                 </div>
-                                <i title='Select or Fill in your skills' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
+                                <i title='Select or Fill your skills' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
                             </div>
                             <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} onBlur={handleBlur} />
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}
