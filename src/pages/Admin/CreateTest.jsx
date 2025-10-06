@@ -310,7 +310,7 @@ const CreateTest = () => {
                     <div className='flex flex-col gap-3 justify-center mt-8 mb-5'>
                         <ol>
                             {testData.questions?.map((question, index) => {
-                                return <li key={question.id} className='border border-gray-300 rounded'>
+                                return <li key={question.id} className='border border-gray-300 rounded mt-3'>
                                     <div>
                                         <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} handleQuestionChange={handleQuestionChange} handleOptionChange={handleOptionChange} />
                                         <Divider className='m-0' />
