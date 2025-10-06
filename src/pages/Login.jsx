@@ -75,7 +75,7 @@ const Login = () => {
     return (
         <div className='w-screen h-screen flex flex-col bg-gray-200 justify-center items-center gap-8'>
             <div className='flex justify-center items-center'>
-                <p className='text-gray-600 text-2xl'>Online Assessment Platform</p>
+                <p className='text-gray-600 text-xl xs:text-2xl'>Online Assessment Platform</p>
             </div>
 
             <Card className='w-full max-w-[400px] rounded-lg shadow-sm'>
@@ -94,7 +94,7 @@ const Login = () => {
                             type='email'
                             value={email}
                             onChange={handleEmailChange}
-                            className='p-3 rounded-md bg-gray-100'
+                            className='rounded-md w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none'
                             pt={{ input: 'p-3 w-full ' }}
                             placeholder='Enter your email'
                         />
@@ -110,7 +110,7 @@ const Login = () => {
                             className='w-full rounded-md'
                             feedback={false}
                             placeholder='Enter your password'
-                            pt={{ input: 'p-3 w-full bg-gray-100' }}
+                            pt={{ input: 'w-full bg-gray-100 rounded-md py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' }}
                         />
                         {(passwordError && isErrorView) && <small className='text-red-500'>{passwordError}</small>}
                     </div>

@@ -256,7 +256,7 @@ const Register = () => {
         )
     } else {
         return (
-            <div className='w-full h-screen flex flex-col justify-center items-center bg-[#E6ECF1] p-6'>
+            <div className='w-full h-full flex flex-col justify-center items-center bg-[#E6ECF1] p-6 gap-8'>
                 <div className='w-full h-[15%] flex flex-col justify-center items-center'>
                     <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-gray-600'>Online Assessment Platform</h2>
                 </div>
@@ -265,7 +265,7 @@ const Register = () => {
                         <div className='flex flex-col justify-center items-center gap-2 mb-3'>
                             <img src={logo} alt="logo" className='h-[40px] xs:h-[40px]' />
                         </div>
-                        <h3 className='text-gray-700 text-sm xs:text-base text-center mb-6'>Please fill in the details below to register and start your test.</h3>
+                        <h3 className='text-gray-700 text-sm xs:text-base text-center mb-6'>Please fill the details below to register and start your test.</h3>
                         <p className='text-gray-500 text-xs'>Fields marked with <span className='inline text-red-500'>*</span> are required</p>
                     </div>
                     <form action="" className='flex flex-col gap-4'>
@@ -330,7 +330,7 @@ const Register = () => {
                             <div className='flex flex-col gap-1 lg:w-1/2 xs:w-full'>
                                 <div className='flex items-center gap-0.5'>
                                     <label htmlFor="email">Referred By</label>
-                                    <i title='Fill in the name of the person who referred you' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
+                                    <i title='Fill the name of the person who referred you' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
                                 </div>
                                 <span className="p-input-icon-left w-full flex items-center">
                                     <i className="pi pi-user mx-2 text-gray-400" />

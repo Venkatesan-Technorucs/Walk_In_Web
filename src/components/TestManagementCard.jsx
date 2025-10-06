@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Axios } from '../services/Axios';
 import DateFilter from './DateFilter';
 import ClearFilter from './common/ClearFilter';
+import { pt } from '../utils/pt';
 
 const TestManagementCard = () => {
     let navigate = useNavigate();
@@ -150,7 +151,7 @@ const TestManagementCard = () => {
                         <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
                     </div>
                 </div>}
-                <DataTable value={allTests} paginator rows={rows} totalRecords={totalRecords} loading={loading} emptyMessage='No tests available' tableStyle={{ minWidth: '60rem' }}>
+                <DataTable value={allTests} paginator rows={rows} totalRecords={totalRecords} loading={loading} emptyMessage='No tests available' pt={{paginator:pt.paginator}}>
                     <Column field="title" header="Title" body={titleBodyTemplate}></Column>
                     <Column field='questions' header="Questions" body={questionsBodyTemplate}></Column>
                     <Column field="duration" header="Duration" body={durationBodyTemplate}></Column>
