@@ -61,10 +61,10 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                                         handleQuestionChange('options', newOptions, index)
                                     }
                                     } />
-                                <InputText id={`option-${oIndex}`} className='h-6 w-full mr-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${oIndex + 1}`} value={option.title} pt={{ root: 'py-1' }}
+                                <InputText id={`option-${oIndex}`} className='h-8 w-full mr-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${oIndex + 1}`} value={option.title} pt={{ root: 'py-1' }}
                                     onChange={(e) => { handleOptionChange(`title`, index, oIndex, e.target.value) }}
                                 />
-                                <Button type='button' outlined icon='pi pi-trash text-xs' className='p-0 w-6 text-(--primary-color)' disabled={question.options.length <= 2}
+                                <Button type='button' outlined icon='pi pi-minus text-xs' className='p-0 w-6 text-red-400' disabled={question.options.length <= 2}
                                     onClick={() => {
                                         const newOptions = question.options.filter((_, i) => i !== oIndex);
                                         handleQuestionChange("options", newOptions, index)
