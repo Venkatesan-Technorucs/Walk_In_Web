@@ -301,8 +301,8 @@ const CreateTest = () => {
                 <Card className='w-full rounded-2xl overflow-auto' pt={{ header: "p-3 pb-0", body: "py-0", content: "pt-0 pl-4" }} header={() => {
                     return <div className='flex justify-between items-center'>
                         <h1 className='text-xl font-bold'>Questions</h1>
-                        <div className='flex items-center gap-2'>
-                            <Button outlined label='Copy' className='text-(--primary-color) h-8' onClick={() => { setVisible(true) }} />
+                        <div className='flex items-center gap-4'>
+                            <Button title='Copy Questions from previous tests' icon='pi pi-copy' label='Copy' className='text-green-400 h-8 border-none bg-transparent' onClick={() => { setVisible(true) }} />
                             <Button label='Add Question' icon='pi pi-plus' className='p-button-text bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white h-8' onClick={AddQuestionCard}></Button>
                         </div>
                     </div>
@@ -320,8 +320,8 @@ const CreateTest = () => {
                         </ol>
                         {(errors.questions && isErrorView) && <small className='text-xs text-red-500'>{errors.questions}</small>}
                         <div className='flex items-center justify-end gap-2 '>
-                            <Button type='button' outlined label="Cancel" icon="pi pi-times" onClick={() => { navigate(-1) }} className="text-(--primary-color)" />
-                            <Button loading={loading} label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' />
+                            <Button type='button' outlined label="Cancel" onClick={() => { navigate(-1) }} className="text-gray-500" pt={{ root: 'py-2' }} />
+                            <Button loading={loading} label="Create" onClick={handleCreate} icon="pi pi-check" autoFocus className='bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' pt={{ root: 'py-2' }} />
                         </div>
                     </div>
                 </Card>
