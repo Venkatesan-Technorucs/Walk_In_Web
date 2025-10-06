@@ -22,6 +22,7 @@ const CreateTest = () => {
     let [visible, setVisible] = useState(false);
     let [tests, setTests] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [testLoading, setTestLoading] = useState(false);
     let [questionData, setQuestionData] = useState({
         qtitle: '',
         isMultiSelect: '',
@@ -57,13 +58,13 @@ const CreateTest = () => {
         time.setMilliseconds(0);
         setTestData({ ...testData, duration: time });
         let fetchTests = async () => {
-            setLoading(true);
+            setTestLoading(true);
             let response = await Axios.post('/api/tests/getAllTests?skip=&limit=&search=', { dateRange: {} });
             if (response?.data?.success) {
-                setLoading(false);
+                setTestLoading(false);
                 setTests(response.data.data.tests);
             } else {
-                setLoading(false);
+                setTestLoading(false);
                 setMsg(response.data.message);
             }
         }
@@ -244,7 +245,7 @@ const CreateTest = () => {
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.duration && isErrorView) ? 'text-red-500' : ''}`}></i>
                                     <p className=''>(HH:MM)</p>
                                 </div>
-                                <Calendar id='duration' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.value) }} className='w-full h-10 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.duration && isErrorView)} timeOnly hourFormat='24' showIcon icon={() => <i className='pi pi-clock text-(--primary-color)'></i>} />
+                                <Calendar id='duration' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.value) }} className='w-full h-10 focus:shadow-none focus-within:shadow-none focus-within:border-2 focus-within:border-(--primary-color)' invalid={(errors.duration && isErrorView)} timeOnly hourFormat='24' showIcon icon={() => <i className='pi pi-clock text-(--primary-color)'></i>} />
                                 {(errors.duration && isErrorView) && <small className='text-xs text-red-500'>{errors.duration}</small>}
                             </div>
                             <div className='w-1/2 flex flex-col gap-1'>
@@ -252,7 +253,7 @@ const CreateTest = () => {
                                     <label htmlFor="department" >Start Date</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                                 </div>
-                                <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} minDate={today} onChange={(e) => handleChange('startDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} invalid={(errors.startDate && isErrorView)} />
+                                <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} minDate={today} onChange={(e) => handleChange('startDate', e.value)} showIcon className='h-10 focus:shadow-none focus-within:shadow-none focus-within:border-2 focus-within:border-(--primary-color)' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} invalid={(errors.startDate && isErrorView)} />
                                 {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                             </div>
                         </div>
@@ -261,40 +262,42 @@ const CreateTest = () => {
                                 <label htmlFor="duration" >End Date</label>
                                 <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                             </div>
-                            <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} invalid={(errors.endDate && isErrorView)} />
+                            <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10 focus:shadow-none focus-within:shadow-none focus-within:border-2 focus-within:border-(--primary-color)' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} invalid={(errors.endDate && isErrorView)} />
                             {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                         </div>
                         <Dialog header='Recent Tests' visible={visible} className='h-[50%] w-[50%] flex flex-col' pt={{ headerTitle: "text-2xl", closeButton: "hidden" }} footer={() => {
                             return <Button label='Ok' className='self-end bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(false) }} />
                         }}>
-                            {!loading ? <ul className='overflow-auto'>
-                                {tests.map((test, index) => {
-                                    const isChecked = Array.isArray(testData.questions) && test.questions?.every(id =>
-                                        testData.questions?.includes(id)
-                                    );
-                                    return (
-                                        <div className='flex items-center gap-2 mb-3' key={test.id}>
-                                            <Checkbox inputId={test.title} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
-                                                let updatedQuestions;
-                                                if (e.checked) {
-                                                    updatedQuestions = [...testData.questions, ...test.questions];
-                                                }
-                                                else {
-                                                    const testQuestionIds = test.questions.map(q => q.id);
-                                                    updatedQuestions = testData.questions.filter(q => !testQuestionIds.includes(q.id));
-                                                }
-                                                setTestData({
-                                                    ...testData,
-                                                    questions: updatedQuestions
-                                                });
-                                            }} />
-                                            <label htmlFor={test.title} className='capitalize'>{test.title}</label>
-                                        </div>
-                                    )
-                                })}
-                            </ul> : <div className='flex justify-center items-center h-full'>
-                                <i className='pi pi-spin pi-spinner text-(--primary-color) text-4xl'></i>
-                            </div>}
+                            {!testLoading
+                                ? <ul className='overflow-auto'>
+                                    {tests.map((test, index) => {
+                                        const isChecked = Array.isArray(testData.questions) && test.questions?.every(id =>
+                                            testData.questions?.includes(id)
+                                        );
+                                        return (
+                                            <div className='flex items-center gap-2 mb-3' key={test.id}>
+                                                <Checkbox inputId={test.title} name={test.title} pt={pt.checkbox} checked={isChecked} onChange={(e) => {
+                                                    let updatedQuestions;
+                                                    if (e.checked) {
+                                                        updatedQuestions = [...testData.questions, ...test.questions];
+                                                    }
+                                                    else {
+                                                        const testQuestionIds = test.questions.map(q => q.id);
+                                                        updatedQuestions = testData.questions.filter(q => !testQuestionIds.includes(q.id));
+                                                    }
+                                                    setTestData({
+                                                        ...testData,
+                                                        questions: updatedQuestions
+                                                    });
+                                                }} />
+                                                <label htmlFor={test.title} className='capitalize'>{test.title}</label>
+                                            </div>
+                                        )
+                                    })}
+                                </ul>
+                                : <div className='flex justify-center items-center h-full'>
+                                    <i className='pi pi-spin pi-spinner text-(--primary-color) text-4xl'></i>
+                                </div>}
                         </Dialog>
                     </form>
                 </Card>
@@ -302,7 +305,7 @@ const CreateTest = () => {
                     return <div className='flex justify-between items-center'>
                         <h1 className='text-xl font-bold'>Questions</h1>
                         <div className='flex items-center gap-4'>
-                            <Button title='Copy Questions from previous tests' icon='pi pi-copy' label='Copy' className='text-green-400 h-8 border-none bg-transparent' onClick={() => { setVisible(true) }} />
+                            <Button title='Copy Questions from previous tests' icon='pi pi-copy' label='Copy' className='text-(--primary-color) h-8 border-none bg-transparent' onClick={() => { setVisible(true) }} />
                             <Button label='Add Question' icon='pi pi-plus' className='p-button-text bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white h-8' onClick={AddQuestionCard}></Button>
                         </div>
                     </div>

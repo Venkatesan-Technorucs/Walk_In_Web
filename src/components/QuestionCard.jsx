@@ -3,6 +3,9 @@ import { Checkbox } from 'primereact/checkbox';
 import { InputText } from 'primereact/inputtext';
 import React, { useState } from 'react'
 import { pt } from '../utils/pt';
+import { ConfirmPopup } from 'primereact/confirmpopup'; // To use <ConfirmPopup> tag
+import { confirmPopup } from 'primereact/confirmpopup'; // To use confirmPopup method
+        
 
 const QuestionCard = ({ question, testData, setTestData, index, handleQuestionChange, handleOptionChange }) => {
 
@@ -11,9 +14,30 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
         setTestData({ ...testData, questions: filteredQuestions })
     }
 
+
+    const accept = ()=>{
+        onRemove();
+    }
+    const reject = ()=>{}
+
+    const confirm = (event) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: 'Do you want to delete this question?',
+            icon: 'pi pi-info-circle',
+            defaultFocus: 'reject',
+            acceptClassName: 'bg-red-400',
+            rejectClassName:"text-(--primary-color) bg-white hover:bg-(--primary-color-light) hover:text-white",
+            accept,
+            reject
+        });
+    };
+
+
     return (
         <div className='flex flex-col gap-4 p-4'>
             <div className='flex flex-col gap-1'>
+                <ConfirmPopup pt={{footer:'flex justify-end gap-4',root:"w-[50%] xs:w-[35%] sm:w-[40%] md:w-[27%]"}} />
                 <div className='flex justify-between items-center'>
                     <div className='flex'>
                         <>
@@ -22,7 +46,7 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                         </>
                         <i className='pi pi-asterisk text-[8px] mt-1'></i>
                     </div>
-                    <i className='pi pi-times hover:cursor-pointer' onClick={onRemove}></i>
+                    <i className='pi pi-times hover:cursor-pointer hover:text-red-400' onClick={confirm}></i>
                 </div>
                 <InputText id='qtitle' type='text' placeholder='Enter question' value={question.qtitle} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' onChange={(e) => { handleQuestionChange('qtitle', e.target.value, index) }} />
             </div>
@@ -75,7 +99,7 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                         </div>
                     )
                 })}
-                <Button label='Add Option' icon='pi pi-plus-circle' className='mt-2 border-none bg-transparent text-green-400 w-[120px] p-0' disabled={question.options.length >= 6}
+                <Button label='Add Option' icon='pi pi-plus-circle' className='mt-2 border-none bg-transparent text-(--primary-color) w-[120px] p-0' disabled={question.options.length >= 6}
                     onClick={() => {
                         const newOptions = [...question.options, { title: "", isCorrect: false }]
                         handleQuestionChange("options", newOptions, index)
