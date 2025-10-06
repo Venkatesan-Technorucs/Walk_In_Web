@@ -27,7 +27,7 @@ const AutoComplete = ({ placeholder, value, onChange, onKeyDown, onBlur, list = 
             <div className="w-full relative">
                 <IconField iconPosition="right">
                     <InputIcon className={iconClass} />
-                    <InputText type="text" ref={spinRef} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} onBlur={onBlur} className="w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none" />
+                    <InputText type="text" ref={spinRef} value={value} onChange={onChange} onKeyDown={onKeyDown} placeholder={placeholder} onBlur={onBlur} className="w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none bg-gray-100" />
                 </IconField>
                 {filteredList.length > 0 && (
                     <ul className="p-2 max-h-40 z-50 absolute left-0 right-0 top-full mt-0 rounded shadow-md w-full h-20 bg-white overflow-auto">

@@ -73,27 +73,57 @@ const Login = () => {
     }
 
     return (
-        <div className='w-screen h-screen flex flex-col bg-[#E6ECF1] p-6 gap-3 justify-center items-center'>
-            <div className='w-full h-[15%] flex flex-col justify-center items-center gap-2'>
-                <img src={logo} alt="logo" className='h-[40px] xs:h-[50px]' />
-                <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-(--primary-color)'>Online Assessment Platform</h2>
+        <div className='w-screen h-screen flex flex-col bg-gray-200 justify-center items-center gap-8'>
+            <div className='flex justify-center items-center'>
+                <p className='text-gray-600 text-2xl'>Online Assessment Platform</p>
             </div>
-            <Card title='Login to your account' className='w-full rounded-2xl sm:w-2/3 lg:w-2/4 sm:self-center' pt={{ title: 'text-(--secondary-text-color) text-[22px] xs:text-2xl mb-0' }}>
-                <form action="" className='flex flex-col gap-4' onSubmit={handleLogin}>
-                    <div className='flex flex-col gap-1'>
-                        <label htmlFor="email" className='font-medium text-base xs:text-xl'>Email</label>
-                        <InputText id='email' type='email' placeholder='Enter email' value={email} onChange={handleEmailChange} className='rounded-lg w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(emailError && isErrorView)} />
-                        {(emailError && isErrorView) && <small className='text-xs text-red-500'>{emailError}</small>}
+
+            <Card className='w-full max-w-[400px] rounded-lg shadow-sm'>
+                <div className='flex flex-col justify-center items-center gap-4 mb-2'>
+                    <div className='flex items-center justify-center'>
+                        <img src={logo} alt="logo" className='h-[40px] xs:h-[40px]' />
                     </div>
-                    <div className='flex flex-col gap-1'>
-                        <label htmlFor="password" className='font-medium text-base xs:text-xl'>Password</label>
-                        <Password id='password' placeholder='Enter password' feedback={false} value={password} onChange={handlePasswordChange} toggleMask className='register_password' pt={{ root: 'w-full', panel: '', input: 'w-full rounded-lg py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none', iconField: 'w-full', info: '', showIcon: 'w-full -mt-2', hideIcon: 'w-full -mt-2' }} invalid={(passwordError && isErrorView)} />
-                        {(passwordError && isErrorView) && <small className='text-xs text-red-500'>{passwordError}</small>}
+                    <h2 className='text-2xl font-medium text-[#4CAF50]'>Login to your account</h2>
+                </div>
+
+                <form className='flex flex-col gap-4' onSubmit={handleLogin}>
+                    <div className='flex flex-col gap-2 w-full'>
+                        <label htmlFor="email" className='text-gray-500 text-md'>Email</label>
+                        <InputText
+                            id='email'
+                            type='email'
+                            value={email}
+                            onChange={handleEmailChange}
+                            className='p-3 rounded-md bg-gray-100'
+                            pt={{ input: 'p-3 w-full ' }}
+                            placeholder='Enter your email'
+                        />
+                        {(emailError && isErrorView) && <small className='text-red-500'>{emailError}</small>}
                     </div>
-                    <Toast ref={toast} position="top-right" className='h-5' pt={{ root: 'w-[60%]', content: 'p-2', icon: 'w-4 h-4 mt-1', text: 'text-sm xs:text-base', closeButton: 'w-4 h-3 mt-1' }} />
-                    <Button type='submit' label='Login' loading={isLoading} className='h-11 text-xl font-bold rounded-lg bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' pt={{ loadingIcon: 'text-white', label: 'text-white' }} />
+
+                    <div className='flex flex-col gap-2 w-full'>
+                        <label htmlFor="password" className='text-gray-500 text-md'>Password</label>
+                        <Password
+                            id='password'
+                            value={password}
+                            onChange={handlePasswordChange}
+                            className='w-full rounded-md'
+                            feedback={false}
+                            placeholder='Enter your password'
+                            pt={{ input: 'p-3 w-full bg-gray-100' }}
+                        />
+                        {(passwordError && isErrorView) && <small className='text-red-500'>{passwordError}</small>}
+                    </div>
+
+                    <Button
+                        type='submit'
+                        label='Login'
+                        loading={isLoading}
+                        className='w-full p-3 mt-2 bg-[#4CAF50] hover:bg-[#45a049] border-none'
+                    />
                 </form>
             </Card>
+            <Toast ref={toast} position="top-right" />
         </div>
     )
 }

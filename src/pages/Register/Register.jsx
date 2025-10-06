@@ -224,8 +224,13 @@ const Register = () => {
     );
 
     const dialogFooterContent = (
-        <div className='w-full flex flex-col items-center justify-center gap-2 pb-4'>
-            <Button label="EXIT"  onClick={() => window.open('https://www.technorucs.com/', '_self')} autoFocus className='w-10/12 rounded bg-green-500 duration-700 hover:bg-(--primary-color-light)' />
+        <div className='w-full flex justify-center items-center px-4'>
+            <Button 
+                label="EXIT"  
+                onClick={() => window.open('https://www.technorucs.com/', '_self')} 
+                autoFocus 
+                className='w-full max-w-[300px] rounded-lg bg-[#4CAF50] text-white font-semibold py-3 duration-300 hover:bg-(--primary-color-light) shadow-none border-none' 
+            />
         </div>
     );
 
@@ -239,76 +244,108 @@ const Register = () => {
     }
     if (!todayTestPresent) {
         return (
-            <div className="w-screen h-screen flex justify-center items-center">
-                <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px]' />
-                <Dialog header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[30%] h-[30%]' pt={{ root: 'min-w-[300px] min-h-[200px] text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', header: 'p-4', closeButton: 'hidden', footer: 'p-2' }}>
-                    <div className='flex flex-col items-center justify-center gap-4'>
+            <div className="w-screen h-screen flex justify-center items-center bg-gray-400">
+                {/* <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px] bg-white' /> */}
+                <Card header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[30%] lg:h-[30%] h-[40%] p-4' pt={{ root: 'min-w-[300px] min-h-[200px] text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', closeButton: 'hidden', }}>
+                    <div className='flex flex-col items-center justify-center gap-2 h-full'>
                         <p className="m-0 text-lg font-semibold">No Test Available</p>
                         <p className="m-0 text-sm text-gray-500 text-center">There is no test scheduled for today. Please check back later or contact support for more information.</p>
                     </div>
-                </Dialog>
+                </Card>
             </div>
         )
     } else {
         return (
-            <div className='w-full h-full flex flex-col justify-center items-center bg-[#E6ECF1] p-6 gap-3'>
-                <div className='w-full h-[15%] flex flex-col justify-center items-center gap-2'>
-                    <img src={logo} alt="logo" className='h-[40px] xs:h-[50px]' />
-                    <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-(--primary-color)'>Online Assessment Platform</h2>
+            <div className='w-full h-screen flex flex-col justify-center items-center bg-[#E6ECF1] p-6'>
+                <div className='w-full h-[15%] flex flex-col justify-center items-center'>
+                    <h2 className='text-xl xs:text-2xl font-medium capitalize text-center text-gray-600'>Online Assessment Platform</h2>
                 </div>
-                <Card title='Create your account' className='w-full h-full rounded-2xl sm:w-2/3 lg:w-2/4 sm:self-center' pt={{ title: 'text-(--secondary-text-color) text-[22px] xs:text-2xl mb-0' }}>
+                <Card className='w-full gap-2 rounded-2xl sm:w-1/3 lg:w-2/5 sm:self-center' pt={{ title: 'text-(--secondary-text-color) text-[22px] xs:text-2xl mb-0' }}>
+                    <div className='flex flex-col justify-center mb-4'>
+                        <div className='flex flex-col justify-center items-center gap-2 mb-3'>
+                            <img src={logo} alt="logo" className='h-[40px] xs:h-[40px]' />
+                        </div>
+                        <h3 className='text-gray-700 text-sm xs:text-base text-center mb-6'>Please fill in the details below to register and start your test.</h3>
+                        <p className='text-gray-500 text-xs'>Fields marked with <span className='inline text-red-500'>*</span> are required</p>
+                    </div>
                     <form action="" className='flex flex-col gap-4'>
-                        <div className='flex flex-col gap-1'>
-                            <div className='flex'>
-                                <label htmlFor="firstName" className={`${(errors.firstName && isErrorView) ? 'text-red-500' : ''}`}>First Name</label>
-                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.firstName && isErrorView) ? 'text-red-500' : ''}`}></i>
+                        <div className='flex gap-4 w-full'>
+                            <div className='flex flex-col gap-1 w-1/2'>
+                                <div className='flex gap-1'>
+                                    <label htmlFor="firstName" className={`${(errors.firstName && isErrorView) ? 'text-red-500' : ''}`}>First Name</label>
+                                    <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
+                                </div>
+                                <span className="p-input-icon-left w-full flex items-center">
+                                    <i className="pi pi-user mx-2 text-gray-400" />
+                                    <InputText type='text' placeholder='Enter your first name' value={registerData.firstName} onChange={(e) => { handleChange('firstName', e.target.value) }} className='w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none pl-8' invalid={(errors.firstName && isErrorView)} />
+                                </span>
+                                {(errors.firstName && isErrorView) && <small className='text-xs text-red-500'>{errors.firstName}</small>}
                             </div>
-                            <InputText type='text' placeholder='Enter your first name' value={registerData.firstName} onChange={(e) => { handleChange('firstName', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.firstName && isErrorView)} />
-                            {(errors.firstName && isErrorView) && <small className='text-xs text-red-500'>{errors.firstName}</small>}
+                            <div className='flex flex-col gap-1 w-1/2'>
+                                <div className='flex gap-1'>
+                                    <label htmlFor="lastName" className={`${(errors.lastName && isErrorView) ? 'text-red-500' : ''}`}>Last Name</label>
+                                    <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
+                                </div>
+                                <span className="p-input-icon-left w-full flex items-center">
+                                    <i className="pi pi-user mx-2 text-gray-400" />
+                                    <InputText type='text' placeholder='Enter your last name' value={registerData.lastName} onChange={(e) => { handleChange('lastName', e.target.value) }} className='w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none pl-8' invalid={(errors.lastName && isErrorView)} />
+                                </span>
+                                {(errors.lastName && isErrorView) && <small className='text-xs text-red-500'>{errors.lastName}</small>}
+                            </div>
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <div className='flex'>
-                                <label htmlFor="lastName" className={`${(errors.lastName && isErrorView) ? 'text-red-500' : ''}`}>Last Name</label>
-                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.lastName && isErrorView) ? 'text-red-500' : ''}`}></i>
-                            </div>
-                            <InputText type='text' placeholder='Enter your last name' value={registerData.lastName} onChange={(e) => { handleChange('lastName', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.lastName && isErrorView)} />
-                            {(errors.lastName && isErrorView) && <small className='text-xs text-red-500'>{errors.lastName}</small>}
-                        </div>
-                        <div className='flex flex-col gap-1'>
-                            <div className='flex'>
+                            <div className='flex gap-1'>
                                 <label htmlFor="email" className={`${(errors.email && isErrorView) ? 'text-red-500' : ''}`}>Email</label>
-                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.email && isErrorView) ? 'text-red-500' : ''}`}></i>
+                                <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
                             </div>
-                            <InputText id='email' type='email' placeholder='Enter your email' value={registerData.email} onChange={(e) => { handleChange('email', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.email && isErrorView)} />
+                            <span className="p-input-icon-left w-full flex items-center">
+                                <i className="pi pi-envelope mx-2 text-gray-400" />
+                                <InputText id='email' type='email' placeholder='Enter your email' value={registerData.email} onChange={(e) => { handleChange('email', e.target.value) }} className='w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none pl-8' invalid={(errors.email && isErrorView)} />
+                            </span>
                             {(errors.email && isErrorView) && <small className='text-xs text-red-500'>{errors.email}</small>}
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <div className='flex' >
+                            <div className='flex gap-1'>
                                 <label htmlFor="phNumber" className={`${(errors.phNumber && isErrorView) ? 'text-red-500' : ''}`}>Phone Number</label>
-                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.phNumber && isErrorView) ? 'text-red-500' : ''}`}></i>
+                                <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
                             </div>
-                            <InputText id='phNumber' placeholder='Enter your phone number' keyfilter={'pint'} maxLength={10} value={registerData.phoneNumber} onChange={(e) => { handleChange('phoneNumber', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.phNumber && isErrorView)} />
+                            <span className="p-input-icon-left w-full flex items-center">
+                                <i className="pi pi-phone mx-2 text-gray-400" />
+                                <InputText id='phNumber' placeholder='Enter your phone number' keyfilter={'pint'} maxLength={10} value={registerData.phoneNumber} onChange={(e) => { handleChange('phoneNumber', e.target.value) }} className='w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none pl-8' invalid={(errors.phNumber && isErrorView)} />
+                            </span>
                             {(errors.phNumber && isErrorView) && <small className='text-xs text-red-500'>{errors.phNumber}</small>}
                         </div>
-                        <div className='flex flex-col gap-1'>
-                            <label htmlFor="phNumber">City</label>
-                            <div className='border-gray-400  border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
-                                <CascadeSelect value={registerData.city} onChange={(e) => handleChange('city', e.value.cname)} options={structuredCities} appendTo={'self'}
-                                    optionLabel="cname" optionGroupLabel="name" optionGroupChildren={['cities']}
-                                    className="text-black register-select border-none focus-within:border-0 focus-within:shadow-none " placeholder="Select your city"
-                                    pt={{ root: 'w-[100%]', label: 'py-2', sublist: 'max-h-60 overflow-auto', text: 'text-black', list: 'w-30 h-60 overflow-auto', panel: 'mt-1' }}
-                                />
+                        <div className='flex lg:flex-row xs:flex-col gap-4 w-full'>
+                            <div className='flex flex-col gap-1 lg:w-1/2 xs:w-full'>
+                                <label htmlFor="phNumber">City</label>
+                                <div className='flex items-center gap-1 bg-gray-100 border-gray-400  border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
+                                    <i className="pi pi-map-marker mx-2 text-gray-400 bg-gray-100" />
+                                    <CascadeSelect value={registerData.city} onChange={(e) => handleChange('city', e.value.cname)} options={structuredCities} appendTo={'self'}
+                                        optionLabel="cname" optionGroupLabel="name" optionGroupChildren={['cities']}
+                                        className="text-black bg-gray-100 register-select border-none focus-within:border-0 focus-within:shadow-none" placeholder="Select your city"
+                                        pt={{ root: 'w-[100%]', label: 'px-0.5 py-2', sublist: 'max-h-60 overflow-auto', text: 'text-black', list: 'w-30 h-60 overflow-auto mr-2', panel: 'mt-1' }}
+                                    />
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-1 lg:w-1/2 xs:w-full'>
+                                <div className='flex items-center gap-0.5'>
+                                    <label htmlFor="email">Referred By</label>
+                                    <i title='Fill in the name of the person who referred you' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
+                                </div>
+                                <span className="p-input-icon-left w-full flex items-center">
+                                    <i className="pi pi-user mx-2 text-gray-400" />
+                                    <InputText id='referredBy' type='text' placeholder='Enter referrer name (if any)' value={registerData.referredBy} onChange={(e) => { handleChange('referredBy', e.target.value) }} className='w-full py-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none pl-8' invalid={(errors.referredBy && isErrorView)} />
+                                </span>
+                                {(errors.referredBy && isErrorView) && <small className='text-xs text-red-500'>{errors.referredBy}</small>}
                             </div>
                         </div>
                         <div className='flex flex-col gap-1'>
-                            <label htmlFor="email">Referred By</label>
-                            <InputText id='referredBy' type='text' placeholder='Enter referrer name' value={registerData.referredBy} onChange={(e) => { handleChange('referredBy', e.target.value) }} className='w-full py-2 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.referredBy && isErrorView)} />
-                            {(errors.referredBy && isErrorView) && <small className='text-xs text-red-500'>{errors.referredBy}</small>}
-                        </div>
-                        <div className='flex flex-col gap-1'>
-                            <div className='flex'>
-                                <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
-                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}></i>
+                            <div className='flex items-center gap-0.5'>
+                                <div className='flex gap-1'>
+                                    <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
+                                    <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
+                                </div>
+                                <i title='Select or Fill in your skills' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
                             </div>
                             <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} onBlur={handleBlur} />
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}

@@ -88,20 +88,20 @@ const Dashboard = () => {
         if (storedCard) {
             setActive(storedCard);
         }
-    }, [])
+    }, []);
 
     return (
         <div className='w-full min-h-full flex flex-col bg-[#E6ECF1] px-4'>
             <div className='w-full min-h-full flex flex-col self-center gap-2'>
                 <div className='w-full h-80 xs:h-40 flex flex-col xs:flex-row justify-between items-center gap-12'>
                    {state.user.role === 'SuperAdmin' && <CustomCard pt={pt.dashboardCard} header={adminHeader}>
-                        <p className='text-4xl'>{dashboardData.totalAdmins}</p>
+                        <p className='text-4xl'>{dashboardData.totalAdmins ? dashboardData.totalAdmins : '0'}</p>
                     </CustomCard>}
                     <CustomCard pt={pt.dashboardCard} header={applicantsHeader}>
-                        <p className='text-4xl'>{dashboardData.totalApplicants}</p>
+                        <p className='text-4xl'>{dashboardData.totalApplicants ? dashboardData.totalApplicants : '0'}</p>
                     </CustomCard>
                     <CustomCard pt={pt.dashboardCard} header={testHeader}>
-                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests}/{dashboardData.totalTests}</p>
+                        <p className='text-2xl xs:text-4xl sm:text-4xl'>{dashboardData.totalActiveTests !== '' ? `${dashboardData.totalActiveTests} / ${dashboardData.totalTests}` : '0'}</p>
                         {/* <p className='text-xs xs:text-sm sm:text-base'>of {dashboardData.totalTests} total tests</p> */}
                     </CustomCard>
                 </div>

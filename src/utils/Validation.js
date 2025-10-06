@@ -85,9 +85,9 @@ export const validateDate = (label,date)=>{
   if(!date){
     return `${label} must be required`;
   }
-  if(date.getMinutes() ===0){
-    return `${label} atleast minutes`
-  }
+  // if(date.getMinutes() ===0){
+  //   return `${label} atleast minutes`
+  // }
   else return null;
 }
 

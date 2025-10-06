@@ -209,84 +209,100 @@ const TakeTest = () => {
     };
 
     return (
-        <div className='w-full min-h-full flex flex-col'>
-            {/* Header */}
-            {/* <Header name={state.user.name} role={state.user.role} /> */}
-            {/* Body */}
-            {isLoading
-                ? <div className='w-full h-[calc(100vh-100px)] flex items-center justify-center self-center bg-[#E6ECF1]'>
-                    <ProgressSpinner className='h-16' />
-                </div>
-                : <div className='w-full p-2 bg-[#E6ECF1] flex flex-col sm:flex-row justify-center gap-4'>
-                    <div className='w-full sm:w-[70%] flex flex-col gap-4 '>
-                        <Dialog position='top' header={dialogHeaderContent} footer={dialogFooterContent} visible={visible} onHide={() => { if (!visible) return; setVisible(false); }} className='w-[75%] h[50%] xs:w-[60%]' pt={{ root: 'text-xs xs:text-base md:text-xl', content: 'pt-[2px] pb-[8px]', header: 'p-3', closeButton: 'w-[20px] h-[30px] xs:h-[48px] xs:w-[30px]', footer: 'p-2' }}>
-                            <p className="m-0">Please remain on this page while taking the test. Navigating away, refreshing, or switching tabs may interrupt your session and result in automatic submission.</p>
-                        </Dialog>
-                        <Card pt={pt.progressCard}>
-                            <div className='flex flex-col xs:flex-row justify-between items-center'>
-                                <div>
-                                    <h1 className='text-center xs:text-left text-base xs:text-xl sm:text-2xl font-medium capitalize'>{title}</h1>
-                                    <h2 className='text-sm xs:text-base sm:text-lg font-normal text-(--secondary-text-color)'>Question {currentQuestionIndex + 1} of {totalQuestions}</h2>
+            <div className="flex items-center justify-center">
+                {isLoading ? (
+                    <div className='w-full h-full flex items-center justify-center self-center bg-[#E6ECF1]'>
+                        <ProgressSpinner className='h-16' />
+                    </div>
+                ) : (
+                    <div className="flex flex-row gap-6 w-full h-[750px] items-stretch p-4">
+                        <div className="flex-1 flex flex-col justify-between bg-white rounded-xl shadow-2xs border border-[#E3E8EF] p-8 min-w-[600px]">
+                            <div className="mb-2">
+                                <div className='flex justify-between items-center'>
+                                    <div>
+                                        <h2 className="font-bold text-2xl text-[#1A2E3B] mb-1">{title}</h2>
+                                        <div className="text-gray-500 text-base">Question {currentQuestionIndex + 1} of {totalQuestions}</div>
+                                    </div>
+                                    <div className="flex items-center gap-2 bg-[#F6FAFF] px-3 py-2 rounded-lg">
+                                        <span className="font-semibold text-lg">{duration ? <CountdownTimer duration={duration * 60} active={true} onComplete={handleSubmit} /> : '--:--'}</span>
+                                    </div>
                                 </div>
-                                <div className='flex justify-center items-center gap-3'>
-                                    <CountdownTimer duration={duration * 60} active={true} onComplete={handleSubmit} />
-                                    <div className='w-30 h-8 rounded-4xl border-2 flex justify-center items-center p-1'>
-                                        <p className='text-[10px] sm:text-sm p-1 font-medium'>{answeredCount}/{totalQuestions} answered</p>
+                                <div className="mt-2">
+                                    <div className="flex justify-between items-center text-xs text-gray-400 mb-1">
+                                        <span>Progress</span>
+                                        <span>{answeredCount}/{totalQuestions} answered</span>
+                                    </div>
+                                    <div className="w-full h-2 bg-[#E3E8EF] rounded-full">
+                                        <div className="h-2 rounded-full bg-[#4CAF50] transition-all duration-300" style={{ width: `${progressCount}%` }}></div>
                                     </div>
                                 </div>
                             </div>
-                            <ProgressBar value={progressCount} className='h-4 text-xs rounded-4xl font-bold' pt={{ value: 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' }}></ProgressBar>
-                        </Card>
-                        {questions.slice(currentQuestionIndex, currentQuestionIndex + 1).map((question, index) => {
-                            console.log(index)
-                            return <Card className='w-full' key={question.id} pt={pt.questionsCard}>
-                                <div className='flex flex-col gap-1'>
-                                    <h1 className='text-lg xs:text-xl'>Question {currentQuestionIndex + 1}.</h1>
+                            {questions.length > 0 && (
+                                <div className="flex-1 flex flex-col justify-center">
+                                    <div className="mb-4">
+                                        <div className="font-semibold text-lg mb-2">Question {currentQuestionIndex + 1}.</div>
+                                        <div className="text-base text-[#1A2E3B] mb-4">{questions[currentQuestionIndex]?.title}</div>
+                                        <div className="flex flex-col gap-3">
+                                            {questions[currentQuestionIndex]?.options.map((option, idx) => {
+                                                const selected = isSelected(questions[currentQuestionIndex].id, option.id);
+                                                return !questions[currentQuestionIndex]?.isMultiSelect ? (
+                                                    <div
+                                                        key={option.id}
+                                                        className={`border rounded-lg px-4 py-3 flex items-center cursor-pointer transition-all duration-200 text-base font-medium ${selected ? 'bg-[#E8F5E9] border-[#4CAF50] text-[#388E3C]' : 'bg-white border-[#E3E8EF] hover:bg-[#F6FAFF]'} `}
+                                                        onClick={() => handleAnswer(questions[currentQuestionIndex].id, option.id, false)}
+                                                    >
+                                                        <span className="mr-2 font-bold">{idx + 1}.</span> {option.title}
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        key={option.id}
+                                                        className={`border rounded-lg px-4 py-3 flex items-center cursor-pointer transition-all duration-200 text-base font-medium ${selected ? 'bg-[#E8F5E9] border-[#4CAF50] text-[#388E3C]' : 'bg-white border-[#E3E8EF] hover:bg-[#F6FAFF]'} `}
+                                                        onClick={() => handleAnswer(questions[currentQuestionIndex].id, option.id, true)}
+                                                    >
+                                                        <Checkbox inputId='option.id' checked={selected} readOnly className="mr-2" pt={pt.checkbox}/>
+                                                        <span className="mr-2 font-bold">{idx + 1}.</span> {option.title}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
-                                <h2 className='text-base xs:text-lg font-medium mb-2'>{question.title}</h2>
-                                <ol className='pl-5 list-decimal marker:text-xl' type='1' >
-                                    {question.options.map((option) => {
-                                        return question.isMultiSelect
-                                            ? (<li key={option.id} className="w-full p-2">
-                                                <div className='flex items-center'>
-                                                    <Checkbox inputId={option.id} name={question.id} value={option.title} onChange={() => handleAnswer(question.id, option.id, true)} checked={isSelected(question.id, option.id)} pt={pt.checkbox} />
-                                                    <label htmlFor={option.id} className="ml-2 text-sm">{option.title}</label>
-                                                </div>
-                                            </li>)
-                                            : (<li key={option.id}>
-                                                <div className={`h-8 w-full p-4 text-sm flex items-center rounded-2xl mb-2 ${isSelected(question.id, option.id) ? 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white' : 'bg-(--header-bg) border-1 border-(--primary-color)'} hover:bg-(--primary-color-light) hover:text-white`} onClick={() => handleAnswer(question.id, option.id, false)} >
-                                                    {option.title}
-                                                </div>
-                                            </li>)
-                                    })}
-                                </ol>
-                                <div className='w-full h-10 self-center flex justify-between '>
-                                    <Button label='Previous' className={`h-8 w-22 text-sm xs:h-10 xs:w-30 xs:text-base flex justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm ${currentQuestionIndex === 0 ? "invisible" : ''}`} onClick={handlePrevious} />
-                                    <Button label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'} loading={loading} className='h-8 w-22 text-sm xs:h-10 xs:w-30 xs:text-base flex text-white justify-center bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) rounded-sm' onClick={() => {
+                            )}
+                            <div className="flex justify-end mt-4">
+                                <Button
+                                    label={currentQuestionIndex === totalQuestions - 1 ? 'Submit' : 'Next'}
+                                    className="bg-[#4CAF50] text-white px-8 py-2 rounded-lg text-base font-semibold shadow-none border-none hover:bg-[#388E3C]"
+                                    loading={loading}
+                                    onClick={() => {
                                         if (currentQuestionIndex === totalQuestions - 1) {
                                             handleSubmit(answers);
                                         } else {
                                             handleNext();
                                         }
-                                    }} />
-                                </div>
-                            </Card>
-                        })}
-                    </div>
-                    <Card title='Question Navigator' pt={pt.questionsNavigatorCard} className='w-full sm:w-[30%] min-h-full p-3 '>
-                        {questions.map((question, index) => {
-                            const answered = answers.find(a => {
-                                if (a.questionId !== question.id) return false;
-                                return Array.isArray(a.options) ? a.options.length > 0 : a.options !== null;
-                            });
-                            return <div className={`text-sm px-3 py-1 rounded-lg font-bold xs:text-base flex justify-center items-center ${answered ? 'bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white' : 'bg-white border-2 text-(--primary-color) border-(--primary-color)'}`} key={question.id} onClick={() => { setCurrentQuestionIndex(index) }} >
-                                <p>{index + 1}</p>
+                                    }}
+                                />
                             </div>
-                        })}
-                    </Card>
-                </div>
-            }
-        </div >
+                        </div>
+                        <div className="min-w-[300px] w-full max-w-[600px] h-fit bg-white rounded-xl shadow-2xs border border-[#E3E8EF] p-6 flex flex-col">
+                            <div className="font-bold text-lg mb-4 text-[#1A2E3B]">Question Navigator</div>
+                            <div className="flex gap-3">
+                                {questions.map((question, idx) => {
+                                    const isCurrent = idx === currentQuestionIndex;
+                                    return (
+                                        <button
+                                            key={question.id}
+                                            className={`w-10 h-10 rounded-lg border text-lg font-bold flex items-center justify-center transition-all duration-200 ${isCurrent ? 'bg-[#E8F5E9] border-[#4CAF50] text-[#388E3C]' : 'bg-white border-[#E3E8EF] text-[#1A2E3B] hover:bg-[#F6FAFF]'}`}
+                                            onClick={() => setCurrentQuestionIndex(idx)}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
     )
 }
 

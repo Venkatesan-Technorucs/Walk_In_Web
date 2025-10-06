@@ -57,10 +57,13 @@ const CreateTest = () => {
         time.setMilliseconds(0);
         setTestData({ ...testData, duration: time });
         let fetchTests = async () => {
+            setLoading(true);
             let response = await Axios.post('/api/tests/getAllTests?skip=&limit=&search=', { dateRange: {} });
             if (response?.data?.success) {
+                setLoading(false);
                 setTests(response.data.data.tests);
             } else {
+                setLoading(false);
                 setMsg(response.data.message);
             }
         }
@@ -213,10 +216,10 @@ const CreateTest = () => {
                 >
                     <i className="pi pi-arrow-left text-[var(--primary-color)] text-xl" />
                 </div>
-                <Card title="Create Test" pt={{ root: 'w-full rounded-2xl', title: "text-xl font-fold", content: "pt-0", body: "px-4 pb-0" }} >
+                <Card title="Test Details" pt={{ root: 'w-full rounded', title: "text-xl font-fold", content: "pt-0", body: "px-4 pb-0" }} >
                     <form className='flex flex-col gap-3'>
                         <div className='flex gap-2'>
-                            <div className='w-[60%] flex flex-col gap-1'>
+                            <div className='w-[50%] flex flex-col gap-1'>
                                 <div className='flex'>
                                     <label htmlFor="title">Test Title</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.title && isErrorView) ? 'text-red-500' : ''}`}></i>
@@ -225,7 +228,7 @@ const CreateTest = () => {
                                 />
                                 {(errors.title && isErrorView) && <small className='text-xs text-red-500'>{errors.title}</small>}
                             </div>
-                            <div className='w-[40%] flex flex-col gap-1'>
+                            <div className='w-[50%] flex flex-col gap-1'>
                                 <div className='flex'>
                                     <label htmlFor="department" >Department</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.department && isErrorView) ? 'text-red-500' : ''}`}></i>
@@ -235,7 +238,7 @@ const CreateTest = () => {
                             </div>
                         </div>
                         <div className='flex gap-3'>
-                            <div className='w-1/3 flex flex-col gap-1'>
+                            <div className='w-1/2 flex flex-col gap-1'>
                                 <div className='flex'>
                                     <label htmlFor="duration" >Duration</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.duration && isErrorView) ? 'text-red-500' : ''}`}></i>
@@ -244,7 +247,7 @@ const CreateTest = () => {
                                 <Calendar id='duration' placeholder='Enter duration' value={testData.duration} onChange={(e) => { handleChange('duration', e.value) }} className='w-full h-10 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' invalid={(errors.duration && isErrorView)} timeOnly hourFormat='24' showIcon icon={() => <i className='pi pi-clock text-(--primary-color)'></i>} />
                                 {(errors.duration && isErrorView) && <small className='text-xs text-red-500'>{errors.duration}</small>}
                             </div>
-                            <div className='w-1/3 flex flex-col gap-1'>
+                            <div className='w-1/2 flex flex-col gap-1'>
                                 <div className='flex'>
                                     <label htmlFor="department" >Start Date</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.startDate && isErrorView) ? 'text-red-500' : ''}`}></i>
@@ -252,19 +255,19 @@ const CreateTest = () => {
                                 <Calendar id="startDate" placeholder='Select start date' value={testData.startDate} minDate={today} onChange={(e) => handleChange('startDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} invalid={(errors.startDate && isErrorView)} />
                                 {(errors.startDate && isErrorView) && <small className='text-xs text-red-500'>{errors.startDate}</small>}
                             </div>
-                            <div className='w-1/3 flex flex-col gap-1'>
-                                <div className='flex'>
-                                    <label htmlFor="duration" >End Date</label>
-                                    <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
-                                </div>
-                                <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} invalid={(errors.endDate && isErrorView)} />
-                                {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
+                        </div>
+                        <div className='w-1/2 flex flex-col gap-1'>
+                            <div className='flex'>
+                                <label htmlFor="duration" >End Date</label>
+                                <i className={`pi pi-asterisk text-[8px] mt-1 ${(errors.endDate && isErrorView) ? 'text-red-500' : ''}`}></i>
                             </div>
+                            <Calendar id="endDate" placeholder='Select end date' value={testData.endDate} minDate={today} onChange={(e) => handleChange('endDate', e.value)} showIcon className='h-10' icon={() => <i className='pi pi-calendar text-(--primary-color)'></i>} pt={{ root: '', title: "hover:text-green-400", }} invalid={(errors.endDate && isErrorView)} />
+                            {(errors.endDate && isErrorView) && <small className='text-xs text-red-500'>{errors.endDate}</small>}
                         </div>
                         <Dialog header='Recent Tests' visible={visible} className='h-[50%] w-[50%] flex flex-col' pt={{ headerTitle: "text-2xl", closeButton: "hidden" }} footer={() => {
                             return <Button label='Ok' className='self-end bg-(--primary-color-light) duration-700 hover:bg-(--primary-color)' onClick={() => { setVisible(false) }} />
                         }}>
-                            <ul className='overflow-auto'>
+                            {!loading ? <ul className='overflow-auto'>
                                 {tests.map((test, index) => {
                                     const isChecked = Array.isArray(testData.questions) && test.questions?.every(id =>
                                         testData.questions?.includes(id)
@@ -289,7 +292,9 @@ const CreateTest = () => {
                                         </div>
                                     )
                                 })}
-                            </ul>
+                            </ul> : <div className='flex justify-center items-center h-full'>
+                                <i className='pi pi-spin pi-spinner text-(--primary-color) text-4xl'></i>
+                            </div>}
                         </Dialog>
                     </form>
                 </Card>
@@ -298,14 +303,14 @@ const CreateTest = () => {
                         <h1 className='text-xl font-bold'>Questions</h1>
                         <div className='flex items-center gap-2'>
                             <Button outlined label='Copy' className='text-(--primary-color) h-8' onClick={() => { setVisible(true) }} />
-                            <i className='pi pi-plus hover:cursor-pointer mr-3' onClick={AddQuestionCard}></i>
+                            <Button label='Add Question' icon='pi pi-plus' className='p-button-text bg-green-500 text-white h-8' onClick={AddQuestionCard}></Button>
                         </div>
                     </div>
                 }}>
-                    <div className='flex flex-col gap-3'>
-                        <ol className='list-decimal'>
+                    <div className='flex flex-col gap-3 justify-center mt-8 mb-5'>
+                        <ol>
                             {testData.questions?.map((question, index) => {
-                                return <li key={question.id}>
+                                return <li key={question.id} className='border border-gray-300 rounded'>
                                     <div>
                                         <QuestionCard question={question} testData={testData} setTestData={setTestData} index={index} handleQuestionChange={handleQuestionChange} handleOptionChange={handleOptionChange} />
                                         <Divider className='m-0' />

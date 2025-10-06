@@ -16,7 +16,10 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
             <div className='flex flex-col gap-1'>
                 <div className='flex justify-between items-center'>
                     <div className='flex'>
-                        <label htmlFor="qtitle" >Question</label>
+                        <>
+                            {index + 1}.
+                            <label htmlFor="qtitle" >Question</label>
+                        </>
                         <i className='pi pi-asterisk text-[8px] mt-1'></i>
                     </div>
                     <i className='pi pi-times hover:cursor-pointer' onClick={onRemove}></i>
@@ -30,7 +33,7 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                 <label htmlFor="isMultiSelect">Multiple Choice</label>
             </div>
             <div className='flex justify-between items-start'>
-                <h1 className='font-bold text-base'>Options</h1>
+                <h1 className='font-medium text-base'>Options</h1>
                 <Button type='button' outlined icon='pi pi-plus text-xs' className='p-0 w-6 text-(--primary-color)' disabled={question.options.length >= 6}
                     onClick={() => {
                         const newOptions = [...question.options,{title:"",isCorrect:false}]
