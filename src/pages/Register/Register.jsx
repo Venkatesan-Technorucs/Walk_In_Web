@@ -345,7 +345,7 @@ const Register = () => {
                                     <label htmlFor="skills" className={`${(errors.skills && isErrorView) ? 'text-red-500' : ''}`}>Skills</label>
                                     <i className={`pi pi-asterisk text-[8px] mt-1 text-red-500`}></i>
                                 </div>
-                                <i title='Select or Fill in your skills' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
+                                <i title='Select or Fill your skills' className='pi pi-question-circle mx-2 text-gray-400 cursor-pointer'></i>
                             </div>
                             <AutoComplete placeholder={"Enter your skills"} label='skillName' id='skillId' value={typedSkill} onChange={handleTyping} onKeyDown={handleKeyDown} list={filteredSkills} selectedList={registerData.skills} onSelect={handleSelectSuggestion} onRemove={removeSkill} onBlur={handleBlur} />
                             {(errors.skills && isErrorView) && <small className='text-xs text-red-500'>{errors.skills}</small>}

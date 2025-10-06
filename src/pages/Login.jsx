@@ -75,7 +75,7 @@ const Login = () => {
     return (
         <div className='w-screen h-screen flex flex-col bg-gray-200 justify-center items-center gap-8'>
             <div className='flex justify-center items-center'>
-                <p className='text-gray-600 text-xl xs:text-2xl'>Online Assessment Platform</p>
+                <p className='text-gray-600 font-medium text-xl xs:text-2xl'>Online Assessment Platform</p>
             </div>
 
             <Card className='w-full max-w-[400px] rounded-lg shadow-sm'>
