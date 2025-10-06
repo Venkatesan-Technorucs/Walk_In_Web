@@ -303,7 +303,7 @@ const CreateTest = () => {
                         <h1 className='text-xl font-bold'>Questions</h1>
                         <div className='flex items-center gap-2'>
                             <Button outlined label='Copy' className='text-(--primary-color) h-8' onClick={() => { setVisible(true) }} />
-                            <Button label='Add Question' icon='pi pi-plus' className='p-button-text bg-green-500 text-white h-8' onClick={AddQuestionCard}></Button>
+                            <Button label='Add Question' icon='pi pi-plus' className='p-button-text bg-(--primary-color-light) duration-700 hover:bg-(--primary-color) text-white h-8' onClick={AddQuestionCard}></Button>
                         </div>
                     </div>
                 }}>
