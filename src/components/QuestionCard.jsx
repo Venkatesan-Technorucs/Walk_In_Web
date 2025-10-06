@@ -34,11 +34,11 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
             </div>
             <div className='flex justify-between items-start'>
                 <h1 className='font-medium text-base'>Options</h1>
-                <Button type='button' outlined icon='pi pi-plus text-xs' className='p-0 w-6 text-(--primary-color)' disabled={question.options.length >= 6}
+                {/* <Button type='button' outlined icon='pi pi-plus text-xs' className='p-0 w-6 text-(--primary-color)' disabled={question.options.length >= 6}
                     onClick={() => {
                         const newOptions = [...question.options,{title:"",isCorrect:false}]
                         handleQuestionChange("options", newOptions, index)
-                    }} />
+                    }} /> */}
             </div>
             <div className='flex flex-col gap-2'>
                 {question.options.map((option, oIndex) => {
@@ -59,9 +59,8 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                                             newOptions[oIndex] = { ...newOptions[oIndex], isCorrect: e.checked };
                                         }
                                         handleQuestionChange('options', newOptions, index)
-                                    }
-                                    } />
-                                <InputText id={`option-${oIndex}`} className='h-8 w-full mr-2 bg-gray-100 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${oIndex + 1}`} value={option.title} pt={{ root: 'py-1' }}
+                                    }} />
+                                <InputText id={`option-${oIndex}`} className='h-8 w-full mr-2 focus-within:border-green-100 focus:border-(--primary-color) focus:border-2 focus:shadow-none' placeholder={`Enter option ${oIndex + 1}`} value={option.title} pt={{ root: 'py-1' }}
                                     onChange={(e) => { handleOptionChange(`title`, index, oIndex, e.target.value) }}
                                 />
                                 <Button type='button' outlined icon='pi pi-minus text-xs' className='p-0 w-6 text-red-400' disabled={question.options.length <= 2}
@@ -81,7 +80,7 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                         const newOptions = [...question.options, { title: "", isCorrect: false }]
                         handleQuestionChange("options", newOptions, index)
                     }} />
-                <p className='text-sm text-gray-500 mt-2'>Select the correct answers</p>
+                <p className='text-sm text-gray-500 mt-2'>Select the correct answers by checking the boxes.</p>
             </div>
         </div>
     )
