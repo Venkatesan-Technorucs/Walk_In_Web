@@ -12,7 +12,7 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
     }
 
     return (
-        <div className='flex flex-col gap-4 p-3'>
+        <div className='flex flex-col gap-4 p-4'>
             <div className='flex flex-col gap-1'>
                 <div className='flex justify-between items-center'>
                     <div className='flex'>
@@ -76,7 +76,12 @@ const QuestionCard = ({ question, testData, setTestData, index, handleQuestionCh
                         </div>
                     )
                 })}
-                <p>Select the correct answers</p>
+                <Button label='Add Option' icon='pi pi-plus-circle' className='mt-2 border-none bg-transparent text-green-400 w-[120px] p-0' disabled={question.options.length >= 6}
+                    onClick={() => {
+                        const newOptions = [...question.options, { title: "", isCorrect: false }]
+                        handleQuestionChange("options", newOptions, index)
+                    }} />
+                <p className='text-sm text-gray-500 mt-2'>Select the correct answers</p>
             </div>
         </div>
     )
