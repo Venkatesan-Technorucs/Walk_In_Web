@@ -54,6 +54,11 @@ const UserTestDetails = () => {
     );
   };
 
+  const isMultiBodyTemplate = (question) => {
+        return <i className={question.isMultiSelect ? 'pi pi-check text-(--primary-color)' : ''}></i>
+        // <Tag value={question.isMultiSelect ? 'True' : 'False'} severity={question.isMultiSelect ? 'success' : "danger"}></Tag>
+    }
+
   return (
     <div className="min-h-screen w-full">
       {/* <Header name={state.user.name} role={state.user.role} /> */}
@@ -96,7 +101,7 @@ const UserTestDetails = () => {
             emptyMessage={<span className="text-gray-500">No answers found for this user.</span>}
           >
             <Column field="question.title" header="Question" body={(row) => <span className="font-medium text-gray-800 flex items-center gap-2">{row.question.title}</span>} />
-            <Column field="question.isMultiSelect" header="Multiple Choice" body={(row) => <Tag value={row.question.isMultiSelect ? 'True' : 'False'} severity={row.question.isMultiSelect ? 'success' : 'danger'} className="text-xs px-2 py-1" />} />
+            <Column field="question.isMultiSelect" header="Multiple Choice" body={isMultiBodyTemplate} className="text-xs px-2 py-1" />
             <Column header="Options" body={optionBodyTemplate} />
             <Column field="answeredAt" header="Answered At" body={(row) => <span className="text-gray-600 text-sm flex items-center gap-2">{row.answeredAt}</span>} />
           </DataTable>
