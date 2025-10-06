@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 
 export const Axios = axios.create({
-  baseURL: "https://walk-in-backend-4w8f.onrender.com/",
+  baseURL: "https://walk-in.azurewebsites.net/",
   // timeout:10000,
   headers: {
     "Content-Type": "application/json",
