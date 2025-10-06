@@ -13,10 +13,12 @@ import { Axios } from '../services/Axios';
 import CreateAdminDialog from './CreateAdminDialog';
 import { useNavigate } from 'react-router-dom';
 import ClearFilter from './common/ClearFilter';
+import { OverlayPanel } from 'primereact/overlaypanel';
 
 
 const UsersManagementCard = ({ }) => {
     let { state } = useAuth();
+    let overlayRef = useRef(null);
     let navigate = useNavigate();
     let [users, setUsers] = useState([]);
     const [visible, setVisible] = useState(false);
@@ -131,10 +133,13 @@ const UsersManagementCard = ({ }) => {
     const actionBodyTemplate = (users) => {
         return (
             <div className='flex items-center gap-2'>
-                <Button disabled={users.role === "Admin"} outlined icon='pi pi-info-circle' onClick={() => {
-                    navigate(`/user/details/${users.id}`)
-                }} className='text-(--primary-color)' />
-                {/* <Button outlined icon='pi pi-trash' className='text-(--primary-color)' /> */}
+                <Button icon='pi pi-ellipsis-v' className='bg-white text-(--primary-color)' onClick={(e) => { overlayRef.current.toggle(e) }} />
+                <OverlayPanel ref={overlayRef}  className='flex flex-col gap-2' pt={{content:"flex flex-col gap-2"}}>
+                    <Button disabled={users.role === "Admin"} icon='pi pi-info-circle' label='View' onClick={() => {
+                        navigate(`/user/details/${users.id}`)
+                    }} className='text-(--primary-color) h-6  border-none bg-white hover:bg-gray-300 p-4' />
+                    {/* <Button icon='pi pi-trash' label='Delete' className='text-(--primary-color) border-none bg-white h-6' /> */}
+                </OverlayPanel>
             </div>
         )
     };
@@ -150,7 +155,7 @@ const UsersManagementCard = ({ }) => {
                         </IconField>
                         <div className='w-1/6 border-gray-400 border-1 rounded-sm hover:border-black focus-within:border-2 focus-within:hover:border-(--primary-color) focus-within:border-(--primary-color)'>
                             <Dropdown id='role' name='role' value={role} onChange={(e) => handleChange('role', e)} options={roles} optionLabel="name"
-                                placeholder="Select Role" className="w-full h-11.5 border-none focus-within:border-0 focus-within:shadow-none" pt={{input:"p-[10px]"}} />
+                                placeholder="Select Role" className="w-full h-11.5 border-none focus-within:border-0 focus-within:shadow-none" pt={{ input: "p-[10px]" }} />
                         </div>
                         <ClearFilter onClear={handleClearFilter} />
                     </>
@@ -165,7 +170,7 @@ const UsersManagementCard = ({ }) => {
                         <IconField iconPosition='left' className="w-1/3">
                             <InputIcon className="pi pi-search"> </InputIcon>
                             <InputText id='filterText' name='filterText' placeholder="Search by name or email..." value={filterText} onChange={(e) => { handleChange('filterText', e) }} className='w-full bg-gray-100 h-12 focus-within:border-green-800 focus:border-(--primary-color) focus:border-2 focus:shadow-none' />
-                        </IconField>                       
+                        </IconField>
                         <ClearFilter onClear={handleClearFilter} />
                     </div>}
                 <DataTable className='mt-4 border-1 border-gray-200' value={users} paginator rows={rows} first={page} totalRecords={totalRecords} loading={loading} tableStyle={{ minWidth: '60rem' }} emptyMessage='No users found' pt={{ bodyRow: 'hover:bg-gray-50 cursor-pointer', columns: 'px-2' }}>
