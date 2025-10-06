@@ -229,7 +229,7 @@ const Register = () => {
                 label="EXIT"  
                 onClick={() => window.open('https://www.technorucs.com/', '_self')} 
                 autoFocus 
-                className='w-full max-w-[300px] rounded-lg bg-[#4CAF50] text-white font-semibold py-3 duration-300 hover:bg-(--primary-color-light) shadow-none border-none' 
+                className='w-full rounded-lg bg-[#4CAF50] text-white font-semibold duration-300 hover:bg-(--primary-color-light) shadow-none border-none' 
             />
         </div>
     );
@@ -246,9 +246,9 @@ const Register = () => {
         return (
             <div className="w-screen h-screen flex justify-center items-center bg-gray-400">
                 {/* <img src={logo} alt="logo" className='w-[200px] h-[30px] xs:h-[50px] bg-white' /> */}
-                <Card header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='w-[30%] lg:h-[30%] h-[40%] p-4' pt={{ root: 'min-w-[300px] min-h-[200px] text-base xs:text-xl md:text-2xl', content: 'pt-[2px] pb-[8px]', closeButton: 'hidden', }}>
+                <Card header={dialogHeaderContent} footer={dialogFooterContent} visible={true} className='' pt={{ root: 'w-[300px] min-h-[300px] xs:w-[420px] xs:min-h-[250px] text-base xs:text-xl md:text-2xl p-4', content: 'pt-[2px] pb-[8px]', closeButton: 'hidden', }}>
                     <div className='flex flex-col items-center justify-center gap-2 h-full'>
-                        <p className="m-0 text-lg font-semibold">No Test Available</p>
+                        <p className="m-0 text-lg font-semibold text-center">No Test Available</p>
                         <p className="m-0 text-sm text-gray-500 text-center">There is no test scheduled for today. Please check back later or contact support for more information.</p>
                     </div>
                 </Card>
